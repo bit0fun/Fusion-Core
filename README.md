@@ -5,40 +5,28 @@ Parallel processor architecture that is centered around modular components and s
 <b>Item					Status</b>
 Single Core			
 	
-   -ALU:				In Progress
-	
-   -Register Organization		In Progress
-	
-   -Interrupt Controller		N/A
-	
-   -Instruction Decoder			N/A
-	
-   -Memory Interface			N/A	
+	-ALU:				In Progress
+	-Register Organization		In Progress
+	-Interrupt Controller		N/A
+	-Instruction Decoder		N/A
+	-Memory Interface		N/A	
 
 Supervisor Core
-
-   -Global Register Organization	N/A
 	
-   -Message Passing Interfaces&nbsp;N/A
-	
-   -Memory Interfaces&nbsp;&nbsp;N/A
-	
-   -Networking Interface&nbsp;&nbsp;N/A
-	
-   -Process Controler&nbsp;&nbsp;N/A
-	
-   -Extended Instructions&nbsp;&nbsp;N/A
+	-Global Register Organization	N/A
+	-Message Passing Interfaces	N/A
+	-Memory Interfaces		N/A
+	-Networking Interface		N/A
+	-Process Controler		N/A
+	-Extended Instructions		N/A
 
 
 Coprocessor Cores/Misc.
-
-   -Graphics Core\*&nbsp;&nbsp;&nbsp;N/A
 	
-   -Courier Controller&nbsp;&nbsp;N/A
-	
-   -Network Manager&nbsp;&nbsp;N/A
-	
-   -I/O Controller\*\*&nbsp;&nbsp;N/A
+	-Graphics Core			N/A
+	-Courier Controller		N/A
+	-Network Manager		N/A
+	-I/O Controller**		N/A
 
 
 ##Notes
