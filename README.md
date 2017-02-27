@@ -9,7 +9,6 @@ Single Core
 	-Interrupt Controller		N/A
 	-Instruction Decoder		N/A
 	-Memory Interface		N/A	
----
 
 Supervisor Core
 	-Global Register Organization	N/A
@@ -18,7 +17,6 @@ Supervisor Core
 	-Networking Interface		N/A
 	-Process Controler		N/A
 	-Extended Instructions		N/A
----
 
 Coprocessor Cores/Misc.
 	-Graphics Core*			N/A
@@ -27,7 +25,6 @@ Coprocessor Cores/Misc.
 	-I/O Controller**		N/A
 
 
----
 
 ##Notes
 
