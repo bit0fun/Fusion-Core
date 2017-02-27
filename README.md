@@ -2,10 +2,10 @@
 Parallel processor architecture that is centered around modular components and specialized cores.
 
 ##To-do list:
-<b>Item								Status</b>
+<b>Item&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status</b>
 Single Core			
 	
-	-ALU:						In Progress
+	-ALU:							In Progress
 	-Register Organization			In Progress
 	-Interrupt Controller			N/A
 	-Instruction Decoder			N/A
