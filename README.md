@@ -4,6 +4,7 @@ Parallel processor architecture that is centered around modular components and s
 ##To-do list:
 Item					Status
 Single Core			
+	
 	-ALU:				In Progress
 	
 	-Register Organization		In Progress
