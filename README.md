@@ -2,45 +2,49 @@
 Parallel processor architecture that is centered around modular components and specialized cores.
 
 ##To-do list:
-<b>Item&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status</b>
+<b>Item					Status</b>
+<p>
 Single Core			
 	
-   -ALU:&nbsp;&nbsp;&nbsp;&nbsp;In Progress
+   -ALU:				In Progress
 	
-   -Register Organization&nbsp;&nbsp;In Progress
+   -Register Organization		In Progress
 	
-   -Interrupt Controller&nbsp;&nbsp;N/A
+   -Interrupt Controller		N/A
 	
-&nbsp;-Instruction Decoder&nbsp;&nbsp;N/A
+   -Instruction Decoder			N/A
 	
-&nbsp;-Memory Interface&nbsp;&nbsp;N/A	
+   -Memory Interface			N/A	
+</p>
 
-
-
+<p>
 Supervisor Core
 
-&nbsp;-Global Register Organization&nbsp;N/A
+   -Global Register Organization	N/A
 	
-&nbsp;-Message Passing Interfaces&nbsp;N/A
+   -Message Passing Interfaces&nbsp;N/A
 	
-&nbsp;-Memory Interfaces&nbsp;&nbsp;N/A
+   -Memory Interfaces&nbsp;&nbsp;N/A
 	
-&nbsp;-Networking Interface&nbsp;&nbsp;N/A
+   -Networking Interface&nbsp;&nbsp;N/A
 	
-&nbsp;-Process Controler&nbsp;&nbsp;N/A
+   -Process Controler&nbsp;&nbsp;N/A
 	
-&nbsp;-Extended Instructions&nbsp;&nbsp;N/A
+   -Extended Instructions&nbsp;&nbsp;N/A
 
+</p>
+
+<p>
 Coprocessor Cores/Misc.
 
-&nbsp;-Graphics Core\*&nbsp;&nbsp;&nbsp;N/A
+   -Graphics Core\*&nbsp;&nbsp;&nbsp;N/A
 	
-&nbsp;-Courier Controller&nbsp;&nbsp;N/A
+   -Courier Controller&nbsp;&nbsp;N/A
 	
-&nbsp;-Network Manager&nbsp;&nbsp;N/A
+   -Network Manager&nbsp;&nbsp;N/A
 	
-&nbsp;-I/O Controller\*\*&nbsp;&nbsp;N/A
-
+   -I/O Controller\*\*&nbsp;&nbsp;N/A
+</p>
 
 
 ##Notes
