@@ -3,7 +3,6 @@ Parallel processor architecture that is centered around modular components and s
 
 ##To-do list:
 <b>Item					Status</b>
-<p>
 Single Core			
 	
    -ALU:				In Progress
@@ -15,9 +14,7 @@ Single Core
    -Instruction Decoder			N/A
 	
    -Memory Interface			N/A	
-</p>
 
-<p>
 Supervisor Core
 
    -Global Register Organization	N/A
@@ -32,9 +29,7 @@ Supervisor Core
 	
    -Extended Instructions&nbsp;&nbsp;N/A
 
-</p>
 
-<p>
 Coprocessor Cores/Misc.
 
    -Graphics Core\*&nbsp;&nbsp;&nbsp;N/A
@@ -44,7 +39,6 @@ Coprocessor Cores/Misc.
    -Network Manager&nbsp;&nbsp;N/A
 	
    -I/O Controller\*\*&nbsp;&nbsp;N/A
-</p>
 
 
 ##Notes
