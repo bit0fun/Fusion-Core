@@ -2,7 +2,7 @@
 Parallel processor architecture that is centered around modular components and specialized cores.
 
 ##To-do list:
-Item					Status
+<b>Item					Status</b>
 ___
 Single Core			
 ___	
