@@ -2,7 +2,7 @@
 Parallel processor architecture that is centered around modular components and specialized cores.
 
 ##To-do list:
-<b>Item							Status</b>
+<b>Item								Status</b>
 Single Core			
 	
 	-ALU:						In Progress
@@ -23,10 +23,10 @@ Supervisor Core
 
 Coprocessor Cores/Misc.
 	
-	-Graphics Core				N/A
-	-Courier Controller			N/A
-	-Network Manager			N/A
-	-I/O Controller**			N/A
+	-Graphics Core					N/A
+	-Courier Controller				N/A
+	-Network Manager				N/A
+	-I/O Controller**				N/A
 
 
 ##Notes
