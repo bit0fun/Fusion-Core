@@ -3,8 +3,9 @@ Parallel processor architecture that is centered around modular components and s
 
 ##To-do list:
 Item					Status
+___
 Single Core			
-	
+___	
 	-ALU:				In Progress
 	
 	-Register Organization		In Progress
@@ -18,6 +19,7 @@ Single Core
 
 
 Supervisor Core
+___
 	-Global Register Organization	N/A
 	
 	-Message Passing Interfaces	N/A
@@ -31,6 +33,7 @@ Supervisor Core
 	-Extended Instructions		N/A
 
 Coprocessor Cores/Misc.
+___
 	-Graphics Core*			N/A
 	
 	-Courier Controller		N/A
@@ -44,4 +47,5 @@ Coprocessor Cores/Misc.
 ##Notes
 
 \* May end up using open source graphics processor, undecided on what will be done.
+
 \*\*Another project that will be available in the future; link will be provided when progress has started
