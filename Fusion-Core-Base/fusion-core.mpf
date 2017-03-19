@@ -218,7 +218,7 @@ Resolution = ps
 UserTimeUnit = default
 
 ; Default run length
-RunLength = 100
+RunLength = 100 ps
 
 ; Maximum iterations that can be run without advancing simulation time
 IterationLimit = 5000
@@ -408,15 +408,29 @@ ConcurrentFileLimit = 40
 Project_Version = 6
 Project_DefaultLib = work
 Project_SortMethod = unused
-Project_Files_Count = 2
-Project_File_0 = C:/Data/Fusion-Core/ALU.v
-Project_File_P_0 = cover_toggle 0 vlog_protect 0 file_type verilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat 0 vlog_nodebug 0 cover_fsm 0 last_compile 0 vlog_noload 0 cover_branch 0 folder User_Core vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 1 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 0 dont_compile 0 cover_expr 0 cover_stmt 0
-Project_File_1 = C:/Data/Fusion-Core/Register_File.v
-Project_File_P_1 = cover_toggle 0 vlog_protect 0 file_type verilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat 0 vlog_nodebug 0 cover_fsm 0 last_compile 0 vlog_noload 0 cover_branch 0 folder User_Core vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 1 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 1 dont_compile 0 cover_expr 0 cover_stmt 0
+Project_Files_Count = 6
+Project_File_0 = C:/Data/Fusion-Core/Fusion-Core-Base/carry_lookahead_8b.v
+Project_File_P_0 = cover_toggle 0 vlog_protect 0 file_type verilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat 0 vlog_nodebug 0 folder adder last_compile 1489956564 cover_fsm 0 cover_branch 0 vlog_noload 0 vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 0 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 3 dont_compile 0 cover_expr 0 cover_stmt 0
+Project_File_1 = C:/Data/Fusion-Core/Fusion-Core-Base/RegisterFile.v
+Project_File_P_1 = cover_toggle 0 vlog_protect 0 file_type verilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat 0 vlog_nodebug 0 folder Register_Files last_compile 0 cover_fsm 0 cover_branch 0 vlog_noload 0 vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 1 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 0 dont_compile 0 cover_expr 0 cover_stmt 0
+Project_File_2 = C:/Data/Fusion-Core/Fusion-Core-Base/adder_1b.v
+Project_File_P_2 = cover_toggle 0 vlog_protect 0 file_type verilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat 0 vlog_nodebug 0 cover_fsm 0 last_compile 1489952614 vlog_noload 0 cover_branch 0 folder adder vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 0 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 4 dont_compile 0 cover_expr 0 cover_stmt 0
+Project_File_3 = C:/Data/Fusion-Core/Fusion-Core-Base/GPRF_0.v
+Project_File_P_3 = cover_toggle 0 vlog_protect 0 file_type verilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat 0 vlog_nodebug 0 folder Register_Files last_compile 0 cover_fsm 0 cover_branch 0 vlog_noload 0 vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 1 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 2 dont_compile 0 cover_expr 0 cover_stmt 0
+Project_File_4 = C:/Data/Fusion-Core/Fusion-Core-Base/ALU.v
+Project_File_P_4 = cover_toggle 0 vlog_protect 0 file_type verilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat 0 vlog_nodebug 0 cover_fsm 0 cover_branch 0 vlog_noload 0 last_compile 0 folder User_Core cover_excludedefault 0 vlog_enable0In 0 vlog_disableopt 0 cover_covercells 0 voptflow 1 cover_optlevel 3 vlog_showsource 0 vlog_hazard 0 toggle - vlog_0InOptions {} ood 1 cover_noshort 0 vlog_upper 0 compile_to work vlog_options {} compile_order 1 cover_expr 0 dont_compile 0 cover_stmt 0
+Project_File_5 = C:/Data/Fusion-Core/Fusion-Core-Base/adder.v
+Project_File_P_5 = cover_toggle 0 vlog_protect 0 file_type verilog group_id 0 cover_exttoggle 0 cover_nofec 0 cover_cond 0 vlog_1995compat 0 vlog_nodebug 0 vlog_noload 0 last_compile 1489957134 folder adder cover_branch 0 cover_fsm 0 vlog_enable0In 0 cover_excludedefault 0 vlog_disableopt 0 cover_covercells 0 vlog_hazard 0 vlog_showsource 0 cover_optlevel 3 voptflow 1 ood 0 vlog_0InOptions {} toggle - vlog_options {} compile_to work vlog_upper 0 cover_noshort 0 compile_order 5 dont_compile 0 cover_expr 0 cover_stmt 0
 Project_Sim_Count = 0
-Project_Folder_Count = 1
-Project_Folder_0 = User_Core
-Project_Folder_P_0 = folder {Top Level}
+Project_Folder_Count = 4
+Project_Folder_0 = adder
+Project_Folder_P_0 = folder ALU_modules
+Project_Folder_1 = ALU_modules
+Project_Folder_P_1 = folder User_Core
+Project_Folder_2 = User_Core
+Project_Folder_P_2 = folder {Top Level}
+Project_Folder_3 = Register_Files
+Project_Folder_P_3 = folder User_Core
 Echo_Compile_Output = 0
 Save_Compile_Report = 1
 Project_Opt_Count = 0

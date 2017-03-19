@@ -1,0 +1,58 @@
+`include "carry_lookahead_8b.v"
+
+module adder_32b(
+	input[31:0] reg_a,
+	input[31:0] reg_b,
+	output[31:0] sum,
+	output carry_out
+	);
+
+
+	reg carry_in = 1'b0; //fix carry_in to 0
+	wire sum0[7:0], sum1[7:0], sum2[7:0], sum3[7:0];
+	wire carry0, carry1, carry2;
+begin
+	carry_lookahead_8b adder_0(
+
+	.reg_a(reg_a),
+	.reg_b(reg_b[7:0]),
+	.carryin(carry_in),
+	.out(sum[7:0])),
+	//.carry_out(carry0)
+
+	);
+
+	carry_lookahead_8b adder_1(
+
+	.reg_a(reg_a[15:8]),
+	.reg_b(reg_b[15:8]),
+	.carryin(carry0),
+	.out(sum[15:8])),
+	//.carry_out(carry1)
+
+	);
+
+	carry_lookahead_8b adder_2(
+
+	.reg_a(reg_a[23:16]),
+	.reg_b(reg_b[23:16]),
+	.carryin(carry1),
+	.out(sum[23:16])),
+	//.carry_out(carry2)
+
+	);
+
+	carry_lookahead_8b adder_3(
+
+	.reg_a(reg_a[31:24]),
+	.reg_b(reg_b[31:24]),
+	.carryin(carry2),
+	.out(sum[31:24])),
+	//.carry_out(carry_out)
+
+	);
+
+end
+
+
+endmodule

@@ -16,9 +16,11 @@
 */
 
 
+/*ALU Module Includes*/
+`include "carry_lookahead_8b.v"
 
 
-module ALU(op_a, op_b, out, op_code, ar_code);
+module ALU(op_a, op_b, out, op_code, ar_code, flag_carry);
 //32 bit ALU, will upgrade to 64 bit after tests are done.
 
 	//Values from register file to operate on
@@ -32,13 +34,32 @@ module ALU(op_a, op_b, out, op_code, ar_code);
 	input [5:0] ar_code;
 
 	//output from the ALU
-	output reg [31:0] out;
+	output [31:0] out;
+
+	//Flags
+	output flag_carry;
 	
 
 
 	/*Wires*/
 	wire [31:0] to_out;
 	wire [31:0] w_and;
+	wire [31:0] w_add;
+	
+
+
+	/*Instantiations of ALU Modules*/
+
+	//Adder
+	add(
+	.reg_a(op_a),
+	.reg_b(op_b),
+	.out(w_add),
+	.flg_carry(flag_carry),
+	.carryin()
+
+	);
+
 
 	always@*
 		if(op_code == 6'b000000)
@@ -46,11 +67,15 @@ module ALU(op_a, op_b, out, op_code, ar_code);
 		/*0*/	5'b00000:begin	//for NOP
 					out <= 0; 			
 				 end
-		/*1*/	5'b00001:begin
+		/*1*/	5'b00001:begin	//output AND operation
 					out <= w_add;
 				 end
-		/*2*/	5'b00010:
-		/*3*/	5'b00011:
+		/*2*/	5'b00010:begin	//output OR operation
+					out <= w_or;
+				 end
+		/*3*/	5'b00011:begin  //output XOR operation
+					out <= w_xor;
+				 end
 		/*4*/	5'b00100:
 		/*5*/	5'b00101:
 		/*6*/	5'b00110:

@@ -1,1 +1,16 @@
+C:/Data/Fusion-Core/Fusion-Core-Base/carry_lookahead_8b.v {1 {vlog -work work -stats=none C:/Data/Fusion-Core/Fusion-Core-Base/carry_lookahead_8b.v
+Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+-- Compiling module adder_1b
+-- Compiling module carry_lookahead_8b
 
+Top level modules:
+	carry_lookahead_8b
+
+} {} {}} C:/Data/Fusion-Core/Fusion-Core-Base/adder_1b.v {1 {vlog -work work -stats=none C:/Data/Fusion-Core/Fusion-Core-Base/adder_1b.v
+Model Technology ModelSim ALTERA vlog 10.4b Compiler 2015.05 May 27 2015
+-- Compiling module adder_1b
+
+Top level modules:
+	adder_1b
+
+} {} {}}
