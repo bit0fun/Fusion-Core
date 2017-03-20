@@ -31,7 +31,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	input [4:0] op_code; //5 bit opcode
 
 	//output from the ALU
-	output [31:0] out;
+	output reg [31:0] out;
 
 	//Flags
 	output flag_carry;

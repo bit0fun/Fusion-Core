@@ -28,8 +28,28 @@ r1
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Data/Fusion-Core/Fusion-Core-Base/adder.v|
 !i113 1
 Z3 o-work work
+vadd_32
+Z4 !s110 1489978325
+!i10b 1
+!s100 bYgfHPAKfKGlNfnXVleMa2
+I;_J06LV2hRaDU7<S]8an31
+R0
+R1
+w1489978295
+8C:/Data/Fusion-Core/Fusion-Core-Base/add_32.v
+FC:/Data/Fusion-Core/Fusion-Core-Base/add_32.v
+L0 3
+R2
+r1
+!s85 0
+31
+Z5 !s108 1489978325.000000
+Z6 !s107 adder_1b.v|C:/Data/Fusion-Core/Fusion-Core-Base/add_32.v|
+Z7 !s90 -reportprogress|300|-work|work|-stats=none|C:/Data/Fusion-Core/Fusion-Core-Base/add_32.v|
+!i113 1
+R3
 vadder_1b
-Z4 !s110 1489961001
+R4
 !i10b 1
 !s100 4@TU2daaTP:c28lT2GM330
 ILRQ>Ookj6z>GbCRhBCYP=2
@@ -38,18 +58,39 @@ R1
 w1489952614
 8adder_1b.v
 Fadder_1b.v
-L0 19
+Z8 L0 19
 R2
 r1
 !s85 0
 31
-Z5 !s108 1489961001.000000
-Z6 !s107 adder_1b.v|carry_lookahead_8b.v|C:/Data/Fusion-Core/Fusion-Core-Base/ALU.v|
-Z7 !s90 -reportprogress|300|-work|work|-stats=none|C:/Data/Fusion-Core/Fusion-Core-Base/ALU.v|
+R5
+R6
+R7
 !i113 1
 R3
+vALU
+Z9 !s110 1489961920
+!i10b 1
+!s100 aKMXCB>2TgE12PDD8RaDl3
+ImOKLfhPD`adQBc@l1dl7Q1
+R0
+R1
+w1489961918
+8C:/Data/Fusion-Core/Fusion-Core-Base/ALU.v
+FC:/Data/Fusion-Core/Fusion-Core-Base/ALU.v
+L0 23
+R2
+r1
+!s85 0
+31
+Z10 !s108 1489961920.000000
+Z11 !s107 adder_1b.v|carry_lookahead_8b.v|C:/Data/Fusion-Core/Fusion-Core-Base/ALU.v|
+Z12 !s90 -reportprogress|300|-work|work|-stats=none|C:/Data/Fusion-Core/Fusion-Core-Base/ALU.v|
+!i113 1
+R3
+n@a@l@u
 vcarry_lookahead_8b
-R4
+R9
 !i10b 1
 !s100 aE9Y9KC9PKYC0:AeWaeAZ0
 I4;Xa>XaKWJM7k`O`YUPdE0
@@ -63,8 +104,29 @@ R2
 r1
 !s85 0
 31
-R5
-R6
-R7
+R10
+R11
+R12
 !i113 1
 R3
+vRegisterFile
+!s110 1489979733
+!i10b 1
+!s100 NXCWzZ00m`09Gjj;WmbYR1
+I=b[g_ZEG@DKW5dEjCKGk]3
+R0
+R1
+w1489979726
+8C:/Data/Fusion-Core/Fusion-Core-Base/RegisterFile.v
+FC:/Data/Fusion-Core/Fusion-Core-Base/RegisterFile.v
+R8
+R2
+r1
+!s85 0
+31
+!s108 1489979733.000000
+!s107 C:/Data/Fusion-Core/Fusion-Core-Base/RegisterFile.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Data/Fusion-Core/Fusion-Core-Base/RegisterFile.v|
+!i113 1
+R3
+n@register@file

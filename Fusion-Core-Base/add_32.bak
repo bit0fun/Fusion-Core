@@ -1,6 +1,6 @@
 `include "adder_1b.v"
 
-module add(reg_a, reg_b, out, flg_carry, carryin);
+module add_32(reg_a, reg_b, out, flg_carry, carryin);
 
 	parameter NBIT = 32;
 
