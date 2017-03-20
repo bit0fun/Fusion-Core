@@ -1,7 +1,7 @@
 # Fusion-Core
 Parallel processor architecture that is centered around modular components and specialized cores.
 
-##To-do list:
+## To-do list:
 <b>Item&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status</b>
 ***
 
@@ -31,7 +31,7 @@ Coprocessor Cores/Misc.
 	-I/O Controller**				N/A
 
 
-##Notes
+## Notes
 
 \* May end up using open source graphics processor, undecided on what will be done.
 
