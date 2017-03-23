@@ -1,0 +1,69 @@
+MIF/HEX Update report for Fusion-Core-Base
+Wed Mar 22 20:47:52 2017
+Quartus Prime Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. MIF/HEX Update Summary
+  3. MIF/HEX Update Processed Files
+  4. MIF/HEX Update Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2015 Altera Corporation. All rights reserved.
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, the Altera Quartus Prime License Agreement,
+the Altera MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Altera and sold by Altera or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+
+
+
++-----------------------------------------------------------+
+; MIF/HEX Update Summary                                    ;
++-----------------------+-----------------------------------+
+; MIF/HEX Update Status ; Failed - Wed Mar 22 20:47:52 2017 ;
+; Revision Name         ; Fusion-Core-Base                  ;
+; Top-level Entity Name ; baseline_c5gx                     ;
+; Family                ; Cyclone V                         ;
+; Device                ; 5CGXFC5C6F27C7                    ;
++-----------------------+-----------------------------------+
+
+
++--------------------------------+
+; MIF/HEX Update Processed Files ;
++--------------------------------+
+; File Name                      ;
++--------------------------------+
+
+
++-------------------------+
+; MIF/HEX Update Messages ;
++-------------------------+
+Info: *******************************************************************
+Info: Running Quartus Prime MIF/HEX Update
+    Info: Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
+    Info: Processing started: Wed Mar 22 20:47:50 2017
+Info: Command: quartus_cdb Fusion-Core-Base -c Fusion-Core-Base --update_mif
+Error (39022): Found no valid Memory Initialization File to process
+Error: Quartus Prime MIF/HEX Update was unsuccessful. 1 error, 0 warnings
+    Error: Peak virtual memory: 906 megabytes
+    Error: Processing ended: Wed Mar 22 20:47:52 2017
+    Error: Elapsed time: 00:00:02
+    Error: Total CPU time (on all processors): 00:00:02
+
+

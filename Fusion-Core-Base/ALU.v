@@ -17,7 +17,6 @@
 
 
 /*ALU Module Includes*/
-`include "carry_lookahead_8b.v"
 
 
 module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, flag_neg);
@@ -34,7 +33,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	output reg [31:0] out;
 
 	//Flags
-	output flag_carry;
+	output reg flag_carry;
 	output flag_overflow;
 	output flag_parity; //even parity of output, 1 valid, 0 invalid
 	output flag_neg; //output is negative
@@ -56,7 +55,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	wire [31:0] w_inc; //increment
 	wire [31:0] w_dec; //decrement
 
-	
+	wire flg_carry_sub, flg_carry_add;
 
 
 	/*Instantiations of ALU Modules*/
@@ -66,7 +65,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	.reg_a(op_a),
 	.reg_b(op_b),
 	.out(w_add),
-	.flg_carry(flag_carry),
+	.flg_carry(flg_carry_add),
 	.carryin(1'b0)
 
 	);
@@ -76,7 +75,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	.reg_a(op_a),
 	.reg_b(op_b),
 	.out(w_sub),
-	.flg_carry(flag_carry),
+	.flg_carry(flg_carry_sub),
 	.carryin(1'b1)	//2's compliment, so need this to be a 1
 
 	);
@@ -89,7 +88,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 					out <= 0; 			
 				 end
 		/*1*/	5'b00001:begin	//output AND operation
-					out <= w_add;
+					out <= w_and;
 				 end
 		/*2*/	5'b00010:begin	//output OR operation
 					out <= w_or;
@@ -137,9 +136,11 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 /*-------------------------------RESERVED END-----------------------------------*/
 		/*16*/	5'b10000:begin	//output for ADD operation
 					out <= w_add;
+					flag_carry <= flg_carry_add;
 				 end
 		/*17*/	5'b10001:begin	//output for SUBTRACT operation
 					out <= w_sub;
+					flag_carry <= flg_carry_sub;
 				 end
 		/*18*/	5'b10010:begin	//output for INCREMENT operation
 					out <= w_inc;
@@ -187,7 +188,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 				 end
 /*-------------------------------RESERVED END-----------------------------------*/
 			endcase
-
+	
 
 endmodule
 
