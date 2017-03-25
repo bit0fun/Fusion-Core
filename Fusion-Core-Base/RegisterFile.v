@@ -30,7 +30,8 @@ module RegisterFile(
 	
 	/*Control Lines*/
 	input rw, //rw == 1, then read; rw == 0, write
-	input clk //clock for synchronous registers
+	input clk, //clock for synchronous registers
+	input sel //chip select line, active low
 	);
 
 
@@ -69,7 +70,7 @@ module RegisterFile(
 	reg [31:0] r31;
 
 always @(posedge clk)
-if(rw == 0)
+if(rw == 0 && sel == 0)
 begin
 	out_a <= 0;
 	out_b <= 0;
@@ -109,7 +110,7 @@ begin
 		5'b11111: r31 <= in_reg;
 	endcase
 	end
-else
+else if(rw == 1 && sel == 0)
 	begin
 	case(addr_a)
 		5'b00000: out_a <= r0;
@@ -145,9 +146,7 @@ else
 		5'b11110: out_a <= r30;
 		5'b11111: out_a <= r31;
 	endcase
-	//end
 
-	//begin
 	case(addr_b)
 		5'b00000: out_b <= r0;
 		5'b00001: out_b <= r1;
@@ -182,7 +181,12 @@ else
 		5'b11110: out_b <= r30;
 		5'b11111: out_b <= r31;
 	endcase
-	//end
+	
+end
+else
+	begin
+		out_a <= 'h0000;
+		out_b <= 'h0000;
 end
 
 

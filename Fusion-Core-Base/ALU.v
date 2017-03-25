@@ -47,9 +47,8 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	wire [31:0] w_not;
 	wire [31:0] w_shl; //shift left
 	wire [31:0] w_shr; //shift right
-	wire [31:0] w_scl; //shift carry left
 	wire [31:0] w_scr; //shift carry right
-	wire [31:0] w_slt; //set less than, 1 if true, 0 if false
+	wire [31:0] w_cmp; //compare; 0 if true, -1 if less, 1 if greater
 	wire [31:0] w_add;
 	wire [31:0] w_sub;
 	wire [31:0] w_inc; //increment
@@ -80,6 +79,53 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 
 	);
 
+	//Increment
+	add_32 inc_32(
+	.reg_a(op_a),
+	.reg_b(32'b0001),
+	.out(w_inc),
+	.flg_carry(),
+	.carryin(1'b0)
+	);
+
+	//Decrement
+	add_32 dec_32(
+	.reg_a(op_a),
+	.reg_b('hFffF), //-1, 2's compliment
+	.out(w_dec),
+	.flg_carry(),
+	.carryin(1'b1)	//2's compliment, so need this to be a 1
+
+	);
+
+	//AND
+	and_32 and_32(
+	.a(op_a), //input values
+	.b(op_b),
+	.out(w_and) //output value
+	);
+
+	//OR
+	or_32 or_32(
+	.a(op_a), //input values
+	.b(op_b),
+	.out(w_or) //output value
+	);
+
+	//XOR
+	xor_32 xor_32(
+	.a(op_a), //input values
+	.b(op_b),
+	.out(w_xor) //output value
+	);
+
+	
+	//NOT
+	not_32 not_32(
+	.a(op_a), //input value
+	.out(w_not) //output value
+	);
+
 
 	always@*
 		
@@ -105,16 +151,16 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 		/*6*/	5'b00110:begin 	//output shift right operation
 					out <= w_shr;
 				 end
-		/*7*/	5'b00111:begin //output shift carry left operation
-					out <= w_scl;
-				 end
-		/*8*/	5'b01000:begin //output shift carry left operation
+		/*7*/	5'b00111:begin //output shift carry right operation
 					out <= w_scr;
 				 end
-		/*9*/	5'b01001:begin //output set less than operation
-					out <= w_slt;
-		 		 end
+		/*8*/	5'b01000:begin //output compare operation
+					out <= w_cmp;
+				 end
 /*------------------------------RESERVED START-----------------------------------*/
+		/*9*/	5'b01001:begin 
+					out <= 0;
+		 		 end
 		/*10*/	5'b01010:begin
 					out <= 0;
 				 end

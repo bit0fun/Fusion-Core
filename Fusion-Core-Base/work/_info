@@ -29,74 +29,98 @@ r1
 !i113 1
 Z3 o-work work
 vadd_32
-Z4 !s110 1490233219
+Z4 !s110 1490481576
 !i10b 1
-!s100 efboNADMGkP:TJ6LN=Mc70
-IQ_;K2zHA8n6aAMJanf7Ro3
+!s100 RfzGO1eRhkRm2Tn<eKDz90
+IOa:Z0e7[c8X]2V:QYY8_f1
 R0
-R1
-w1490233217
-8C:/Data/Fusion-Core/Fusion-Core-Base/add_32.v
-FC:/Data/Fusion-Core/Fusion-Core-Base/add_32.v
+Z5 dC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base
+Z6 w1490472709
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/add_32.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/add_32.v
 L0 3
-R2
+Z7 OV;L;10.5b;63
 r1
 !s85 0
 31
-Z5 !s108 1490233219.000000
-Z6 !s107 adder_1b.v|C:/Data/Fusion-Core/Fusion-Core-Base/add_32.v|
-Z7 !s90 -reportprogress|300|-work|work|-vlog01compat|-stats=none|C:/Data/Fusion-Core/Fusion-Core-Base/add_32.v|
+Z8 !s108 1490481576.000000
+!s107 adder_1b.v|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/add_32.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/add_32.v|
 !i113 1
-Z8 o-work work -vlog01compat
+R3
+Z9 tCvgOpt 0
 vadder_1b
 R4
 !i10b 1
 !s100 4@TU2daaTP:c28lT2GM330
-IokW`<]=:S=BF[O^H[TUY_1
+ICQjPm2kfEQScAHWBCiZ`=0
 R0
-R1
-Z9 w1489981811
-8adder_1b.v
-Fadder_1b.v
-Z10 L0 19
-R2
-r1
-!s85 0
-31
 R5
 R6
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/adder_1b.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/adder_1b.v
+Z10 L0 19
 R7
-!i113 1
-R8
-vALU
-Z11 !s110 1490233126
-!i10b 1
-!s100 h4hkZjNOomW;XWk7ojA_01
-IZJDB6cQTKH4XQmESeQ3ai1
-R0
-R1
-w1490226791
-8C:/Data/Fusion-Core/Fusion-Core-Base/ALU.v
-FC:/Data/Fusion-Core/Fusion-Core-Base/ALU.v
-L0 22
-R2
 r1
 !s85 0
 31
-Z12 !s108 1490233126.000000
-!s107 C:/Data/Fusion-Core/Fusion-Core-Base/ALU.v|
-!s90 -reportprogress|300|-work|work|-stats=none|C:/Data/Fusion-Core/Fusion-Core-Base/ALU.v|
+R8
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/adder_1b.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/adder_1b.v|
 !i113 1
 R3
+R9
+vALU
+R4
+!i10b 1
+!s100 oOmToQCYO]Z5F9A:XBT2h1
+I8H@B;hJfjheTj@oWaW7Dd2
+R0
+R5
+w1490481565
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/ALU.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/ALU.v
+L0 22
+R7
+r1
+!s85 0
+31
+R8
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/ALU.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/ALU.v|
+!i113 1
+R3
+R9
 n@a@l@u
+vand_32
+R4
+!i10b 1
+!s100 bV2nPzT5@hoce?^YnCNj31
+IXfC>?7KF>ab4VPFD4hSKX3
+R0
+R5
+w1490479206
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/and_32.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/and_32.v
+Z11 L0 18
+R7
+r1
+!s85 0
+31
+R8
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/and_32.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/and_32.v|
+!i113 1
+R3
+R9
 vcarry_lookahead_8b
-R11
+!s110 1490233126
 !i10b 1
 !s100 aE9Y9KC9PKYC0:AeWaeAZ0
 I4lo?i4:M`WQM6HLl;?hEM3
 R0
 R1
-R9
+w1489981811
 8C:/Data/Fusion-Core/Fusion-Core-Base/carry_lookahead_8b.v
 FC:/Data/Fusion-Core/Fusion-Core-Base/carry_lookahead_8b.v
 L0 20
@@ -104,29 +128,199 @@ R2
 r1
 !s85 0
 31
-R12
+!s108 1490233126.000000
 !s107 adder_1b.v|C:/Data/Fusion-Core/Fusion-Core-Base/carry_lookahead_8b.v|
 !s90 -reportprogress|300|-work|work|-stats=none|C:/Data/Fusion-Core/Fusion-Core-Base/carry_lookahead_8b.v|
 !i113 1
 R3
-vRegisterFile
-R11
+vGeneral_Purpose_Regs
+Z12 !s110 1490481577
 !i10b 1
-!s100 NXCWzZ00m`09Gjj;WmbYR1
-I=b[g_ZEG@DKW5dEjCKGk]3
+!s100 illGXMB?LSn9]ih[f6;J43
+I[47`0K<znb@l0lIiAk3>42
 R0
-R1
-R9
-8C:/Data/Fusion-Core/Fusion-Core-Base/RegisterFile.v
-FC:/Data/Fusion-Core/Fusion-Core-Base/RegisterFile.v
-R10
-R2
+R5
+w1490481527
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/General_Purpose_Regs.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/General_Purpose_Regs.v
+L0 1
+R7
 r1
 !s85 0
 31
-R12
-!s107 C:/Data/Fusion-Core/Fusion-Core-Base/RegisterFile.v|
-!s90 -reportprogress|300|-work|work|-stats=none|C:/Data/Fusion-Core/Fusion-Core-Base/RegisterFile.v|
+Z13 !s108 1490481577.000000
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/General_Purpose_Regs.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/General_Purpose_Regs.v|
 !i113 1
 R3
+R9
+n@general_@purpose_@regs
+vincrement_32
+R12
+!i10b 1
+!s100 IKdTVQV7Rcl@XRgmhhYg[1
+IWDle[jM_i84hfVO:kC2Y71
+R0
+R5
+w1490481550
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/increment_32.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/increment_32.v
+R11
+R7
+r1
+!s85 0
+31
+R13
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/increment_32.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/increment_32.v|
+!i113 1
+R3
+R9
+vnot_32
+R4
+!i10b 1
+!s100 f>HVcU:[aCdFPhR>5oCiV1
+IBoQbSO1IEWh03Ndn2<9?M2
+R0
+R5
+w1490474845
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/not_32.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/not_32.v
+L0 1
+R7
+r1
+!s85 0
+31
+R8
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/not_32.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/not_32.v|
+!i113 1
+R3
+R9
+vor_32
+R4
+!i10b 1
+!s100 ClLXG4D^hXYS?;C]Bl`842
+IkImb@1fj^V>6hX>0GO`>I2
+R0
+R5
+w1490479215
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/or_32.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/or_32.v
+R11
+R7
+r1
+!s85 0
+31
+R8
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/or_32.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/or_32.v|
+!i113 1
+R3
+R9
+vRegisterFile
+!s110 1490481575
+!i10b 1
+!s100 ]0nYC?fKYKzP@4XSgOaNj0
+I?;94aNVz_Lgh>Y7HAXfmP3
+R0
+R5
+w1490480919
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/RegisterFile.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/RegisterFile.v
+R10
+R7
+r1
+!s85 0
+31
+!s108 1490481575.000000
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/RegisterFile.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/RegisterFile.v|
+!i113 1
+R3
+R9
 n@register@file
+vshift_carry_right_32
+R12
+!i10b 1
+!s100 h[hIT1CYn<?CBbNGHIzl;2
+I`HF@LLcRI2?C29k?d@@XO3
+R0
+R5
+w1490476287
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_carry_right_32.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_carry_right_32.v
+L0 1
+R7
+r1
+!s85 0
+31
+R13
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_carry_right_32.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_carry_right_32.v|
+!i113 1
+R3
+R9
+vshift_left_32
+R4
+!i10b 1
+!s100 BC8D_ZQPzZ04YY8Y5DbXK1
+Iciz4DmOTJ@YoRKz;3iCcD0
+R0
+R5
+w1490479198
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_left_32.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_left_32.v
+R11
+R7
+r1
+!s85 0
+31
+R8
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_left_32.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_left_32.v|
+!i113 1
+R3
+R9
+vshift_right_32
+R12
+!i10b 1
+!s100 >]f1hNR0EjC?BFW7idOc=1
+I5TcS[]6]a_NG@Bl`o1Uof1
+R0
+R5
+w1490479194
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_right_32.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_right_32.v
+R11
+R7
+r1
+!s85 0
+31
+R8
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_right_32.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/shift_right_32.v|
+!i113 1
+R3
+R9
+vxor_32
+R4
+!i10b 1
+!s100 kk8kWhNhMYWEfm6KPnnTP3
+IoSHbRo7e>NfT6QMzkJ=IW2
+R0
+R5
+w1490479210
+8C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/xor_32.v
+FC:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/xor_32.v
+R11
+R7
+r1
+!s85 0
+31
+R8
+!s107 C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/xor_32.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/xor_32.v|
+!i113 1
+R3
+R9
