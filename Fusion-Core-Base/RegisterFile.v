@@ -36,6 +36,9 @@ module RegisterFile(
 
 
 	/*Registers*/
+	//reg[31:0] reg_out_a; //for keeping verilog happy
+	//reg[31:0] reg_out_b;
+
 	reg [31:0] r0;
 	reg [31:0] r1;
 	reg [31:0] r2;
@@ -68,6 +71,44 @@ module RegisterFile(
 	reg [31:0] r29;
 	reg [31:0] r30;
 	reg [31:0] r31;
+
+initial //initialize all registers to 0
+begin
+	r0 <= 32'b0;
+	r1 <= 32'b0;
+	r2 <= 32'b0;
+	r3 <= 32'b0;
+	r4 <= 32'b0;
+	r5 <= 32'b0;
+	r6 <= 32'b0;
+	r7 <= 32'b0;
+	r8 <= 32'b0;
+	r9 <= 32'b0;
+	r10 <= 32'b0;
+	r11 <= 32'b0;
+	r12 <= 32'b0;
+	r13 <= 32'b0;
+	r14 <= 32'b0;
+	r15 <= 32'b0;
+	r16 <= 32'b0;
+	r17 <= 32'b0;
+	r18 <= 32'b0;
+	r19 <= 32'b0;
+	r20 <= 32'b0;
+	r21 <= 32'b0;
+	r22 <= 32'b0;
+	r23 <= 32'b0;	
+	r24 <= 32'b0;
+	r25 <= 32'b0;
+	r26 <= 32'b0;
+	r27 <= 32'b0;	
+	r28 <= 32'b0;
+	r29 <= 32'b0;
+	r30 <= 32'b0;
+	r31 <= 32'b0;
+
+end
+
 
 always @(posedge clk)
 if(rw == 0 && sel == 0)
@@ -185,8 +226,8 @@ else if(rw == 1 && sel == 0)
 end
 else
 	begin
-		out_a <= 'h0000;
-		out_b <= 'h0000;
+		out_a <= 32'bz;
+		out_b <= 32'bz;
 end
 
 

@@ -27,6 +27,13 @@ Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  
 Top level modules:
 	shift_right_32
 
+} {} {}} C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/increment_32.v {1 {vlog -work work -stats=none C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/increment_32.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module increment_32
+
+Top level modules:
+	increment_32
+
 } {} {}} C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/adder_1b.v {1 {vlog -work work -stats=none C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/adder_1b.v
 Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
 -- Compiling module adder_1b
@@ -57,6 +64,20 @@ Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  
 
 Top level modules:
 	and_32
+
+} {} {}} C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/ALU.v {1 {vlog -work work -stats=none C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/ALU.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module ALU
+
+Top level modules:
+	ALU
+
+} {} {}} C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/General_Purpose_Regs.v {1 {vlog -work work -stats=none C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/General_Purpose_Regs.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+-- Compiling module General_Purpose_Regs
+
+Top level modules:
+	General_Purpose_Regs
 
 } {} {}} C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/decrement_32.v {1 {vlog -work work -stats=none C:/Users/bit0fun/Documents/Projects/HDL/Fusion-Core/Fusion-Core-Base/decrement_32.v
 Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016

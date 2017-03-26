@@ -1,3 +1,20 @@
+/*
+  This file is part of Fusion-Core-ISA.
+
+    Fusion-Core-ISA is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Fusion-Core-ISA is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Fusion-Core-ISA.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 module General_Purpose_Regs(
 	/*Data*/
 	input[31:0] d_in, //input data
@@ -15,6 +32,7 @@ module General_Purpose_Regs(
 	);
 
 	/*Registers*/
+	reg [3:0] gp_sel; //selection line for register files
 
 	/*Wires*/
 	wire [31:0] w_out_a;
@@ -46,8 +64,8 @@ RegisterFile GPRF1(
 
 RegisterFile GPRF2(
 	.in_reg(d_in), //only one input needed
-	.out_a(w_out_a),
-	.out_b(w_out_b),
+	.out_a(out_a),
+	.out_b(out_b),
 	.addr_a(addr_a), //used for input addresses
 	.addr_b(addr_b),
 	.rw(rw), //rw == 1, then read; rw == 0, write
@@ -57,8 +75,8 @@ RegisterFile GPRF2(
 
 RegisterFile GPRF3(
 	.in_reg(d_in), //only one input needed
-	.out_a(w_out_a),
-	.out_b(w_out_b),
+	.out_a(out_a),
+	.out_b(out_b),
 	.addr_a(addr_a), //used for input addresses
 	.addr_b(addr_b),
 	.rw(rw), //rw == 1, then read; rw == 0, write
@@ -86,8 +104,6 @@ end
 
 
 
-assign out_a = w_out_a;
-assign out_b = w_out_b;
 
 
 endmodule
