@@ -1,6 +1,8 @@
 # Fusion-Core
 Parallel processor architecture that is centered around modular components and specialized cores.
 
+A main goal of the microarchitecutre is to seperate the user-space and kernel-space to potentially eliminate buffer overflow attacks. This may provide other security benefits, though once completed the performance will be measured as well as testing the security of the microarchitecure.
+
 ## To-do list:
 <b>Item&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status</b>
 ***
