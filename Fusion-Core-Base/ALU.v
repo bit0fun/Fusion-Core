@@ -17,7 +17,16 @@
 
 
 /*ALU Module Includes*/
-
+`include add_32.v
+`include and_32.v
+`include not_32.v
+`include or_32.v
+`include xor_32.v
+`include shift_carry_right_32.v
+`include shift_left_32.v
+`include shift_right_32.v
+`include compare_32.v
+`include decrement_32.v
 
 module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, flag_neg);
 //32 bit ALU, will upgrade to 64 bit after tests are done.
@@ -119,7 +128,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	.out(w_xor) //output value
 	);
 
-	
+
 	//NOT
 	not_32 not_32(
 	.a(op_a), //input value
@@ -128,10 +137,10 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 
 
 	always@*
-		
+
 		case(op_code)
 		/*0*/	5'b00000:begin	//for NOP
-					out <= 0; 			
+					out <= 0;
 				 end
 		/*1*/	5'b00001:begin	//output AND operation
 					out <= w_and;
@@ -158,7 +167,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 					out <= w_cmp;
 				 end
 /*------------------------------RESERVED START-----------------------------------*/
-		/*9*/	5'b01001:begin 
+		/*9*/	5'b01001:begin
 					out <= 0;
 		 		 end
 		/*10*/	5'b01010:begin
@@ -234,7 +243,6 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 				 end
 /*-------------------------------RESERVED END-----------------------------------*/
 			endcase
-	
+
 
 endmodule
-
