@@ -1,6 +1,6 @@
-\documentclass[letterpaper]{article}
+\documentclass[letterpaper, 11pt]{article}
 \usepackage{graphicx}
-\usepackage[left=1.00in, right=1.00in, top=1.00in, bottom=1.00in]{geometry}
+\usepackage[left=1.00in, right=-1.00in, top=1.00in, bottom=1.00in]{geometry}
 \usepackage{hyperref}
 \hypersetup{colorlinks=false,linktoc=all}
 
@@ -26,40 +26,92 @@
 the instruction set. By use of defining an easy interface with a simple core instruction set, this allows for
 more freedom in implementation. High end processors and microcontrollers would only have slight varaitions in
 configuration, as their core would remain identical save for easy to maintain and scalable co-processors.
-\paragraph{}At this moment in time, the Fusion-Core ISA is only a 32 bit ISA. Due to the focus on co-processors,
+\paragraph{}The architecture is Big endian, with a core instruction set that is RISC, but the co-processors do not need to adhere to the RISC philosophy. This allows for more flexibility in design, and possibly faster core clock speeds as the pipeline would depend on smaller amounts of logic. Only the instructions provided in this document are to be implemented in the main processor. The co-processors defined in this document are recommended, but not required for normal function. Co-processor documentation is to be provided by the creator, and should adhere to the standards of clarity and conciseness such that it can be easily implemented from the documentation alone in a HDL. 
+\paragraph{64 Bit instructions:}At this moment in time, the Fusion-Core ISA is only a 32 bit ISA. Due to the focus on co-processors,
 older implementations could easily be modified to include 64 bit operations.
 
 
 \subsection{Goals}
 \subsection{Conventions}
+\paragraph{Document Conventions:}Example code will be shown with \texttt{monospace} text. General purpose registers will be denoted with
+\$R\# where \# is the number of the register. Special purpose registers will be proceeded by a \$ as well.
+\paragraph{Naming Conventions:}The name of input signals will have "\_in" after the signal name, with "\_out" after output signals.
+This is mainly used in the verilog example implementation. If a naming convention is not globally used, it will be stated in the individual section that it pertains to. 
 
 
-
-\section{Register File Defintions}
+\section{Register File Definitions}
+\paragraph{}This section goes over the different registers available in the ISA. Each register file name begins with 
+"REGF", such as the first General Purpose Register File being REGFGP0. Any additional register files require the number after the
+name of the register file. Register files with additional numbers after them are bank switched to reduce space, hence why the number is
+required to denote the register file space used.
 \subsection{General Purpose Registers}
-\subsubsection{Definition}
-\subsubsection{Usage}
-\subsection{Speial Registers}
+\paragraph{}32 general purpose registers that are 32 bits wide are available, as shown in Figure 1, below.
+\begin{figure}[!h]
+	\begin{center}
+				\caption{General Purpose Registers (REGFGP0)}
+		\begin{tabular}{|l|l|l|c|}
+			\hline
+			Register & Secondary use & Function Call State & Width \\ \hline
+			\$R0  & Hardcoded value of 0 & Static & 32 bits\\ 	\hline
+			\$R1  & Stack Pointer & Saved (callee) & 32 bits\\ 	\hline
+			\$R2  & Frame Pointer & Saved (callee) &32 bits\\ 	\hline
+			\$R3  & Global Pointer & Saved &32 bits\\ 	\hline
+			\$R4  & Return Address & Saved (caller) &32 bits\\ 	\hline
+			\$R5  & System arg 0 & Saved (caller) &32 bits\\ 	\hline
+			\$R6  & System arg 1 & Saved (caller) &32 bits\\ 	\hline
+			\$R7  & System arg 2 & Saved (caller) &32 bits\\ 	\hline
+			\$R8  & System arg 3 & Saved (caller) &32 bits\\ 	\hline
+			\$R9  & System return 0 & Saved (callee) &32 bits\\ 	\hline
+			\$R10 & System return 1 & Saved (callee) &32 bits\\ \hline
+			\$R11 & System return 2 & Saved (callee) &32 bits \\ \hline
+			\$R12 & System return 3 & Saved (callee) &32 bits \\ \hline
+			\$R13 & Function arg 0 & Saved (caller) &32 bits \\ \hline
+			\$R14 & Function arg 1 & Saved (caller) &32 bits \\ \hline
+			\$R15 & Function arg 2 & Saved (caller) &32 bits \\ \hline
+			\$R16 & Function arg 3 & Saved (caller) &32 bits \\ \hline
+			\$R17 & Function return 0 & Saved (callee) &32 bits \\ \hline
+			\$R18 & Function return 1 & Saved (callee) &32 bits \\ \hline
+			\$R19 & Function return 2 & Saved &32 bits \\ \hline
+			\$R20 & Function return 3 & Saved (callee) &32 bits \\ \hline
+			\$R21 & Global Register 0 & Saved (callee) &32 bits \\ \hline
+			\$R22 & Global Register 1 & Saved (callee) &32 bits \\ \hline
+			\$R23 & Global Register 2 & Saved (callee) &32 bits \\ \hline
+			\$R24 & Global Register 3 & Saved (callee) &32 bits \\ \hline
+			\$R25 & Temporary Register 0 & Volatile &32 bits \\ \hline
+			\$R26 & Temporary Register 1 & Volatile  &32 bits \\ \hline
+			\$R27 & Temporary Register 2 & Volatile &32 bits \\ \hline
+			\$R28 & Temporary Register 3 & Volatile &32 bits \\ \hline
+			\$R29 & Temporary Register 4 & Volatile &32 bits \\ \hline
+			\$R30 & High word & Volatile  &32 bits \\ \hline
+			\$R31 & Low word & Volatile &32 bits \\ \hline
+		\end{tabular} 
+
+	\end{center}
+\paragraph{NOTE:} In writing programs, register arguments and return values can be used to reduce the number of registers used between processes. 
+\end{figure}
+\paragraph{}While it is not defined by the architecture, larger general purpose registers can be used instead of 32 bit wide registers. If larger registers are needed, consider using a co-processor to for instructions that require larger operands. This provides code compatibility between different implementations.
+\subsection{Special Registers}
 \subsubsection{Control Registers}
 \subsubsection{Supervisor Registers}
+\subsection{Adding Registers}
 
 
-\section{Instruction Defintions}
+\section{Instruction Definitions}
 \subsection{Instruction Types}
 \subsubsection{Integer}
 \subsubsection{Immediate}
-\subsubsection{Load\/Store}
-\subsubsection{Branch\/Jump}
+\subsubsection{Load/Store}
+\subsubsection{Branch/Jump}
 \subsubsection{Floating Point}
 \subsubsection{Atomic}
 \subsubsection{System}
 \subsubsection{Co-Processor}
 \subsubsection{Custom}
-\subsection{List of Instructons}
+\subsection{List of Instructions}
 \subsubsection{Integer}
 \subsubsection{Immediate}
-\subsubsection{Load\/Store}
-\subsubsection{Branch\/Jump}
+\subsubsection{Load/Store}
+\subsubsection{Branch/Jump}
 \subsubsection{Floating Point}
 \subsubsection{Atomic}
 \subsubsection{System}
@@ -89,6 +141,26 @@ the documentation of the implementation.
 \subsection{Memory Locations for Vector Table}
 \subsubsection{Interrupt Vector Table}
 \subsubsection{Exception Vector Table}
+
+
+\begin{figure}[!h]
+	\begin{center}
+		\begin{tabular}{|l|l|}
+			\hline
+			Address (32 bit) &  Definition\\ \hline
+			0x0000 & Reset address \\ 	\hline
+			0x0000 &  \\ 	\hline
+			0x0000 &  \\ 	\hline
+			0x0000 &  \\ 	\hline
+			0x0000 &  \\ 	\hline
+			0x0000 &  \\	\hline
+		\end{tabular} 
+		\caption{Exception Vector Table}
+	\end{center}
+	
+\end{figure}
+
+
 
 
 \end{document}
