@@ -20,7 +20,16 @@
 \paragraph{Version 0.1} Initial Definition of the Instruction Set Architecture
 
 \section{Introduction}
+
 \subsection{About}
+\paragraph{}The Fusion-Core ISA is dedicated to creating an easily expandible architecture without altering
+the instruction set. By use of defining an easy interface with a simple core instruction set, this allows for
+more freedom in implementation. High end processors and microcontrollers would only have slight varaitions in
+configuration, as their core would remain identical save for easy to maintain and scalable co-processors.
+\paragraph{}At this moment in time, the Fusion-Core ISA is only a 32 bit ISA. Due to the focus on co-processors,
+older implementations could easily be modified to include 64 bit operations.
+
+
 \subsection{Goals}
 \subsection{Conventions}
 
@@ -66,6 +75,10 @@
 \subsubsection{User Level}
 \subsubsection{Supervisor Level}
 
+\section{Co-Processor Interface}
+\subsection{Interface Connection Definitions}
+\subsection{Adding custom Co-Processor}
+\subsection{List of Co-Processors}
 
 \section{Memory Map}
 \textbf{NOTE}
