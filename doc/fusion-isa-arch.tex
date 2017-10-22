@@ -241,13 +241,13 @@ required to denote the register file space used.
 \subsubsection{Immediate}
 \subsubsection{Load/Store}
 \subsubsection{Branch/Jump}
-
+\subsubsection{Co-Processor}
 \subsection{List of Instructions}
 \subsubsection{Integer}
 \subsubsection{Immediate}
 \subsubsection{Load/Store}
 \subsubsection{Branch/Jump}
-
+\subsubsection{Co-Processor}
 
 
 
@@ -260,7 +260,29 @@ required to denote the register file space used.
 \subsubsection{Supervisor Level}
 
 \section{Co-Processors}
+\paragraph{}Co-processors are the main point of the Fusion-Core archetecture. As the ISA only defines the main core, the implementator is free to use
+whichever co-processors that would be necessary for an application. Hardware acceleration for vector instructions, encryption, floating point, communication,
+etc. There is no limitation for what kind of co-processor that could be used, only the number that could fit within the defined usable instructions.
+\paragraph{}It is important to note that the co-processors do not need to be of a RISC construction, due to this reliance on co-processors without
+specifying how they should be implemented. The main core is indeed RISC, as only the simplest instructions are defined that something as small as a microcontroller
+could use without issue.
+\paragraph{}The idea behind the separation of processor is to create different pipelines for each core. In doing so, the main core could be clocked faster that of
+a pipeline requiring integer multiplication, or some other time consuming operation. As well, the individual cores could be clocked at their respective 
+fastest frequencies, thus resulting in the fastest possible performance of each part. To deal with writing to memory with varying clock speeds for each core,
+a FIFO buffer is used to send each write to main memory. This FIFO is to create the illusion of write atomicity. The FIFO should have connections to allow
+for a seeming atomic read though, the programmer should note that reads require care; if there is a dependancy on a slow core's written value. This programming 
+paradigm is similar to that of parallel threads, where certain values may not be available until an unknown time. The ISA does not define any particular ways
+to handle this and it is either left up to the implementation, or programmer depending.
+\paragraph{}As shown in the instruction section, there are predefined regions for the co-processor slots. 
+This is defined to allow for the compiler/assembler to work across implementations. At this time, only a fixed number of co-processors can be used on 
+an implementation at a time, though future expansions to the ISA may change this.  
+
 \subsection{Co-Processor Interface}
+\paragraph{}The interface is designed to be extremely simple, as to make co-processors easy to implement. The inputs is just the output from the instruction fetch
+passthrough on the decode unit. As shown in the instruction list, there is a section of 6 bits for the co-processor's opcode. Please also note
+that this section of the instruction is different than the opcode , 0x3f (may change to 0x20 to allow for more opcodes for the co-processors) , which indicates that the instruction is for the co-processor. To save connections, 
+the normal opcode section is removed, leaving 26 bit physical instructions. Using more bits per instruction is not supported at this time, though it is possible
+to take the instruction fetch output directly. 
 \subsubsection{Co-Processor Conventions}
 \subsubsection{Register Connections}
 \subsubsection{Decode unit Connections}
@@ -269,7 +291,6 @@ required to denote the register file space used.
 \subsection{List of Co-Processors}
 \subsubsection{Floating Point}
 \subsubsection{System Unit}
-\subsubsection{Atomic Unit}
 \subsubsection{Memory Management Unit}
 \subsubsection{}
 
@@ -278,9 +299,6 @@ required to denote the register file space used.
 \subsubsection{Registers}
 \subsubsection{Instructions}
 \subsection{System Unit}
-\subsubsection{Registers}
-\subsubsection{Instructions}
-\subsection{Atomic Unit}
 \subsubsection{Registers}
 \subsubsection{Instructions}
 \subsection{Memory Management Unit}
