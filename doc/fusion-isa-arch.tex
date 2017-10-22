@@ -1,6 +1,7 @@
 \documentclass[letterpaper, 11pt]{article}
 \usepackage{graphicx}
-\usepackage[left=1.00in, right=-1.00in, top=1.00in, bottom=1.00in]{geometry}
+\usepackage[left=1.00in, right=1.00in, top=1.00in, bottom=1.00in]{geometry}
+\usepackage{subfigure}
 \usepackage{hyperref}
 \hypersetup{colorlinks=false,linktoc=all}
 
@@ -16,7 +17,7 @@
 
 
 \newpage
-\section{Changelog}
+\section{Change log}
 \paragraph{Version 0.1} Initial Definition of the Instruction Set Architecture
 
 \section{Introduction}
@@ -44,51 +45,189 @@ This is mainly used in the verilog example implementation. If a naming conventio
 "REGF", such as the first General Purpose Register File being REGFGP0. Any additional register files require the number after the
 name of the register file. Register files with additional numbers after them are bank switched to reduce space, hence why the number is
 required to denote the register file space used.
+\subsection{Register File List}
+\paragraph{}Th
+	\begin{figure}[!h]
+	%	\begin{center}
+		\parbox{0.2\linewidth}{
+			\centering
+			\fontsize{6}{8}\selectfont
+			\begin{tabular}{|l|l|}
+				\hline
+				\multicolumn{2}{|c|}{REGFGP0} \\
+				\hline
+				Register & Register Name \\ \hline
+				\$R0  & ZERO \\ 	\hline
+				\$R1  & SP0 \\ 	\hline
+				\$R2  & FP0 \\ 	\hline
+				\$R3  & GP0 \\ 	\hline
+				\$R4  & RA0 \\ 	\hline
+				\$R5  & ARG00 \\ 	\hline
+				\$R6  & ARG01 \\ 	\hline
+				\$R7  & ARG02 \\ 	\hline
+				\$R8  & ARG03 \\ 	\hline
+				\$R9  & ARG04 \\ 	\hline
+				\$R10 & ARG05 \\ \hline
+				\$R11 & RVAL00  \\ \hline
+				\$R12 & RVAL01  \\ \hline
+				\$R13 & RVAL02  \\ \hline
+				\$R14 & RVAL03  \\ \hline
+				\$R15 & RVAL04  \\ \hline
+				\$R16 & GPR00  \\ \hline
+				\$R17 & GPR01  \\ \hline
+				\$R18 & GPR02  \\ \hline
+				\$R19 & GPR03  \\ \hline
+				\$R20 & GPR04  \\ \hline
+				\$R21 & GPR05  \\ \hline
+				\$R22 & GPR06  \\ \hline
+				\$R23 & GPR07  \\ \hline
+				\$R24 & TMPR00  \\ \hline
+				\$R25 & TMPR01  \\ \hline
+				\$R26 & TMPR02  \\ \hline
+				\$R27 & TMPR03  \\ \hline
+				\$R28 & TMPR04  \\ \hline
+				\$R29 & TMPR05  \\ \hline
+				\$R30 & REGHI0  \\ \hline
+				\$R31 & REGLOW0  \\ \hline
+			\end{tabular}
+		}
+		\hfill
+		\parbox{0.2\linewidth}{
+			\centering
+			\fontsize{6}{8}\selectfont
+			\begin{tabular}{|l|l|}
+				\hline
+				\multicolumn{2}{|c|}{REGFGP1} \\
+				\hline
+				Register & Register Name \\ \hline
+				\$R0  & ZERO \\ 	\hline
+				\$R1  & SP1 \\ 	\hline
+				\$R2  & FP1 \\ 	\hline
+				\$R3  & GP1 \\ 	\hline
+				\$R4  & RA1 \\ 	\hline
+				\$R5  & ARG10 \\ 	\hline
+				\$R6  & ARG11 \\ 	\hline
+				\$R7  & ARG12 \\ 	\hline
+				\$R8  & ARG13 \\ 	\hline
+				\$R9  & ARG14 \\ 	\hline
+				\$R10 & ARG15 \\ \hline
+				\$R11 & RVAL10  \\ \hline
+				\$R12 & RVAL11  \\ \hline
+				\$R13 & RVAL12  \\ \hline
+				\$R14 & RVAL13  \\ \hline
+				\$R15 & RVAL14  \\ \hline
+				\$R16 & GPR10  \\ \hline
+				\$R17 & GPR11  \\ \hline
+				\$R18 & GPR12  \\ \hline
+				\$R19 & GPR13  \\ \hline
+				\$R20 & GPR14  \\ \hline
+				\$R21 & GPR15  \\ \hline
+				\$R22 & GPR16  \\ \hline
+				\$R23 & GPR17  \\ \hline
+				\$R24 & TMPR10  \\ \hline
+				\$R25 & TMPR11  \\ \hline
+				\$R26 & TMPR12  \\ \hline
+				\$R27 & TMPR13  \\ \hline
+				\$R28 & TMPR14  \\ \hline
+				\$R29 & TMPR15  \\ \hline
+				\$R30 & REGHI1  \\ \hline
+				\$R31 & REGLOW1  \\ \hline
+			\end{tabular}
+		}
+		\hfill
+		\parbox{0.2\linewidth}{
+			\centering
+			\fontsize{6}{8}\selectfont
+			\begin{tabular}{|l|l|}
+				\hline
+				\multicolumn{2}{|c|}{REGFEXCP} \\
+				\hline
+				Register & Register Name \\ \hline
+				\$R0  & ZERO \\ 	\hline
+				\$R1  & SP1 \\ 	\hline
+				\$R2  & FP1 \\ 	\hline
+				\$R3  & GP1 \\ 	\hline
+				\$R4  & RA1 \\ 	\hline
+				\$R5  & ARG0 \\ 	\hline
+				\$R6  & ARG1 \\ 	\hline
+				\$R7  & ARG2 \\ 	\hline
+				\$R8  & ARG3 \\ 	\hline
+				\$R9  & ARG4 \\ 	\hline
+				\$R10 & ARG5 \\ \hline
+				\$R11 & RVAL0  \\ \hline
+				\$R12 & RVAL1  \\ \hline
+				\$R13 & RVAL2  \\ \hline
+				\$R14 & RVAL3  \\ \hline
+				\$R15 & RVAL4  \\ \hline
+				\$R16 & GPR0  \\ \hline
+				\$R17 & GPR1  \\ \hline
+				\$R18 & GPR2  \\ \hline
+				\$R19 & GPR3  \\ \hline
+				\$R20 & GPR4  \\ \hline
+				\$R21 & GPR5  \\ \hline
+				\$R22 & GPR6  \\ \hline
+				\$R23 & GPR7  \\ \hline
+				\$R24 & TMPR0  \\ \hline
+				\$R25 & TMPR1  \\ \hline
+				\$R26 & TMPR2  \\ \hline
+				\$R27 & TMPR3  \\ \hline
+				\$R28 & TMPR4  \\ \hline
+				\$R29 & TMPR5  \\ \hline
+				\$R30 & REGHI1  \\ \hline
+				\$R31 & REGLOW1  \\ \hline
+			\end{tabular}
+		}
+		\hfill
+		\parbox{0.2\linewidth}{
+			\centering
+			\fontsize{6}{8}\selectfont
+			\begin{tabular}{|l|l|}
+				\hline
+				\multicolumn{2}{|c|}{REGFSYSCL0} \\
+				\hline
+				Register & Register Name \\ \hline
+				\$R0  & ZERO \\ 	\hline
+				\$R1  & SP1 \\ 	\hline
+				\$R2  & FP1 \\ 	\hline
+				\$R3  & GP1 \\ 	\hline
+				\$R4  & RA1 \\ 	\hline
+				\$R5  & SYSARG00 \\ 	\hline
+				\$R6  & SYSARG01 \\ 	\hline
+				\$R7  & SYSARG02 \\ 	\hline
+				\$R8  & SYSARG03 \\ 	\hline
+				\$R9  & SYSARG04 \\ 	\hline
+				\$R10 & SYSARG05 \\ \hline
+				\$R11 & SYSRVAL00  \\ \hline
+				\$R12 & SYSRVAL01  \\ \hline
+				\$R13 & SYSRVAL02  \\ \hline
+				\$R14 & SYSRVAL03  \\ \hline
+				\$R15 & SYSRVAL04  \\ \hline
+				\$R16 & SYSGPR00  \\ \hline
+				\$R17 & SYSGPR01  \\ \hline
+				\$R18 & SYSGPR02  \\ \hline
+				\$R19 & SYSGPR03  \\ \hline
+				\$R20 & SYSGPR04  \\ \hline
+				\$R21 & SYSGPR05  \\ \hline
+				\$R22 & SYSGPR06  \\ \hline
+				\$R23 & SYSGPR07  \\ \hline
+				\$R24 & SYSTMPR00  \\ \hline
+				\$R25 & SYSTMPR01  \\ \hline
+				\$R26 & SYSTMPR02  \\ \hline
+				\$R27 & SYSTMPR03  \\ \hline
+				\$R28 & SYSTMPR04  \\ \hline
+				\$R29 & SYSTMPR05  \\ \hline
+				\$R30 & SYSREGHI0  \\ \hline
+				\$R31 & SYSREGLOW0  \\ \hline
+			\end{tabular}
+		}
+%		\end{center}
+	\end{figure}
 \subsection{General Purpose Registers}
 \paragraph{}32 general purpose registers that are 32 bits wide are available, as shown in Figure 1, below.
-\begin{figure}[!h]
-	\begin{center}
-				\caption{General Purpose Registers (REGFGP0)}
-		\begin{tabular}{|l|l|l|c|}
-			\hline
-			Register & Secondary use & Function Call State & Width \\ \hline
-			\$R0  & Hardcoded value of 0 & Static & 32 bits\\ 	\hline
-			\$R1  & Stack Pointer & Saved (callee) & 32 bits\\ 	\hline
-			\$R2  & Frame Pointer & Saved (callee) &32 bits\\ 	\hline
-			\$R3  & Global Pointer & Saved &32 bits\\ 	\hline
-			\$R4  & Return Address & Saved (caller) &32 bits\\ 	\hline
-			\$R5  & System arg 0 & Saved (caller) &32 bits\\ 	\hline
-			\$R6  & System arg 1 & Saved (caller) &32 bits\\ 	\hline
-			\$R7  & System arg 2 & Saved (caller) &32 bits\\ 	\hline
-			\$R8  & System arg 3 & Saved (caller) &32 bits\\ 	\hline
-			\$R9  & System return 0 & Saved (callee) &32 bits\\ 	\hline
-			\$R10 & System return 1 & Saved (callee) &32 bits\\ \hline
-			\$R11 & System return 2 & Saved (callee) &32 bits \\ \hline
-			\$R12 & System return 3 & Saved (callee) &32 bits \\ \hline
-			\$R13 & Function arg 0 & Saved (caller) &32 bits \\ \hline
-			\$R14 & Function arg 1 & Saved (caller) &32 bits \\ \hline
-			\$R15 & Function arg 2 & Saved (caller) &32 bits \\ \hline
-			\$R16 & Function arg 3 & Saved (caller) &32 bits \\ \hline
-			\$R17 & Function return 0 & Saved (callee) &32 bits \\ \hline
-			\$R18 & Function return 1 & Saved (callee) &32 bits \\ \hline
-			\$R19 & Function return 2 & Saved &32 bits \\ \hline
-			\$R20 & Function return 3 & Saved (callee) &32 bits \\ \hline
-			\$R21 & Global Register 0 & Saved (callee) &32 bits \\ \hline
-			\$R22 & Global Register 1 & Saved (callee) &32 bits \\ \hline
-			\$R23 & Global Register 2 & Saved (callee) &32 bits \\ \hline
-			\$R24 & Global Register 3 & Saved (callee) &32 bits \\ \hline
-			\$R25 & Temporary Register 0 & Volatile &32 bits \\ \hline
-			\$R26 & Temporary Register 1 & Volatile  &32 bits \\ \hline
-			\$R27 & Temporary Register 2 & Volatile &32 bits \\ \hline
-			\$R28 & Temporary Register 3 & Volatile &32 bits \\ \hline
-			\$R29 & Temporary Register 4 & Volatile &32 bits \\ \hline
-			\$R30 & High word & Volatile  &32 bits \\ \hline
-			\$R31 & Low word & Volatile &32 bits \\ \hline
-		\end{tabular} 
+	
 
-	\end{center}
 \paragraph{NOTE:} In writing programs, register arguments and return values can be used to reduce the number of registers used between processes. 
-\end{figure}
+
 \paragraph{}While it is not defined by the architecture, larger general purpose registers can be used instead of 32 bit wide registers. If larger registers are needed, consider using a co-processor to for instructions that require larger operands. This provides code compatibility between different implementations.
 \subsection{Special Registers}
 \subsubsection{Control Registers}
@@ -102,21 +241,14 @@ required to denote the register file space used.
 \subsubsection{Immediate}
 \subsubsection{Load/Store}
 \subsubsection{Branch/Jump}
-\subsubsection{Floating Point}
-\subsubsection{Atomic}
-\subsubsection{System}
-\subsubsection{Co-Processor}
-\subsubsection{Custom}
+
 \subsection{List of Instructions}
 \subsubsection{Integer}
 \subsubsection{Immediate}
 \subsubsection{Load/Store}
 \subsubsection{Branch/Jump}
-\subsubsection{Floating Point}
-\subsubsection{Atomic}
-\subsubsection{System}
-\subsubsection{Co-Processor}
-\subsubsection{Custom}
+
+
 
 
 \section{Exceptions and Interrupts}
@@ -127,10 +259,33 @@ required to denote the register file space used.
 \subsubsection{User Level}
 \subsubsection{Supervisor Level}
 
-\section{Co-Processor Interface}
+\section{Co-Processors}
+\subsection{Co-Processor Interface}
+\subsubsection{Co-Processor Conventions}
+\subsubsection{Register Connections}
+\subsubsection{Decode unit Connections}
 \subsection{Interface Connection Definitions}
 \subsection{Adding custom Co-Processor}
 \subsection{List of Co-Processors}
+\subsubsection{Floating Point}
+\subsubsection{System Unit}
+\subsubsection{Atomic Unit}
+\subsubsection{Memory Management Unit}
+\subsubsection{}
+
+\section{Recommended Co-Processors}
+\subsection{Floating Point Unit}
+\subsubsection{Registers}
+\subsubsection{Instructions}
+\subsection{System Unit}
+\subsubsection{Registers}
+\subsubsection{Instructions}
+\subsection{Atomic Unit}
+\subsubsection{Registers}
+\subsubsection{Instructions}
+\subsection{Memory Management Unit}
+\subsubsection{Registers}
+\subsubsection{Instructions}
 
 \section{Memory Map}
 \textbf{NOTE}
