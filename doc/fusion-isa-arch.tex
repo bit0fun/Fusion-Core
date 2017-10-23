@@ -35,7 +35,7 @@ older implementations could easily be modified to include 64 bit operations.
 \subsection{Goals}
 \subsection{Conventions}
 \paragraph{Document Conventions:}Example code will be shown with \texttt{monospace} text. General purpose registers will be denoted with
-\$R\# where \# is the number of the register. Special purpose registers will be proceeded by a \$ as well.
+\$R\# where \# is the number of the register. Special purpose registers will be presented with \textbf{bold} text.
 \paragraph{Naming Conventions:}The name of input signals will have "\_in" after the signal name, with "\_out" after output signals.
 This is mainly used in the verilog example implementation. If a naming convention is not globally used, it will be stated in the individual section that it pertains to. 
 
@@ -45,9 +45,11 @@ This is mainly used in the verilog example implementation. If a naming conventio
 "REGF", such as the first General Purpose Register File being REGFGP0. Any additional register files require the number after the
 name of the register file. Register files with additional numbers after them are bank switched to reduce space, hence why the number is
 required to denote the register file space used.
+\paragraph{}To alleviate context switching delays, three general purpose register files are bank availble by bank switching. Only these register files are required
+for a minimal system, though more can certainly be implemented if required. Each register file can be accessed by changing the value in the BSELRF register. 
 \subsection{Register File List}
-\paragraph{}Th
 	\begin{figure}[!h]
+		\caption{General Purpose Registers}
 	%	\begin{center}
 		\parbox{0.2\linewidth}{
 			\centering
@@ -89,49 +91,6 @@ required to denote the register file space used.
 				\$R29 & TMPR05  \\ \hline
 				\$R30 & REGHI0  \\ \hline
 				\$R31 & REGLOW0  \\ \hline
-			\end{tabular}
-		}
-		\hfill
-		\parbox{0.2\linewidth}{
-			\centering
-			\fontsize{6}{8}\selectfont
-			\begin{tabular}{|l|l|}
-				\hline
-				\multicolumn{2}{|c|}{REGFGP1} \\
-				\hline
-				Register & Register Name \\ \hline
-				\$R0  & ZERO \\ 	\hline
-				\$R1  & SP1 \\ 	\hline
-				\$R2  & FP1 \\ 	\hline
-				\$R3  & GP1 \\ 	\hline
-				\$R4  & RA1 \\ 	\hline
-				\$R5  & ARG10 \\ 	\hline
-				\$R6  & ARG11 \\ 	\hline
-				\$R7  & ARG12 \\ 	\hline
-				\$R8  & ARG13 \\ 	\hline
-				\$R9  & ARG14 \\ 	\hline
-				\$R10 & ARG15 \\ \hline
-				\$R11 & RVAL10  \\ \hline
-				\$R12 & RVAL11  \\ \hline
-				\$R13 & RVAL12  \\ \hline
-				\$R14 & RVAL13  \\ \hline
-				\$R15 & RVAL14  \\ \hline
-				\$R16 & GPR10  \\ \hline
-				\$R17 & GPR11  \\ \hline
-				\$R18 & GPR12  \\ \hline
-				\$R19 & GPR13  \\ \hline
-				\$R20 & GPR14  \\ \hline
-				\$R21 & GPR15  \\ \hline
-				\$R22 & GPR16  \\ \hline
-				\$R23 & GPR17  \\ \hline
-				\$R24 & TMPR10  \\ \hline
-				\$R25 & TMPR11  \\ \hline
-				\$R26 & TMPR12  \\ \hline
-				\$R27 & TMPR13  \\ \hline
-				\$R28 & TMPR14  \\ \hline
-				\$R29 & TMPR15  \\ \hline
-				\$R30 & REGHI1  \\ \hline
-				\$R31 & REGLOW1  \\ \hline
 			\end{tabular}
 		}
 		\hfill
@@ -222,15 +181,109 @@ required to denote the register file space used.
 		}
 %		\end{center}
 	\end{figure}
+	\begin{figure}
+		\caption{Special Registers}
+		\parbox{0.2\linewidth}{
+			\centering
+			\fontsize{6}{8}\selectfont
+			\begin{tabular}{|l|l|}
+				\hline
+				\multicolumn{2}{|c|}{Control Registers} \\
+				\hline
+				Register Name & Description \\ \hline
+				\$R0  & ZERO \\ 	\hline
+				\$R1  & SP0 \\ 	\hline
+				\$R2  & FP0 \\ 	\hline
+				\$R3  & GP0 \\ 	\hline
+				\$R4  & RA0 \\ 	\hline
+				\$R5  & ARG00 \\ 	\hline
+				\$R6  & ARG01 \\ 	\hline
+				\$R7  & ARG02 \\ 	\hline
+				\$R8  & ARG03 \\ 	\hline
+				\$R9  & ARG04 \\ 	\hline
+				\$R10 & ARG05 \\ \hline
+				\$R11 & RVAL00  \\ \hline
+				\$R12 & RVAL01  \\ \hline
+				\$R13 & RVAL02  \\ \hline
+				\$R14 & RVAL03  \\ \hline
+				\$R15 & RVAL04  \\ \hline
+				\$R16 & GPR00  \\ \hline
+				\$R17 & GPR01  \\ \hline
+				\$R18 & GPR02  \\ \hline
+				\$R19 & GPR03  \\ \hline
+				\$R20 & GPR04  \\ \hline
+				\$R21 & GPR05  \\ \hline
+				\$R22 & GPR06  \\ \hline
+				\$R23 & GPR07  \\ \hline
+				\$R24 & TMPR00  \\ \hline
+				\$R25 & TMPR01  \\ \hline
+				\$R26 & TMPR02  \\ \hline
+				\$R27 & TMPR03  \\ \hline
+				\$R28 & TMPR04  \\ \hline
+				\$R29 & TMPR05  \\ \hline
+				\$R30 & REGHI0  \\ \hline
+				\$R31 & REGLOW0  \\ \hline
+			\end{tabular}
+		}
+		\hfill
+		\parbox{0.2\linewidth}{
+			\centering
+			\fontsize{6}{8}\selectfont
+			\begin{tabular}{|l|l|}
+				\hline
+				\multicolumn{2}{|c|}{Supervisor Registers} \\
+				\hline
+				Register Name & Description \\ \hline
+				\$R0  & ZERO \\ 	\hline
+				\$R1  & SP0 \\ 	\hline
+				\$R2  & FP0 \\ 	\hline
+				\$R3  & GP0 \\ 	\hline
+				\$R4  & RA0 \\ 	\hline
+				\$R5  & ARG00 \\ 	\hline
+				\$R6  & ARG01 \\ 	\hline
+				\$R7  & ARG02 \\ 	\hline
+				\$R8  & ARG03 \\ 	\hline
+				\$R9  & ARG04 \\ 	\hline
+				\$R10 & ARG05 \\ \hline
+				\$R11 & RVAL00  \\ \hline
+				\$R12 & RVAL01  \\ \hline
+				\$R13 & RVAL02  \\ \hline
+				\$R14 & RVAL03  \\ \hline
+				\$R15 & RVAL04  \\ \hline
+				\$R16 & GPR00  \\ \hline
+				\$R17 & GPR01  \\ \hline
+				\$R18 & GPR02  \\ \hline
+				\$R19 & GPR03  \\ \hline
+				\$R20 & GPR04  \\ \hline
+				\$R21 & GPR05  \\ \hline
+				\$R22 & GPR06  \\ \hline
+				\$R23 & GPR07  \\ \hline
+				\$R24 & TMPR00  \\ \hline
+				\$R25 & TMPR01  \\ \hline
+				\$R26 & TMPR02  \\ \hline
+				\$R27 & TMPR03  \\ \hline
+				\$R28 & TMPR04  \\ \hline
+				\$R29 & TMPR05  \\ \hline
+				\$R30 & REGHI0  \\ \hline
+				\$R31 & REGLOW0  \\ \hline
+			\end{tabular}
+		}
+	\end{figure}
 \subsection{General Purpose Registers}
-\paragraph{}32 general purpose registers that are 32 bits wide are available, as shown in Figure 1, below.
+\paragraph{}32 general purpose registers that are 32 bits wide are available, as shown in Figure 1, in the previous section. 
 	
 
 \paragraph{NOTE:} In writing programs, register arguments and return values can be used to reduce the number of registers used between processes. 
 
-\paragraph{}While it is not defined by the architecture, larger general purpose registers can be used instead of 32 bit wide registers. If larger registers are needed, consider using a co-processor to for instructions that require larger operands. This provides code compatibility between different implementations.
+\paragraph{}While it is not defined by the architecture, larger general purpose registers can be used instead of 32 bit wide registers. 
+If larger registers are needed, consider using a co-processor to for instructions that require larger operands. 
+This provides code compatibility between different implementations.
 \subsection{Special Registers}
+\paragraph{}The special registers are sorted between the Control Registers and the Supervisor Registers. The control registers provide
+simple configuration values and some read-only registers to give the programmer information about the implementation. The supervisor
+registers provide control for 
 \subsubsection{Control Registers}
+\paragraph{Bank Switching} Bank switching is controlled by the \textbf{BSELRF} register
 \subsubsection{Supervisor Registers}
 \subsection{Adding Registers}
 
@@ -292,7 +345,7 @@ to take the instruction fetch output directly.
 \subsubsection{Floating Point}
 \subsubsection{System Unit}
 \subsubsection{Memory Management Unit}
-\subsubsection{}
+\subsubsection{Multiprocessor Commnuication Unit}
 
 \section{Recommended Co-Processors}
 \subsection{Floating Point Unit}
@@ -302,6 +355,9 @@ to take the instruction fetch output directly.
 \subsubsection{Registers}
 \subsubsection{Instructions}
 \subsection{Memory Management Unit}
+\subsubsection{Registers}
+\subsubsection{Instructions}
+\subsection{Multiprocessor Communication Unit}
 \subsubsection{Registers}
 \subsubsection{Instructions}
 
