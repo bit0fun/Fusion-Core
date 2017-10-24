@@ -186,86 +186,31 @@ for a minimal system, though more can certainly be implemented if required. Each
 		\parbox{0.2\linewidth}{
 			\centering
 			\fontsize{6}{8}\selectfont
-			\begin{tabular}{|l|l|}
+			\begin{tabular}{|l|l|l|}
 				\hline
-				\multicolumn{2}{|c|}{Control Registers} \\
+				\multicolumn{3}{|c|}{Control Registers} \\
 				\hline
-				Register Name & Description \\ \hline
-				\$R0  & ZERO \\ 	\hline
-				\$R1  & SP0 \\ 	\hline
-				\$R2  & FP0 \\ 	\hline
-				\$R3  & GP0 \\ 	\hline
-				\$R4  & RA0 \\ 	\hline
-				\$R5  & ARG00 \\ 	\hline
-				\$R6  & ARG01 \\ 	\hline
-				\$R7  & ARG02 \\ 	\hline
-				\$R8  & ARG03 \\ 	\hline
-				\$R9  & ARG04 \\ 	\hline
-				\$R10 & ARG05 \\ \hline
-				\$R11 & RVAL00  \\ \hline
-				\$R12 & RVAL01  \\ \hline
-				\$R13 & RVAL02  \\ \hline
-				\$R14 & RVAL03  \\ \hline
-				\$R15 & RVAL04  \\ \hline
-				\$R16 & GPR00  \\ \hline
-				\$R17 & GPR01  \\ \hline
-				\$R18 & GPR02  \\ \hline
-				\$R19 & GPR03  \\ \hline
-				\$R20 & GPR04  \\ \hline
-				\$R21 & GPR05  \\ \hline
-				\$R22 & GPR06  \\ \hline
-				\$R23 & GPR07  \\ \hline
-				\$R24 & TMPR00  \\ \hline
-				\$R25 & TMPR01  \\ \hline
-				\$R26 & TMPR02  \\ \hline
-				\$R27 & TMPR03  \\ \hline
-				\$R28 & TMPR04  \\ \hline
-				\$R29 & TMPR05  \\ \hline
-				\$R30 & REGHI0  \\ \hline
-				\$R31 & REGLOW0  \\ \hline
+					Register Name & Description & Address (Hex) \\ \hline
+					CPUREV  & CPU Revision 							& $0x00000000$\\ 	\hline
+					CPO0  	& Co-Processor 0 Information 			& $0x00000004$\\ 	\hline
+					CPO1  	& Co-Processor 1 Information 			& $0x00000008$\\ 	\hline
+					CPO2  	& Co-Processor 2 Information 			& $0x0000000c$\\ 	\hline
+					CPO3  	& Co-Processor 3 Information 			& $0x00000010$\\ 	\hline
+					STATUS  & Status Register						& $0x00000014$ \\ 	\hline
+					BSELRF  & Bank Selection for GP Register File 	&	\\ 	\hline
+					\$
 			\end{tabular}
 		}
 		\hfill
 		\parbox{0.2\linewidth}{
 			\centering
 			\fontsize{6}{8}\selectfont
-			\begin{tabular}{|l|l|}
+			\begin{tabular}{|l|l|l|}
 				\hline
-				\multicolumn{2}{|c|}{Supervisor Registers} \\
+				\multicolumn{3}{|c|}{Supervisor Registers} \\
 				\hline
-				Register Name & Description \\ \hline
-				\$R0  & ZERO \\ 	\hline
-				\$R1  & SP0 \\ 	\hline
-				\$R2  & FP0 \\ 	\hline
-				\$R3  & GP0 \\ 	\hline
-				\$R4  & RA0 \\ 	\hline
-				\$R5  & ARG00 \\ 	\hline
-				\$R6  & ARG01 \\ 	\hline
-				\$R7  & ARG02 \\ 	\hline
-				\$R8  & ARG03 \\ 	\hline
-				\$R9  & ARG04 \\ 	\hline
-				\$R10 & ARG05 \\ \hline
-				\$R11 & RVAL00  \\ \hline
-				\$R12 & RVAL01  \\ \hline
-				\$R13 & RVAL02  \\ \hline
-				\$R14 & RVAL03  \\ \hline
-				\$R15 & RVAL04  \\ \hline
-				\$R16 & GPR00  \\ \hline
-				\$R17 & GPR01  \\ \hline
-				\$R18 & GPR02  \\ \hline
-				\$R19 & GPR03  \\ \hline
-				\$R20 & GPR04  \\ \hline
-				\$R21 & GPR05  \\ \hline
-				\$R22 & GPR06  \\ \hline
-				\$R23 & GPR07  \\ \hline
-				\$R24 & TMPR00  \\ \hline
-				\$R25 & TMPR01  \\ \hline
-				\$R26 & TMPR02  \\ \hline
-				\$R27 & TMPR03  \\ \hline
-				\$R28 & TMPR04  \\ \hline
-				\$R29 & TMPR05  \\ \hline
-				\$R30 & REGHI0  \\ \hline
-				\$R31 & REGLOW0  \\ \hline
+					Register Name & Description & Address (Hex)\\ \hline
+					\$ SUPEN & Supervisor mode enable & $0x00000000$ \\ 	\hline
 			\end{tabular}
 		}
 	\end{figure}
@@ -283,7 +228,28 @@ This provides code compatibility between different implementations.
 simple configuration values and some read-only registers to give the programmer information about the implementation. The supervisor
 registers provide control for 
 \subsubsection{Control Registers}
+\paragraph{CPUREV} Read only register that lets the programmer know what revision the CPU is. 
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multicolumn{32}{|c|}{CPUREV: CPU Revision}
+			\hline
+			31 & 30 & 29 & 28 & 27 & 26 & 25 & 24 & 23 & 22 & 21 & 20 & 19 & 18 & 17 & 16 & 15 & 14 & 13 & 12 & 11 & 10 & 9 & 8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\
+			\hline
+				
+			\hline
+	\end{tabular}
 \paragraph{Bank Switching} Bank switching is controlled by the \textbf{BSELRF} register
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			\multicolumn{32}{|c|}{BSELRF: Bank Selection Register}
+			\hline
+			31 & 30 & 29 & 28 & 27 & 26 & 25 & 24 & 23 & 22 & 21 & 20 & 19 & 18 & 17 & 16 & 15 & 14 & 13 & 12 & 11 & 10 & 9 & 8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\
+			\hline
+
+			\hline
+
+
+
 \subsubsection{Supervisor Registers}
 \subsection{Adding Registers}
 
