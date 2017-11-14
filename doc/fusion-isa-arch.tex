@@ -1,6 +1,6 @@
 \documentclass[letterpaper, 11pt]{article}
 \usepackage{graphicx}
-\usepackage[left=1.00in, right=1.00in, top=1.00in, bottom=1.00in]{geometry}
+\usepackage[left=1in, right=1in, top=1.00in, bottom=1.00in]{geometry}
 \usepackage{subfigure}
 \usepackage{hyperref}
 \hypersetup{colorlinks=false,linktoc=all}
@@ -51,7 +51,7 @@ for a minimal system, though more can certainly be implemented if required. Each
 	\begin{figure}[!h]
 		\caption{General Purpose Registers}
 	%	\begin{center}
-		\parbox{0.2\linewidth}{
+		\parbox{0.05\linewidth}{
 			\centering
 			\fontsize{6}{8}\selectfont
 			\begin{tabular}{|l|l|}
@@ -68,33 +68,33 @@ for a minimal system, though more can certainly be implemented if required. Each
 				\$R6  & ARG01 \\ 	\hline
 				\$R7  & ARG02 \\ 	\hline
 				\$R8  & ARG03 \\ 	\hline
-				\$R9  & ARG04 \\ 	\hline
-				\$R10 & ARG05 \\ \hline
-				\$R11 & RVAL00  \\ \hline
-				\$R12 & RVAL01  \\ \hline
-				\$R13 & RVAL02  \\ \hline
-				\$R14 & RVAL03  \\ \hline
-				\$R15 & RVAL04  \\ \hline
-				\$R16 & GPR00  \\ \hline
-				\$R17 & GPR01  \\ \hline
-				\$R18 & GPR02  \\ \hline
-				\$R19 & GPR03  \\ \hline
-				\$R20 & GPR04  \\ \hline
-				\$R21 & GPR05  \\ \hline
-				\$R22 & GPR06  \\ \hline
-				\$R23 & GPR07  \\ \hline
-				\$R24 & TMPR00  \\ \hline
-				\$R25 & TMPR01  \\ \hline
-				\$R26 & TMPR02  \\ \hline
-				\$R27 & TMPR03  \\ \hline
-				\$R28 & TMPR04  \\ \hline
-				\$R29 & TMPR05  \\ \hline
-				\$R30 & REGHI0  \\ \hline
-				\$R31 & REGLOW0  \\ \hline
+				\$R9  & RVAL00 \\ 	\hline
+				\$R10 & RVAL01 \\ \hline
+				\$R11 & GR00  \\ \hline
+				\$R12 & GR01  \\ \hline
+				\$R13 & GR02  \\ \hline
+				\$R14 & GR03  \\ \hline
+				\$R15 & GR04  \\ \hline
+				\$R16 & GR05  \\ \hline
+				\$R17 & GR06  \\ \hline
+				\$R18 & GR07  \\ \hline
+				\$R19 & GR08  \\ \hline
+				\$R20 & GR09  \\ \hline
+				\$R21 & GR10  \\ \hline
+				\$R22 & TMP00  \\ \hline
+				\$R23 & TMP01 \\ \hline
+				\$R24 & TMP02  \\ \hline
+				\$R25 & TMP03  \\ \hline
+				\$R26 & TMP04  \\ \hline
+				\$R27 & TMP05  \\ \hline
+				\$R28 & TMP06  \\ \hline
+				\$R29 & TMP07  \\ \hline
+				\$R30 & HI0  \\ \hline
+				\$R31 & LOW0  \\ \hline
 			\end{tabular}
 		}
 		\hfill
-		\parbox{0.2\linewidth}{
+		\parbox{0\linewidth}{
 			\centering
 			\fontsize{6}{8}\selectfont
 			\begin{tabular}{|l|l|}
@@ -137,8 +137,8 @@ for a minimal system, though more can certainly be implemented if required. Each
 			\end{tabular}
 		}
 		\hfill
-		\parbox{0.2\linewidth}{
-			\centering
+		\parbox{0.25\linewidth}{
+			\centering\fontsize{6}{8}\selectfont.5
 			\fontsize{6}{8}\selectfont
 			\begin{tabular}{|l|l|}
 				\hline
@@ -183,7 +183,7 @@ for a minimal system, though more can certainly be implemented if required. Each
 	\end{figure}
 	\begin{figure}
 		\caption{Special Registers}
-		\parbox{0.2\linewidth}{
+		\parbox{0\linewidth}{
 			\centering
 			\fontsize{6}{8}\selectfont
 			\begin{tabular}{|l|l|l|}
@@ -191,18 +191,17 @@ for a minimal system, though more can certainly be implemented if required. Each
 				\multicolumn{3}{|c|}{Control Registers} \\
 				\hline
 					Register Name & Description & Address (Hex) \\ \hline
-					CPUREV  & CPU Revision 							& $0x00000000$\\ 	\hline
-					CPO0  	& Co-Processor 0 Information 			& $0x00000004$\\ 	\hline
-					CPO1  	& Co-Processor 1 Information 			& $0x00000008$\\ 	\hline
-					CPO2  	& Co-Processor 2 Information 			& $0x0000000c$\\ 	\hline
-					CPO3  	& Co-Processor 3 Information 			& $0x00000010$\\ 	\hline
-					STATUS  & Status Register						& $0x00000014$ \\ 	\hline
-					BSELRF  & Bank Selection for GP Register File 	&	\\ 	\hline
+					CPUREV  & CPU Revision 							& 0x00000000\\ 	\hline
+					CPO0  	& Co-Processor 0 Information 			& 0x00000004\\ 	\hline
+					CPO1  	& Co-Processor 1 Information 			& 0x00000008\\ 	\hline
+					CPO2  	& Co-Processor 2 Information 			& 0x0000000c\\ 	\hline
+					CPO3  	& Co-Processor 3 Information 			& 0x00000010\\ 	\hline
+					STATUS  & Status Register						& 0x00000014 \\ 	\hline
 					\$
 			\end{tabular}
 		}
 		\hfill
-		\parbox{0.2\linewidth}{
+		\parbox{0.4 \linewidth}{
 			\centering
 			\fontsize{6}{8}\selectfont
 			\begin{tabular}{|l|l|l|}
@@ -210,7 +209,8 @@ for a minimal system, though more can certainly be implemented if required. Each
 				\multicolumn{3}{|c|}{Supervisor Registers} \\
 				\hline
 					Register Name & Description & Address (Hex)\\ \hline
-					\$ SUPEN & Supervisor mode enable & $0x00000000$ \\ 	\hline
+					SMSTAT & Supervisor mode status register & 0x00000000 \\ 	\hline
+				    PRCPR0 & Process Pointer register 0 & 0x00000004	\\ \hline 
 			\end{tabular}
 		}
 	\end{figure}
@@ -228,26 +228,27 @@ This provides code compatibility between different implementations.
 simple configuration values and some read-only registers to give the programmer information about the implementation. The supervisor
 registers provide control for 
 \subsubsection{Control Registers}
-\paragraph{CPUREV} Read only register that lets the programmer know what revision the CPU is. 
-	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-			\hline
-			\multicolumn{32}{|c|}{CPUREV: CPU Revision}
-			\hline
-			31 & 30 & 29 & 28 & 27 & 26 & 25 & 24 & 23 & 22 & 21 & 20 & 19 & 18 & 17 & 16 & 15 & 14 & 13 & 12 & 11 & 10 & 9 & 8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\
-			\hline
-				
-			\hline
+\paragraph{CPUREV} Read only register that lets the programmer know what revision the CPU is. \\
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+			\multicolumn{6}{|c|}{CPUREV: CPU Revision} \\
+		\hline
+		\hline
+		
 	\end{tabular}
-\paragraph{Bank Switching} Bank switching is controlled by the \textbf{BSELRF} register
-	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-			\hline
-			\multicolumn{32}{|c|}{BSELRF: Bank Selection Register}
-			\hline
-			31 & 30 & 29 & 28 & 27 & 26 & 25 & 24 & 23 & 22 & 21 & 20 & 19 & 18 & 17 & 16 & 15 & 14 & 13 & 12 & 11 & 10 & 9 & 8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\
-			\hline
+\end{center}
 
-			\hline
 
+\paragraph{Bank Switching} Bank switching is controlled by the \textbf{BSELRF} register\\
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\hline
+		\hline
+		
+	\end{tabular}
+\end{center}	
 
 
 \subsubsection{Supervisor Registers}
@@ -256,11 +257,117 @@ registers provide control for
 
 \section{Instruction Definitions}
 \subsection{Instruction Types}
+\paragraph{}This section will talk about the different instructions available in the core processor, their encodings, function, and hazards
+they cause or registers they affect in the processor. The Co-Processor instructions are purlely generic and allow the implementation of
+each Co-Processor to determine how their respective instructions will be decoded. Only the Operation Codes will be defined for each 
+Co-Processor slot to allow for more customization.
+\paragraph{}How these OPCodes are allocated is to be determined and does not have a strict definiton
+at this time. There exists four different ideas for definitions: a single OPCode for all co-processor instructions; A single bit in the OPCode field
+to indicate a Co-Processor instruction; 
 \subsubsection{Integer}
+\paragraph{}The interger instructions are the heart of this processor's arithmetic abilities and is vital to ensure fast execution. A semi-strict
+adherence to RISC philosophy in this architecture is required to exploit any benefits to this ISA in a real implementation.
+\paragraph{}The integer instruction coding is shown in the diagram below.
+
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\multicolumn{6}{c}{Register/Integer Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		
+	\end{tabular}
+\end{center}	
+
+
+
+
 \subsubsection{Immediate}
+
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\multicolumn{6}{c}{Immediate Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		
+	\end{tabular}
+\end{center}
+
 \subsubsection{Load/Store}
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\multicolumn{6}{c}{Load Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		
+	\end{tabular}
+\end{center}
+\vspace{0.5cm}
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+				\multicolumn{6}{c}{Load Immediate Instrution Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		
+	\end{tabular}
+\end{center}
+\vspace{0.5cm}
+
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\multicolumn{6}{c}{Store Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		
+	\end{tabular}
+\end{center}
 \subsubsection{Branch/Jump}
+
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\multicolumn{6}{c}{Jump Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		
+	\end{tabular}
+\end{center}	
+
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\multicolumn{6}{c}{Jump Register Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		
+	\end{tabular}
+\end{center}
+
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\multicolumn{6}{c}{Branch Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		
+	\end{tabular}
+\end{center}
+
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\multicolumn{6}{c}{Register/Integer instruction}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		
+	\end{tabular}
+\end{center}
+
 \subsubsection{Co-Processor}
+
+\begin{center}
+		\begin{tabular}{|c|c|c|c|c|c|}
+				\multicolumn{6}{c}{Co-Processor Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		
+	\end{tabular}
+\end{center}	
 \subsection{List of Instructions}
 \subsubsection{Integer}
 \subsubsection{Immediate}
