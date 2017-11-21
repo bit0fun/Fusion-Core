@@ -261,13 +261,10 @@ registers provide control for
 they cause or registers they affect in the processor. The Co-Processor instructions are purlely generic and allow the implementation of
 each Co-Processor to determine how their respective instructions will be decoded. Only the Operation Codes will be defined for each 
 Co-Processor slot to allow for more customization.
-\paragraph{}How these OPCodes are allocated is to be determined and does not have a strict definiton
-at this time. There exists four different ideas for definitions: a single OPCode for all co-processor instructions; A single bit in the OPCode field
-to indicate a Co-Processor instruction; 
 \subsubsection{Integer}
 \paragraph{}The interger instructions are the heart of this processor's arithmetic abilities and is vital to ensure fast execution. A semi-strict
 adherence to RISC philosophy in this architecture is required to exploit any benefits to this ISA in a real implementation.
-\paragraph{}The integer instruction coding is shown in the diagram below.
+\paragraph{}The integer instruction coding is shown in the diagrams below.
 
 \begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
@@ -284,76 +281,68 @@ adherence to RISC philosophy in this architecture is required to exploit any ben
 \subsubsection{Immediate}
 
 \begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
-			\multicolumn{6}{c}{Immediate Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		\begin{tabular}{|c|c|c|c|c|}
+			\multicolumn{5}{c}{Immediate Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Immediate  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15  \hfill   4&3 \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}
 
 \subsubsection{Load/Store}
 \begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
-			\multicolumn{6}{c}{Load Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		\begin{tabular}{|c|c|c|c|}
+			\multicolumn{4}{c}{Load Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt} Immediate \hspace{10pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill 0\\ \hline
 		
 	\end{tabular}
 \end{center}
 \vspace{0.5cm}
 \begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
-				\multicolumn{6}{c}{Load Immediate Instrution Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		\begin{tabular}{|c|c|c|c|}
+				\multicolumn{4}{c}{Load Immediate Instrution Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} DSEL \hspace{4pt} & \hspace{10pt}Immediate  \hspace{10pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15  \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}
 \vspace{0.5cm}
 
 \begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
-			\multicolumn{6}{c}{Store Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		\begin{tabular}{|c|c|c|c|c|}
+			\multicolumn{5}{c}{Store Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} Immediate[15:11] \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}Immediate[10:0]  \hspace{10pt}    \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill  0\\ \hline
 		
 	\end{tabular}
 \end{center}
 \subsubsection{Branch/Jump}
 
 \begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
-			\multicolumn{6}{c}{Jump Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		\begin{tabular}{|c|c|c|c|}
+			\multicolumn{4}{c}{Jump Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt} Immediate  \hspace{10pt}   \\	\hline
+							31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}	
 
-\begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
-			\multicolumn{6}{c}{Jump Register Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
-		
-	\end{tabular}
-\end{center}
 
 \begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
 			\multicolumn{6}{c}{Branch Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} Immediate[11:7] \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}Immediate[6:0]  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
 			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}
 
 \begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
-			\multicolumn{6}{c}{Register/Integer instruction}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+		\begin{tabular}{|c|c|c|c|}
+			\multicolumn{4}{c}{System instruction}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Immediate  \hspace{10pt}  \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15  \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}
