@@ -29,7 +29,7 @@
 `include compare_32.v
 `include decrement_32.v
 
-module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, flag_neg);
+module ALU(
 //32 bit ALU, will upgrade to 64 bit after tests are done.
 
 	//Values from register file to operate on
@@ -47,7 +47,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	output flag_overflow;
 	output flag_parity; //even parity of output, 1 valid, 0 invalid
 	output flag_neg; //output is negative
-
+	);
 
 	/*Wires*/
 	wire [31:0] to_out;

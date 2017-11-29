@@ -256,7 +256,7 @@ registers provide control for
 
 
 \section{Instruction Definitions}
-\subsection{Instruction Types}
+\subsection{Instruction Format Types}
 \paragraph{}This section will talk about the different instructions available in the core processor, their encodings, function, and hazards
 they cause or registers they affect in the processor. The Co-Processor instructions are purlely generic and allow the implementation of
 each Co-Processor to determine how their respective instructions will be decoded. Only the Operation Codes will be defined for each 
@@ -264,17 +264,20 @@ Co-Processor slot to allow for more customization.
 \subsubsection{Integer}
 \paragraph{}The interger instructions are the heart of this processor's arithmetic abilities and is vital to ensure fast execution. A semi-strict
 adherence to RISC philosophy in this architecture is required to exploit any benefits to this ISA in a real implementation.
-\paragraph{}The integer instruction coding is shown in the diagrams below.
+\paragraph{}The integer instruction coding with descriptions, is shown in the diagrams below.
 
 \begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
 			\multicolumn{6}{c}{Register/Integer Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+				\hspace{2pt} opcode (0x01) \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
 			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}	
-
+\paragraph{Overview:}The Register/Integer Instructions are basic ALU operations, without immediates. Registers RSa and RSb are the two operands,which
+are stored in register Rd. The 4 bit ALUOP field denotes the settings for the ALU, to reduce complexity of selecting what operation to choose.
+The shft bits are only for the shift amount with the shifting instructions, but unused for other instructions. 
+\paragraph{}The following instructions use this encoding:
 
 
 
@@ -357,6 +360,7 @@ adherence to RISC philosophy in this architecture is required to exploit any ben
 		
 	\end{tabular}
 \end{center}	
+\subsection{List of OPCodes}
 \subsection{List of Instructions}
 \subsubsection{Integer}
 \subsubsection{Immediate}
