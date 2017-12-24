@@ -23,23 +23,25 @@
 \section{Introduction}
 
 \subsection{About}
-\paragraph{}The Fusion-Core ISA is dedicated to creating an easily expandible architecture without altering
-the instruction set. By use of defining an easy interface with a simple core instruction set, this allows for
-more freedom in implementation. High end processors and microcontrollers would only have slight varaitions in
+\paragraph{Introduction}The Fusion-Core ISA is dedicated to creating an easily expandible architecture without having to 
+recompile a program's binary. By use of defining an easy interface with a simple core instruction set, this allows for
+more freedom in implementation. High end processors and microcontrollers would only require slight varaitions in
 configuration, as their core would remain identical save for easy to maintain and scalable co-processors.
-\paragraph{}The architecture is Big endian, with a core instruction set that is RISC, but the co-processors do not need to adhere to the RISC philosophy. This allows for more flexibility in design, and possibly faster core clock speeds as the pipeline would depend on smaller amounts of logic. Only the instructions provided in this document are to be implemented in the main processor. The co-processors defined in this document are recommended, but not required for normal function. Co-processor documentation is to be provided by the creator, and should adhere to the standards of clarity and conciseness such that it can be easily implemented from the documentation alone in a HDL. 
+\paragraph{Main Ideas}The architecture is Big endian, with a core instruction set that is RISC, but the co-processors do not need to adhere to the RISC philosophy. This allows for more flexibility in design, and possibly faster core clock speeds as the pipeline would depend on smaller amounts of logic. Only the instructions provided in this document are to be implemented in the main processor. The co-processors defined in this document are recommended, but not required for normal function. Co-processor documentation is to be provided by the creator, and should adhere to the standards of clarity and conciseness such that it can be easily implemented from the documentation alone in a HDL. 
 \paragraph{64 Bit instructions:}At this moment in time, the Fusion-Core ISA is only a 32 bit ISA. Due to the focus on co-processors,
 older implementations could easily be modified to include 64 bit operations.
-
+\paragraph{Co-Processors}The Co-Processor interface is currently defined by setting the MSB within the OP Code field of 
+an instruction, to decrease complexity of the Decode unit. In doing so, this allows for coprocessor code to be written in the same memory space as the main processor code. In the current iteration, up to 32 different coprocessors can be used, with the option for dynamic or static allocation of the OP Codes. The interface for the coprocessors is explained further in the dedicated section.
 
 \subsection{Goals}
+\paragraph{}The main goal is to provide an architecture with a simple decoding unit and the ability to utilize a single binary for all implementations of the architecture.
 \subsection{Conventions}
 \paragraph{Document Conventions:}Example code will be shown with \texttt{monospace} text. General purpose registers will be denoted with
-\$R\# where \# is the number of the register. Special purpose registers will be presented with \textbf{bold} text.
-\paragraph{Naming Conventions:}The name of input signals will have "\_in" after the signal name, with "\_out" after output signals.
-This is mainly used in the verilog example implementation. If a naming convention is not globally used, it will be stated in the individual section that it pertains to. 
+\$R\# where \# is the number of the register. Special purpose registers will be written with \textbf{bold} text.
+%\paragraph{Naming Conventions:}The name of input signals will have "\_in" after the signal name, with "\_out" after output signals.
+%This is mainly used in the verilog example implementation. If a naming convention is not globally used, it will be stated in the individual section that it pertains to. 
 
-
+\part{Programming Information}
 \section{Register File Definitions}
 \paragraph{}This section goes over the different registers available in the ISA. Each register file name begins with 
 "REGF", such as the first General Purpose Register File being REGFGP0. Any additional register files require the number after the
@@ -48,191 +50,158 @@ required to denote the register file space used.
 \paragraph{}To alleviate context switching delays, three general purpose register files are bank availble by bank switching. Only these register files are required
 for a minimal system, though more can certainly be implemented if required. Each register file can be accessed by changing the value in the BSELRF register. 
 \subsection{Register File List}
-	\begin{figure}[!h]
-		\caption{General Purpose Registers}
+\begin{figure}[!h]
+	\caption{General Purpose Registers}
 	%	\begin{center}
-		\parbox{0.05\linewidth}{
-			\centering
-			\fontsize{6}{8}\selectfont
-			\begin{tabular}{|l|l|}
-				\hline
-				\multicolumn{2}{|c|}{REGFGP0} \\
-				\hline
-				Register & Register Name \\ \hline
-				\$R0  & ZERO \\ 	\hline
-				\$R1  & SP0 \\ 	\hline
-				\$R2  & FP0 \\ 	\hline
-				\$R3  & GP0 \\ 	\hline
-				\$R4  & RA0 \\ 	\hline
-				\$R5  & ARG00 \\ 	\hline
-				\$R6  & ARG01 \\ 	\hline
-				\$R7  & ARG02 \\ 	\hline
-				\$R8  & ARG03 \\ 	\hline
-				\$R9  & RVAL00 \\ 	\hline
-				\$R10 & RVAL01 \\ \hline
-				\$R11 & GR00  \\ \hline
-				\$R12 & GR01  \\ \hline
-				\$R13 & GR02  \\ \hline
-				\$R14 & GR03  \\ \hline
-				\$R15 & GR04  \\ \hline
-				\$R16 & GR05  \\ \hline
-				\$R17 & GR06  \\ \hline
-				\$R18 & GR07  \\ \hline
-				\$R19 & GR08  \\ \hline
-				\$R20 & GR09  \\ \hline
-				\$R21 & GR10  \\ \hline
-				\$R22 & TMP00  \\ \hline
-				\$R23 & TMP01 \\ \hline
-				\$R24 & TMP02  \\ \hline
-				\$R25 & TMP03  \\ \hline
-				\$R26 & TMP04  \\ \hline
-				\$R27 & TMP05  \\ \hline
-				\$R28 & TMP06  \\ \hline
-				\$R29 & TMP07  \\ \hline
-				\$R30 & HI0  \\ \hline
-				\$R31 & LOW0  \\ \hline
-			\end{tabular}
-		}
-		\hfill
-		\parbox{0\linewidth}{
-			\centering
-			\fontsize{6}{8}\selectfont
-			\begin{tabular}{|l|l|}
-				\hline
-				\multicolumn{2}{|c|}{REGFEXCP} \\
-				\hline
-				Register & Register Name \\ \hline
-				\$R0  & ZERO \\ 	\hline
-				\$R1  & SP1 \\ 	\hline
-				\$R2  & FP1 \\ 	\hline
-				\$R3  & GP1 \\ 	\hline
-				\$R4  & RA1 \\ 	\hline
-				\$R5  & ARG0 \\ 	\hline
-				\$R6  & ARG1 \\ 	\hline
-				\$R7  & ARG2 \\ 	\hline
-				\$R8  & ARG3 \\ 	\hline
-				\$R9  & ARG4 \\ 	\hline
-				\$R10 & ARG5 \\ \hline
-				\$R11 & RVAL0  \\ \hline
-				\$R12 & RVAL1  \\ \hline
-				\$R13 & RVAL2  \\ \hline
-				\$R14 & RVAL3  \\ \hline
-				\$R15 & RVAL4  \\ \hline
-				\$R16 & GPR0  \\ \hline
-				\$R17 & GPR1  \\ \hline
-				\$R18 & GPR2  \\ \hline
-				\$R19 & GPR3  \\ \hline
-				\$R20 & GPR4  \\ \hline
-				\$R21 & GPR5  \\ \hline
-				\$R22 & GPR6  \\ \hline
-				\$R23 & GPR7  \\ \hline
-				\$R24 & TMPR0  \\ \hline
-				\$R25 & TMPR1  \\ \hline
-				\$R26 & TMPR2  \\ \hline
-				\$R27 & TMPR3  \\ \hline
-				\$R28 & TMPR4  \\ \hline
-				\$R29 & TMPR5  \\ \hline
-				\$R30 & REGHI1  \\ \hline
-				\$R31 & REGLOW1  \\ \hline
-			\end{tabular}
-		}
-		\hfill
-		\parbox{0.25\linewidth}{
-			\centering\fontsize{6}{8}\selectfont.5
-			\fontsize{6}{8}\selectfont
-			\begin{tabular}{|l|l|}
-				\hline
-				\multicolumn{2}{|c|}{REGFSYSCL0} \\
-				\hline
-				Register & Register Name \\ \hline
-				\$R0  & ZERO \\ 	\hline
-				\$R1  & SP1 \\ 	\hline
-				\$R2  & FP1 \\ 	\hline
-				\$R3  & GP1 \\ 	\hline
-				\$R4  & RA1 \\ 	\hline
-				\$R5  & SYSARG00 \\ 	\hline
-				\$R6  & SYSARG01 \\ 	\hline
-				\$R7  & SYSARG02 \\ 	\hline
-				\$R8  & SYSARG03 \\ 	\hline
-				\$R9  & SYSARG04 \\ 	\hline
-				\$R10 & SYSARG05 \\ \hline
-				\$R11 & SYSRVAL00  \\ \hline
-				\$R12 & SYSRVAL01  \\ \hline
-				\$R13 & SYSRVAL02  \\ \hline
-				\$R14 & SYSRVAL03  \\ \hline
-				\$R15 & SYSRVAL04  \\ \hline
-				\$R16 & SYSGPR00  \\ \hline
-				\$R17 & SYSGPR01  \\ \hline
-				\$R18 & SYSGPR02  \\ \hline
-				\$R19 & SYSGPR03  \\ \hline
-				\$R20 & SYSGPR04  \\ \hline
-				\$R21 & SYSGPR05  \\ \hline
-				\$R22 & SYSGPR06  \\ \hline
-				\$R23 & SYSGPR07  \\ \hline
-				\$R24 & SYSTMPR00  \\ \hline
-				\$R25 & SYSTMPR01  \\ \hline
-				\$R26 & SYSTMPR02  \\ \hline
-				\$R27 & SYSTMPR03  \\ \hline
-				\$R28 & SYSTMPR04  \\ \hline
-				\$R29 & SYSTMPR05  \\ \hline
-				\$R30 & SYSREGHI0  \\ \hline
-				\$R31 & SYSREGLOW0  \\ \hline
-			\end{tabular}
-		}
-%		\end{center}
-	\end{figure}
-	\begin{figure}
-		\caption{Special Registers}
-		\parbox{0\linewidth}{
-			\centering
-			\fontsize{6}{8}\selectfont
-			\begin{tabular}{|l|l|l|}
-				\hline
-				\multicolumn{3}{|c|}{Control Registers} \\
-				\hline
-					Register Name & Description & Address (Hex) \\ \hline
-					CPUREV  & CPU Revision 							& 0x00000000\\ 	\hline
-					CPO0  	& Co-Processor 0 Information 			& 0x00000004\\ 	\hline
-					CPO1  	& Co-Processor 1 Information 			& 0x00000008\\ 	\hline
-					CPO2  	& Co-Processor 2 Information 			& 0x0000000c\\ 	\hline
-					CPO3  	& Co-Processor 3 Information 			& 0x00000010\\ 	\hline
-					STATUS  & Status Register						& 0x00000014 \\ 	\hline
-					\$
-			\end{tabular}
-		}
-		\hfill
-		\parbox{0.4 \linewidth}{
-			\centering
-			\fontsize{6}{8}\selectfont
-			\begin{tabular}{|l|l|l|}
-				\hline
-				\multicolumn{3}{|c|}{Supervisor Registers} \\
-				\hline
-					Register Name & Description & Address (Hex)\\ \hline
-					SMSTAT & Supervisor mode status register & 0x00000000 \\ 	\hline
-				    PRCPR0 & Process Pointer register 0 & 0x00000004	\\ \hline 
-			\end{tabular}
-		}
-	\end{figure}
+	\parbox{0.5\linewidth}{
+		\centering
+		\fontsize{6}{8}\selectfont
+		\begin{tabular}{|l|l|}
+			\hline
+			\multicolumn{2}{|c|}{REGFGP0} \\
+			\hline
+			Register & Register Name \\ \hline
+			\$R0  & ZERO \\ 	\hline
+			\$R1  & SP0 \\ 	\hline
+			\$R2  & FP0 \\ 	\hline
+			\$R3  & GP0 \\ 	\hline
+			\$R4  & RA0 \\ 	\hline
+			\$R5  & ARG0 \\ 	\hline
+			\$R6  & ARG1 \\ 	\hline
+			\$R7  & ARG2 \\ 	\hline
+			\$R8  & ARG3 \\ 	\hline
+			\$R9  & RVAL0 \\ 	\hline
+			\$R10 & RVAL1 \\ \hline
+			\$R11 & GR0  \\ \hline
+			\$R12 & GR1  \\ \hline
+			\$R13 & GR2  \\ \hline
+			\$R14 & GR3  \\ \hline
+			\$R15 & GR4  \\ \hline
+			\$R16 & GR5  \\ \hline
+			\$R17 & GR6  \\ \hline
+			\$R18 & GR7  \\ \hline
+			\$R19 & GR8  \\ \hline
+			\$R20 & GR9  \\ \hline
+			\$R21 & GR10  \\ \hline
+			\$R22 & TMP0  \\ \hline
+			\$R23 & TMP1 \\ \hline
+			\$R24 & TMP2  \\ \hline
+			\$R25 & TMP3  \\ \hline
+			\$R26 & TMP4  \\ \hline
+			\$R27 & TMP5  \\ \hline
+			\$R28 & TMP6  \\ \hline
+			\$R29 & TMP7  \\ \hline
+			\$R30 & HI0  \\ \hline
+			\$R31 & LOW0  \\ \hline
+		\end{tabular}
+	}
+	\hfill
+	\parbox{0.5\linewidth}{
+		\centering\fontsize{6}{8}\selectfont
+		\fontsize{6}{8}\selectfont
+		\begin{tabular}{|l|l|}
+			\hline
+			\multicolumn{2}{|c|}{REGFSYSCL0} \\
+			\hline
+			Register & Register Name \\ \hline
+			\$R0  & ZERO \\ 	\hline
+			\$R1  & SP1 \\ 	\hline
+			\$R2  & FP1 \\ 	\hline
+			\$R3  & GP1 \\ 	\hline
+			\$R4  & RA1 \\ 	\hline
+			\$R5  & SYSARG0 \\ 	\hline
+			\$R6  & SYSARG1 \\ 	\hline
+			\$R7  & SYSARG2 \\ 	\hline
+			\$R8  & SYSARG3 \\ 	\hline
+			\$R9  & SYSARG4 \\ 	\hline
+			\$R10 & SYSARG5 \\ \hline
+			\$R11 & SYSRVAL0  \\ \hline
+			\$R12 & SYSRVAL1  \\ \hline
+			\$R13 & SYSRVAL2  \\ \hline
+			\$R14 & SYSRVAL3  \\ \hline
+			\$R15 & SYSRVAL4  \\ \hline
+			\$R16 & GPR0  \\ \hline
+			\$R17 & GPR1  \\ \hline
+			\$R18 & GPR2  \\ \hline
+			\$R19 & GPR3  \\ \hline
+			\$R20 & GPR4  \\ \hline
+			\$R21 & GPR5  \\ \hline
+			\$R22 & GPR6  \\ \hline
+			\$R23 & GPR7  \\ \hline
+			\$R24 & SYSTMPR0  \\ \hline
+			\$R25 & SYSTMPR1  \\ \hline
+			\$R26 & SYSTMPR2  \\ \hline
+			\$R27 & SYSTMPR3  \\ \hline
+			\$R28 & SYSTMPR4  \\ \hline
+			\$R29 & SYSTMPR5  \\ \hline
+			\$R30 & SYSREGHI0  \\ \hline
+			\$R31 & SYSREGLOW0  \\ \hline
+		\end{tabular}
+	}
+	%		\end{center}
+\end{figure}
+
+
+\begin{figure}
+	
+	\caption{Special Registers}
+	\begin{center}
+		\fontsize{6}{8}\selectfont
+		\begin{tabular}{|l|l|l|l|}
+			\hline
+			\multicolumn{4}{|c|}{System Registers} \\
+			\hline
+			Register Name & Description & Width (bytes) &Address (Hex) \\ \hline
+			CPUREV  & CPU Revision 				 & 	1		& 0x00000000\\ 	\hline
+			CPNUM	& Co-Processor Number		 &	1		& 0x00000001\\	\hline
+			CPO0  	& Co-Processor 0 ID 		 & 	2		& 0x00000002\\ 	\hline
+			CPO1  	& Co-Processor 1 ID 		 &	2		& 0x00000004\\ 	\hline
+			CPO2  	& Co-Processor 2 ID 		 &	2		& 0x00000006\\ 	\hline
+			CPO3  	& Co-Processor 3 ID 		 &	2		& 0x00000008\\ 	\hline
+			STATUS  & Status Register			 &	1		& 0x0000000a \\ 	\hline
+			n/a		& RESERVED				 	 &	1		& 0x0000000b \\ \hline
+			OPCAR	& Opcode Allocation Pointer	 &	4		& 0x0000000c \\ \hline
+			
+		\end{tabular}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\caption{Supervisor Registers}
+	
+	\begin{center}
+		\fontsize{6}{8}\selectfont
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\multicolumn{3}{|c|}{Supervisor Registers} \\
+			\hline
+			Register Name & Description & Address (Hex)\\ \hline
+			SMSTAT & Supervisor mode status register & 0x00000000 \\ 	\hline
+			PRCPR0 & Process Pointer register 0 & 0x00000004	\\ \hline 
+		\end{tabular}
+	\end{center}
+	
+\end{figure}
 \subsection{General Purpose Registers}
 \paragraph{}32 general purpose registers that are 32 bits wide are available, as shown in Figure 1, in the previous section. 
-	
+There is a distinction between the System Register File and the General Purpose Register File, as during certain syscall
+instructions, the register files are bank switched. Only GP0 through GP7 are saved, for passing between the different banks. 
 
-\paragraph{NOTE:} In writing programs, register arguments and return values can be used to reduce the number of registers used between processes. 
-
-\paragraph{}While it is not defined by the architecture, larger general purpose registers can be used instead of 32 bit wide registers. 
+\paragraph{}While it is not defined by the architecture, larger general purpose registers can be used instead of 32 bit wide registers. The System Register File allows 8 bit addressing for the registers to be accessed, in order to utilize more of the memory space.
 If larger registers are needed, consider using a co-processor to for instructions that require larger operands. 
 This provides code compatibility between different implementations.
 \subsection{Special Registers}
-\paragraph{}The special registers are sorted between the Control Registers and the Supervisor Registers. The control registers provide
-simple configuration values and some read-only registers to give the programmer information about the implementation. The supervisor
-registers provide control for 
-\subsubsection{Control Registers}
+\paragraph{}The special registers are sorted between the System Registers and the Supervisor Registers. The system registers provide
+simple configuration values and some read-only registers to give the programmer information about the implementation.
+The registers defined in this manual are the bare minimum special purpose registers, and
+should be included for code compatibility.
+The supervisor registers 
+\subsubsection{System Registers}
 \paragraph{CPUREV} Read only register that lets the programmer know what revision the CPU is. \\
 \begin{center}
 	\begin{tabular}{|c|c|c|c|c|c|}
 		\hline
-			\multicolumn{6}{|c|}{CPUREV: CPU Revision} \\
+		\multicolumn{6}{|c|}{CPUREV: CPU Revision} \\
 		\hline
 		\hline
 		
@@ -242,7 +211,7 @@ registers provide control for
 
 \paragraph{Bank Switching} Bank switching is controlled by the \textbf{BSELRF} register\\
 \begin{center}
-		\begin{tabular}{|c|c|c|c|c|}
+	\begin{tabular}{|c|c|c|c|c|}
 		\hline
 		\hline
 		\hline
@@ -254,7 +223,36 @@ registers provide control for
 \subsubsection{Supervisor Registers}
 \subsection{Adding Registers}
 
+\section{Memory}
+\paragraph{}At this point in time, the ISA only handles 32 bit addresses.
+With memory capacity increasing in size as time goes on, this may change. In order to access 
+larger sections of memory, the use of an offset register may be implemented to create 64 bit addresses.
+The use of virtual memory with said offset register is also accepted.
 
+\subsection{Memory Locations for Vector Table}
+\subsubsection{Interrupt Vector Table}
+\subsubsection{Exception Vector Table}
+
+
+\begin{figure}[!h]
+	\begin{center}
+		\begin{tabular}{|l|l|}
+			\hline
+			Address (32 bit) &  Definition\\ \hline
+			0x0000 & Reset \\ 	\hline
+			0x0004 & Co-Processor Microcode Exception \\ 	\hline
+			0x0008 &  \\ 	\hline
+			0x000c &  \\ 	\hline
+			0x0010 &  \\ 	\hline
+			0x0014 &  \\	\hline
+		\end{tabular} 
+		\caption{Exception Vector Table}
+	\end{center}
+	
+\end{figure} 
+
+
+\part{Instructions}
 \section{Instruction Definitions}
 \subsection{Instruction Format Types}
 \paragraph{}This section will talk about the different instructions available in the core processor, their encodings, function, and hazards
@@ -342,24 +340,17 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 \end{center}
 
 \begin{center}
-		\begin{tabular}{|c|c|c|c|}
-			\multicolumn{4}{c}{System instruction}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Immediate  \hspace{10pt}  \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15  \hfill   0\\ \hline
+	\begin{tabular}{|c|c|c|c|c|}
+		\multicolumn{5}{c}{System Instruction Format}\\ \hline
+		\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Function  \hspace{10pt} & \hspace{8pt} Immediate \hspace{8pt}   \\	\hline
+		31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  8&7 \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}
 
 \subsubsection{Co-Processor}
-
-\begin{center}
-		\begin{tabular}{|c|c|c|c|c|c|}
-				\multicolumn{6}{c}{Co-Processor Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
-		
-	\end{tabular}
-\end{center}	
+\paragraph{}Since the coprocessors can have any implementation, only the opcode is required. However, adhering to similar formatting of the instruction formats provided in previous sections is imperative and the Fusion-Core foundation will not provide an accepted coprocessor ID number. More information about coprocessors can be accessed in the Co-Processor section.
+	
 \subsection{List of OPCodes}
 \subsection{List of Instructions}
 \subsubsection{Integer}
@@ -378,6 +369,7 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 \subsubsection{User Level}
 \subsubsection{Supervisor Level}
 
+\part{Co-Processors}
 \section{Co-Processors}
 \paragraph{}Co-processors are the main point of the Fusion-Core archetecture. As the ISA only defines the main core, the implementator is free to use
 whichever co-processors that would be necessary for an application. Hardware acceleration for vector instructions, encryption, floating point, communication,
@@ -411,9 +403,10 @@ to take the instruction fetch output directly.
 \subsubsection{Floating Point}
 \subsubsection{System Unit}
 \subsubsection{Memory Management Unit}
-\subsubsection{Multiprocessor Commnuication Unit}
+\subsubsection{Multiprocessor Communication Unit}
 
 \section{Recommended Co-Processors}
+\paragraph{About} This section will cover some basic coprocessors that have been approved and assigned coprocessor IDs. The full list of approved coprocessors will be included in a separate document. 
 \subsection{Floating Point Unit}
 \subsubsection{Registers}
 \subsubsection{Instructions}
@@ -427,33 +420,7 @@ to take the instruction fetch output directly.
 \subsubsection{Registers}
 \subsubsection{Instructions}
 
-\section{Memory Map}
-\textbf{NOTE}
-This section may not remain and be left up to the implementation. Do not use without consulting
-the documentation of the implementation.
-\section{Programming Conventions}
-\subsection{Register Usage}
-\subsection{Memory Locations for Vector Table}
-\subsubsection{Interrupt Vector Table}
-\subsubsection{Exception Vector Table}
 
-
-\begin{figure}[!h]
-	\begin{center}
-		\begin{tabular}{|l|l|}
-			\hline
-			Address (32 bit) &  Definition\\ \hline
-			0x0000 & Reset address \\ 	\hline
-			0x0000 &  \\ 	\hline
-			0x0000 &  \\ 	\hline
-			0x0000 &  \\ 	\hline
-			0x0000 &  \\ 	\hline
-			0x0000 &  \\	\hline
-		\end{tabular} 
-		\caption{Exception Vector Table}
-	\end{center}
-	
-\end{figure}
 
 
 
