@@ -6,7 +6,6 @@
 \hypersetup{colorlinks=false,linktoc=all}
 
 
-
 \title{Fusion-Core ISA Definition: Revision 0.1}
 \author{Dylan Wadler}
 
@@ -17,6 +16,7 @@
 
 
 \newpage
+\part{Administrative}
 \section{Change log}
 \paragraph{Version 0.1} Initial Definition of the Instruction Set Architecture
 
@@ -199,13 +199,15 @@ should be included for code compatibility. \\
 The supervisor registers are aimed at higher level functions required for operating system environments. They are not essential for operation,
 and can either be partially implemented or not at all. The optional parts will be noted in the register descriptions.\\
 
+\subsection{Special Purpose Registers}
 \subsubsection{System Registers}
 %STAT register START
 \begin{center}
 	\begin{tabular}{|c|c|c|c|c|c|c|c|}
 	%	\hline
 			\multicolumn{8}{c}{\textbf{STAT}: Status Register} \\ \hline
-			Z & OV & SPV & PEMA & PML1 & PML0 & INTN & SPCP  \\ \hline
+		 	7 & 6  &  5   &	4	 &	3	&	2  &	1 &	0 \\ \hline
+			Z & OV & PEMA & PML2 & PML1 & PML0 & INTN & SPCP  \\ \hline
 		
 	\end{tabular}
 \end{center}
@@ -213,18 +215,50 @@ and can either be partially implemented or not at all. The optional parts will b
 
 \paragraph{STAT} Read only register for various processor state information. The flags are explained in detail below. \\
 \paragraph{Z} Zero Flag; Indicates whether the processed instruction's resulted in zero. Read Only\\
+			 The flag is set to 0 when the ALU calculation is 0, and 1 when the output it non-zero. \\
 \paragraph{OV} Overflow Flag; Indicated whether the processed instruction's result overflowed the 32 bit space. Read only. \\
+			   The overflow flag is set to the output of the carry out of the ALU. With addition, this would set the bit
+			   to a 1 when true. For subtraction, the inverse is true. \\ 
 \paragraph{PML} Permission Level; Inidcates the running process' permission level. Read only.\\
+				The three registers, PML2, PML1 and PML0 are used to generate a 3 bit value to determine the permission level. The following
+				denotes the different states with PML1 being the left bit, and PML0 being the right bit. \\
+				\vspace{0.2cm} \\
+	\begin{tabular}{l|l}
+			000 & Low User Level \\
+			001 & High User Level \\
+			010 & Low Supervisor Level \\
+			011 & High Supervisor Level \\
+			100 & Low Hypervisor Level \\
+			101 & High Hypervisor Level \\
+			110 & Reserved \\
+			111 & Top Hypervisor Level  \\
+	\end{tabular}\\
+	\vspace{0.2cm} \\
+		The permission levels are explained in more detailed in their dedicated section.\\
 \paragraph{PEMA} Permission Accepted; Indictates whether a privaledged systemcall request was accepted. Read only \\
 \paragraph{INTN} Interrupt Enable; Indicates whether interrupts are enabled. Read/Write \\ 
 \paragraph{SPCP} Support CoProcessors; Indicates whether co-processor code is recognized as illegal instruction or microcode operation.
 Read/Write. \\
 \paragraph{} In order to write to this register, the bits that are read only can be set to any value. \\
-\paragraph{Optionality} In the event that the permission levels are not needed, they should be hard coded to 0x3, the
+\paragraph{Optionality} In the event that the permission levels are not needed, they should be hard coded to 0x7, the
 highest permission level to avoid porting code. PEMA should also be hardcoded to a logic high for the same reasons stated.\\
 
 %STAT register END
 \subsubsection{Supervisor Registers}
+
+\section{Permission Levels}
+\subsection{User Levels}
+\subsubsection{Low User Level} User space programs are designed to run in this permission level. Write access to supervisor registers is revoked.
+\subsubsection{High User Level}
+
+\subsection{Supervisor Levels}
+\subsubsection{Low Supervisor Level}
+\subsubsection{High Supervisor Level}
+
+\subsection{Hypervisor Levels}
+\subsubsection{Low Hypervisor Level}
+\subsubsection{High Hypervisor Level}
+\subsubsection{Top Hypervisor Level}
 
 \section{Memory}
 \paragraph{}At this point in time, the ISA only handles 32 bit addresses.
