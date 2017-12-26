@@ -158,7 +158,7 @@ for a minimal system, though more can certainly be implemented if required. Each
 			CPO1  	& Co-Processor 1 ID 		 &	2		& 0x00000004\\ 	\hline
 			CPO2  	& Co-Processor 2 ID 		 &	2		& 0x00000006\\ 	\hline
 			CPO3  	& Co-Processor 3 ID 		 &	2		& 0x00000008\\ 	\hline
-			STATUS  & Status Register			 &	1		& 0x0000000a \\ 	\hline
+			STAT	& Status Register			 &	1		& 0x0000000a \\ 	\hline
 			n/a		& RESERVED				 	 &	1		& 0x0000000b \\ \hline
 			OPCAR	& Opcode Allocation Pointer	 &	4		& 0x0000000c \\ \hline
 			
@@ -177,7 +177,8 @@ for a minimal system, though more can certainly be implemented if required. Each
 			\hline
 			Register Name & Description & Address (Hex)\\ \hline
 			SMSTAT & Supervisor mode status register & 0x00000000 \\ 	\hline
-			PRCPR0 & Process Pointer register 0 & 0x00000004	\\ \hline 
+			PRCPR0 & Process Pointer register 0 	 & 0x00000004	\\ \hline 
+			HTINFO & Hardware Thread Info 			 & 0x00000008 \\ \hline
 		\end{tabular}
 	\end{center}
 	
@@ -194,40 +195,42 @@ This provides code compatibility between different implementations.
 \paragraph{}The special registers are sorted between the System Registers and the Supervisor Registers. The system registers provide
 simple configuration values and some read-only registers to give the programmer information about the implementation.
 The registers defined in this manual are the bare minimum special purpose registers, and
-should be included for code compatibility.
-The supervisor registers 
+should be included for code compatibility. \\
+The supervisor registers are aimed at higher level functions required for operating system environments. They are not essential for operation,
+and can either be partially implemented or not at all. The optional parts will be noted in the register descriptions.\\
+
 \subsubsection{System Registers}
-\paragraph{CPUREV} Read only register that lets the programmer know what revision the CPU is. \\
+%STAT register START
 \begin{center}
-	\begin{tabular}{|c|c|c|c|c|c|}
-		\hline
-		\multicolumn{6}{|c|}{CPUREV: CPU Revision} \\
-		\hline
-		\hline
+	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+	%	\hline
+			\multicolumn{8}{c}{\textbf{STAT}: Status Register} \\ \hline
+			Z & OV & SPV & PEMA & PML1 & PML0 & INTN & SPCP  \\ \hline
 		
 	\end{tabular}
 \end{center}
 
 
-\paragraph{Bank Switching} Bank switching is controlled by the \textbf{BSELRF} register\\
-\begin{center}
-	\begin{tabular}{|c|c|c|c|c|}
-		\hline
-		\hline
-		\hline
-		
-	\end{tabular}
-\end{center}	
+\paragraph{STAT} Read only register for various processor state information. The flags are explained in detail below. \\
+\paragraph{Z} Zero Flag; Indicates whether the processed instruction's resulted in zero. Read Only\\
+\paragraph{OV} Overflow Flag; Indicated whether the processed instruction's result overflowed the 32 bit space. Read only. \\
+\paragraph{PML} Permission Level; Inidcates the running process' permission level. Read only.\\
+\paragraph{PEMA} Permission Accepted; Indictates whether a privaledged systemcall request was accepted. Read only \\
+\paragraph{INTN} Interrupt Enable; Indicates whether interrupts are enabled. Read/Write \\ 
+\paragraph{SPCP} Support CoProcessors; Indicates whether co-processor code is recognized as illegal instruction or microcode operation.
+Read/Write. \\
+\paragraph{} In order to write to this register, the bits that are read only can be set to any value. \\
+\paragraph{Optionality} In the event that the permission levels are not needed, they should be hard coded to 0x3, the
+highest permission level to avoid porting code. PEMA should also be hardcoded to a logic high for the same reasons stated.\\
 
-
+%STAT register END
 \subsubsection{Supervisor Registers}
-\subsection{Adding Registers}
 
 \section{Memory}
 \paragraph{}At this point in time, the ISA only handles 32 bit addresses.
-With memory capacity increasing in size as time goes on, this may change. In order to access 
-larger sections of memory, the use of an offset register may be implemented to create 64 bit addresses.
-The use of virtual memory with said offset register is also accepted.
+With memory capacity increasing in size as time goes on, this may change. %In order to access 
+%larger sections of memory, the use of an offset register may be implemented to create 64 bit addresses.
+%The use of virtual memory with said offset register is also accepted.
 
 \subsection{Memory Locations for Vector Table}
 \subsubsection{Interrupt Vector Table}
@@ -333,8 +336,8 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 \begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
 			\multicolumn{6}{c}{Branch Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} Immediate[11:7] \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}Immediate[6:0]  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} Immediate[13:9] \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}Immediate[8:0]  \hspace{10pt} & \hspace{3pt} funct \hspace{3pt}   \\	\hline
+			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   2&1 \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}
@@ -342,7 +345,7 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 \begin{center}
 	\begin{tabular}{|c|c|c|c|c|}
 		\multicolumn{5}{c}{System Instruction Format}\\ \hline
-		\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Function  \hspace{10pt} & \hspace{8pt} Immediate \hspace{8pt}   \\	\hline
+			\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Function  \hspace{10pt} & \hspace{8pt} Immediate[7:0] \hspace{8pt}   \\	\hline
 		31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  8&7 \hfill   0\\ \hline
 		
 	\end{tabular}
