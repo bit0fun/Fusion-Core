@@ -29,7 +29,7 @@
 `include compare_32.v
 `include decrement_32.v
 
-module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, flag_neg);
+module ALU(
 //32 bit ALU, will upgrade to 64 bit after tests are done.
 
 	//Values from register file to operate on
@@ -37,7 +37,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	input [31:0] op_b;
 
 	//op code, decoded from instruction
-	input [4:0] op_code; //5 bit opcode
+	input [3:0] op_code; //4 bit opcode
 
 	//output from the ALU
 	output reg [31:0] out;
@@ -47,7 +47,7 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	output flag_overflow;
 	output flag_parity; //even parity of output, 1 valid, 0 invalid
 	output flag_neg; //output is negative
-
+	);
 
 	/*Wires*/
 	wire [31:0] to_out;
@@ -140,109 +140,57 @@ module ALU(op_a, op_b, out, op_code, flag_carry, flag_overflow, flag_parity, fla
 	always@*
 
 		case(op_code)
-		/*0*/	5'b00000:begin	//for NOP
+		/*0*/	4'b0000:begin	//for NOP
 					out <= 0;
 				 end
-		/*1*/	5'b00001:begin	//output AND operation
+		/*1*/	4'b0001:begin	//output AND operation
 					out <= w_and;
 				 end
-		/*2*/	5'b00010:begin	//output OR operation
+		/*2*/	4'b0010:begin	//output OR operation
 					out <= w_or;
 				 end
-		/*3*/	5'b00011:begin  //output XOR operation
+		/*3*/	4'b0011:begin  //output XOR operation
 					out <= w_xor;
 				 end
-		/*4*/	5'b00100:begin	//output NOT operation
+		/*4*/	4'b0100:begin	//output NOT operation
 					out <= w_not;
 				 end
-		/*5*/	5'b00101:begin	//output shift left operation
+		/*5*/	4'b0101:begin	//output shift left operation
 					out <= w_shl;
 				 end
-		/*6*/	5'b00110:begin 	//output shift right operation
+		/*6*/	4'b0110:begin 	//output shift right operation
 					out <= w_shr;
 				 end
-		/*7*/	5'b00111:begin //output shift carry right operation
+		/*7*/	4'b0111:begin //output shift carry right operation
 					out <= w_scr;
 				 end
-		/*8*/	5'b01000:begin //output compare operation
+		/*8*/	4'b1000:begin //output compare operation
 					out <= w_cmp;
 				 end
-/*------------------------------RESERVED START-----------------------------------*/
-		/*9*/	5'b01001:begin
-					out <= 0;
-		 		 end
-		/*10*/	5'b01010:begin
-					out <= 0;
-				 end
-		/*11*/	5'b01011:begin
-					out <= 0;
-				 end
-		/*12*/	5'b01100:begin
-					out <= 0;
-				 end
-		/*13*/	5'b01101:begin
-					out <= 0;
-				 end
-		/*14*/	5'b01110:begin
-					out <= 0;
-				 end
-		/*15*/	5'b01111:begin
-					out <= 0;
-				 end
-/*-------------------------------RESERVED END-----------------------------------*/
-		/*16*/	5'b10000:begin	//output for ADD operation
+
+		/*9*/	4'b1001:begin	//output for ADD operation
 					out <= w_add;
 					flag_carry <= flg_carry_add;
 				 end
-		/*17*/	5'b10001:begin	//output for SUBTRACT operation
+		/*10*/	4'b1010:begin	//output for SUBTRACT operation
 					out <= w_sub;
 					flag_carry <= flg_carry_sub;
 				 end
-		/*18*/	5'b10010:begin	//output for INCREMENT operation
+		/*11*/	4'b1011:begin	//output for INCREMENT operation
 					out <= w_inc;
 				 end
-		/*19*/	5'b10011:begin	//output for DECREMENT operation
+		/*12*/	'b1100:begin	//output for DECREMENT operation
 					out <= w_dec;
 				 end
-
-/*------------------------------RESERVED START-----------------------------------*/
-		/*20*/	5'b10100:begin
+		/*13*/	4'b1101:begin
 					out <= 0;
 				 end
-		/*21*/	5'b10101:begin
+		/*14*/	4'b1110:begin
 					out <= 0;
 				 end
-		/*22*/	5'b10110:begin
+		/*15*/	4'b1111:begin
 					out <= 0;
 				 end
-		/*23*/	5'b10111:begin
-					out <= 0;
-				 end
-		/*24*/	5'b11000:begin
-					out <= 0;
-				 end
-		/*25*/	5'b11001:begin
-					out <= 0;
-				 end
-		/*26*/	5'b11010:begin
-					out <= 0;
-				 end
-		/*27*/	5'b11011:begin
-					out <= 0;
-				 end
-		/*28*/	5'b11100:begin
-					out <= 0;
-				 end
-		/*29*/	5'b11101:begin
-					out <= 0;
-				 end
-		/*30*/	5'b11110:begin
-					out <= 0;
-				 end
-		/*31*/	5'b11111:begin
-					out <= 0;
-				 end
-/*-------------------------------RESERVED END-----------------------------------*/
 			endcase
 
 
