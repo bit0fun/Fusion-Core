@@ -1,8 +1,15 @@
 \documentclass[letterpaper, 11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{inconsolata}
+\usepackage{fontspec}
+\defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+\setmainfont{Hack}
+\usepackage{longtable}
 \usepackage{graphicx}
 \usepackage[left=1in, right=1in, top=1.00in, bottom=1.00in]{geometry}
 \usepackage{subfigure}
 \usepackage{hyperref}
+\usepackage{amssymb}
 \hypersetup{colorlinks=false,linktoc=all}
 
 
@@ -179,6 +186,7 @@ for a minimal system, though more can certainly be implemented if required. Each
 			SMSTAT & Supervisor mode status register & 0x00000000 \\ 	\hline
 			PRCPR0 & Process Pointer register 0 	 & 0x00000004	\\ \hline 
 			HTINFO & Hardware Thread Info 			 & 0x00000008 \\ \hline
+			HTCTL  & Hardware Thread Control		 & 0x0000000c \\ \hline
 		\end{tabular}
 	\end{center}
 	
@@ -212,18 +220,21 @@ and can either be partially implemented or not at all. The optional parts will b
 	\end{tabular}
 \end{center}
 
-
-\paragraph{STAT} Read only register for various processor state information. The flags are explained in detail below. \\
-\paragraph{Z} Zero Flag; Indicates whether the processed instruction's resulted in zero. Read Only\\
-			 The flag is set to 0 when the ALU calculation is 0, and 1 when the output it non-zero. \\
-\paragraph{OV} Overflow Flag; Indicated whether the processed instruction's result overflowed the 32 bit space. Read only. \\
-			   The overflow flag is set to the output of the carry out of the ALU. With addition, this would set the bit
-			   to a 1 when true. For subtraction, the inverse is true. \\ 
-\paragraph{PML} Permission Level; Inidcates the running process' permission level. Read only.\\
-				The three registers, PML2, PML1 and PML0 are used to generate a 3 bit value to determine the permission level. The following
-				denotes the different states with PML1 being the left bit, and PML0 being the right bit. \\
-				\vspace{0.2cm} \\
-	\begin{tabular}{l|l}
+\begin{tabular}{l l}
+	STAT	& Read only register for various processor state information. The flags are \\
+	\hfill 	& explained in detail below. \\
+	Z		& Zero Flag; Indicates whether the processed instruction's resulted in zero. Read Only\\
+	\hfill	& The flag is set to 0 when the ALU calculation is 0, and 1 when the output it non-zero. \\
+	OV		& Overflow Flag; Indicated whether the processed instruction's result \\
+	\hfill	& overflowed the 32 bit space. Read only. \\
+	\hfill	& The overflow flag is set to the output of the carry out of the ALU. \\
+	\hfill  & With addition, this would set the bit to a 1 when true. \\
+	\hfill	& For subtraction, the inverse is true. \\ 
+	PML 	& Permission Level; Inidcates the running process' permission level. Read only.\\
+			%	The three registers, PML2, PML1 and PML0 are used to generate a 3 bit value to determine the permission level. The following
+		%		denotes the different states with PML1 being the left bit, and PML0 being the right bit. \\
+	\hfill	&	\begin{tabular}{l|l}
+			PML & Description \\ \hline
 			000 & Low User Level \\
 			001 & High User Level \\
 			010 & Low Supervisor Level \\
@@ -233,15 +244,20 @@ and can either be partially implemented or not at all. The optional parts will b
 			110 & Reserved \\
 			111 & Top Hypervisor Level  \\
 	\end{tabular}\\
-	\vspace{0.2cm} \\
-		The permission levels are explained in more detailed in their dedicated section.\\
-\paragraph{PEMA} Permission Accepted; Indictates whether a privaledged systemcall request was accepted. Read only \\
-\paragraph{INTN} Interrupt Enable; Indicates whether interrupts are enabled. Read/Write \\ 
-\paragraph{SPCP} Support CoProcessors; Indicates whether co-processor code is recognized as illegal instruction or microcode operation.
-Read/Write. \\
+	\hfill & The permission levels are explained in more detailed in their dedicated section.\\
+	PEMA   & Permission Accepted; Indictates whether a privaledged systemcall request was accepted. Read only \\
+	INTN   & Interrupt Enable; Indicates whether interrupts are enabled. Read/Write \\ 
+	SPCP   & Support CoProcessors; Indicates whether co-processor code is recognized as \\
+	\hfill & illegal instruction or microcode operation. \\
+	\hfill & Read/Write. \\
+
+\end{tabular}
 \paragraph{} In order to write to this register, the bits that are read only can be set to any value. \\
 \paragraph{Optionality} In the event that the permission levels are not needed, they should be hard coded to 0x7, the
 highest permission level to avoid porting code. PEMA should also be hardcoded to a logic high for the same reasons stated.\\
+\begin{center}
+	\line(1,0){250}
+\end{center}
 
 %STAT register END
 \subsubsection{Supervisor Registers}
@@ -288,6 +304,11 @@ With memory capacity increasing in size as time goes on, this may change. %In or
 	
 \end{figure} 
 
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
+\clearpage
 
 \part{Instructions}
 \section{Instruction Definitions}
@@ -309,13 +330,37 @@ adherence to RISC philosophy in this architecture is required to exploit any ben
 		
 	\end{tabular}
 \end{center}	
-\paragraph{Overview:}The Register/Integer Instructions are basic ALU operations, without immediates. Registers RSa and RSb are the two operands,which
+\paragraph{Overview:}The Register/Integer Instruction Format is for basic ALU operations, without immediates. Registers RSa and RSb are the two operands,which
 are stored in register Rd. The 4 bit ALUOP field denotes the settings for the ALU, to reduce complexity of selecting what operation to choose.
 The shft bits are only for the shift amount with the shifting instructions, but unused for other instructions. 
-\paragraph{}The following instructions use this encoding:
+\paragraph{}The following instructions use this encoding:\\
+\begin{center}
+%	\begin{tabular}{|c|c|c|} \hline
+	\begin{longtable}{|l|l|l|}\hline
+			Instruction & Description 				& ALU Operation (hex) \\ \hline
+			add			& Add 						& 0x0 \\ \hline
+			sub 		& Subtract					& 0x1 \\ \hline
+			addc 		& Add Carry 				& 0x2 \\ \hline
+			subc		& Subtract Carry(Borrow) 	& 0x3 \\ \hline
+			tcmp		& 2's Complement			& 0x4 \\ \hline
+			and			& And						& 0x5 \\ \hline
+			or			& Or						& 0x6 \\ \hline
+			xor			& Exclusive Or				& 0x7 \\ \hline
+			sal			& Arithmetic Shift Left		& 0x8 \\ \hline
+			sar			& Arithmetic Shift Right	& 0x9 \\ \hline
+			sll			& Logic Shift Left			& 0xa \\ \hline
+			slr			& Logic Shift Right			& 0xb \\ \hline
+			comp		& Compare					& 0xc \\ \hline
+			Reserved	& n/a						& 0xd \\ \hline
+			Reserved	& n/a						& 0xe \\ \hline
+			Reserved	& n/a						& 0xf \\ \hline
 
-
-
+%	\end{tabular} \\
+\end{longtable}
+\end{center}
+\begin{center}
+	\line(1,0){250}
+\end{center}
 \subsubsection{Immediate}
 
 \begin{center}
@@ -326,17 +371,66 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 		
 	\end{tabular}
 \end{center}
+\paragraph{Overview:}The Immediate Instruction Format is for ALU operations that require an immediate value. The immediate field
+is only 12 bits wide, so in the event that a larger value is required, the Load Immediate Format should be used. There is only a single
+source register, RSa, with the other source being the immediate value. The result is stored into register Rd.
+\paragraph{}The following instructions use this encoding:
+\begin{center}
+	\begin{tabular}{|l|l|l|} \hline
+			Instruction & Description 						& ALU Operation (hex) \\ \hline
+			addi		& Add Immediate						& 0x0 \\ \hline
+			subi 		& Subtract Immediate				& 0x1 \\ \hline
+			adci 		& Add Carry Immediate				& 0x2 \\ \hline
+			subci		& Subtract Carry(Borrow) Immediate 	& 0x3 \\ \hline
+			andi		& And Immediate						& 0x5 \\ \hline
+			ori			& Or Immediate						& 0x6 \\ \hline
+			xori		& Exclusive Or Immediate			& 0x7 \\ \hline
+			sali		& Arithmetic Shift Left				& 0x8 \\ \hline
+			sari		& Arithmetic Shift Right			& 0x9 \\ \hline
+			slli		& Logic Shift Left 					& 0xa \\ \hline
+			slri		& Logic Shift Right					& 0xb \\ \hline
+			compi		& Compare Immedaite					& 0xc \\ \hline
+
+	\end{tabular} \\
+\end{center}
+\begin{center}
+	\line(1,0){250}
+\end{center}
 
 \subsubsection{Load/Store}
 \begin{center}
-		\begin{tabular}{|c|c|c|c|}
-			\multicolumn{4}{c}{Load Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt} Immediate \hspace{10pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill 0\\ \hline
+		\begin{tabular}{|c|c|c|c|c|}
+			\multicolumn{5}{c}{Load Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{3pt} funct \hspace{3pt} & \hspace{10pt} Immediate \hspace{10pt}   \\	\hline
+				31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill 14  & 13 \hfill 0\\ \hline
 		
 	\end{tabular}
 \end{center}
-\vspace{0.5cm}
+\paragraph{Overview:}The Load Instruction Format is for reading values from memory into a register. A 14 bit immediate is used
+for a relative address calculation with RSa as the base address. The value is then stored into register Rd. The funct field is used
+to determine the byte size to read from memory. This encoding is described in the table below. \\
+\begin{tabular}{l|l}
+		Funct & Description \\ \hline
+		00	  & 1 word (32 bits) \\
+		01	  & half word (16 bits, upper) \\ 
+		10	  & 24 bits, upper \\
+		11	  & byte, upper		\\
+		\end{tabular}
+\paragraph{}The following instructions use this encoding: \\
+\begin{center}
+	\begin{tabular}{|l|l|l|} \hline
+			Instruction & Description 						& Funct\\ \hline
+			lw			& Load Word							& 0x0 \\ \hline
+			lh			& Load Half Word					& 0x1 \\ \hline
+			lb			& Load Byte							& 0x3 \\ \hline
+			lth			& Load Three (Bytes, 24 bits)		& 0x2 \\ \hline
+
+\end{tabular}
+\end{center}
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
 \begin{center}
 		\begin{tabular}{|c|c|c|c|}
 				\multicolumn{4}{c}{Load Immediate Instrution Format}\\ \hline
@@ -345,26 +439,97 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 		
 	\end{tabular}
 \end{center}
-\vspace{0.5cm}
+
+\paragraph{Overview:}The Load Immediate Instruction Format is for loading immeidate values into a register.
+The DSEL value determines the destination and function of the instruction. This is to allow the selection
+of various register files to be updated. THe DSEL bit values and their function are shown below.  \\
+\begin{tabular}{l|l}
+		DSEL (hex) & Destination \\ \hline
+		0x0000 & General purpose register file \\
+		0x0001 & System Register File \\
+		0x0010 & Global Co-Processor Register File \\ 
+		0xXX1X & Reserved \\
+		
+		\end{tabular}
+
+\paragraph{}The following instructions use this encoding: \\
+\begin{center}
+	\begin{tabular}{|l|l|l|} \hline
+			Instruction & Description 						& DSEL\\ \hline
+			li			& Load Immediate (GPRF)				& 0x0000 \\ \hline
+			lsi			& Load Immediate System				& 0x0001 \\ \hline
+			lgi			& Load Immediate Global				& 0x0002 \\ \hline
+
+\end{tabular}
+\end{center}
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
 
 \begin{center}
-		\begin{tabular}{|c|c|c|c|c|}
-			\multicolumn{5}{c}{Store Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} Immediate[15:11] \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}Immediate[10:0]  \hspace{10pt}    \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill  0\\ \hline
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\multicolumn{6}{c}{Store Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} Funct \hspace{5pt} &  \hspace{4pt} Immediate[13:11] \hspace{4pt} & \hspace{4pt}rsa  \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt} &\hspace{10pt}Immediate[10:0]  \hspace{10pt}     \\	\hline
+				31 \hfill 26& 25 \hfill 24 &23 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill  0\\ \hline
 		
 	\end{tabular}
 \end{center}
+\paragraph{Overview:}The Store Instruction Format is for writing register values to memory. A 14 bit immediate is used
+for a relative address calculation with RSa as the base address. The value in RSb is then written to memory. The funct field is used
+to determine the byte size to write to memory. This encoding is described in the table below. \\
+\begin{tabular}{l|l}
+		Funct & Description \\ \hline
+		00	  & 1 word (32 bits) \\
+		01	  & half word (16 bits, upper) \\ 
+		10	  & 24 bits, upper \\
+		11	  & byte, upper		\\
+		\end{tabular}
+\paragraph{}The following instructions use this encoding: \\
+\begin{center}
+	\begin{tabular}{|l|l|l|} \hline
+			Instruction & Description 						& Funct\\ \hline
+			sw			& Store Word							& 0x0 \\ \hline
+			sh			& Store Half Word					& 0x1 \\ \hline
+			sb			& Store Byte							& 0x3 \\ \hline
+			sth			& Store Three (Bytes, 24 bits)		& 0x2 \\ \hline
+
+\end{tabular}
+\end{center}
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
 \subsubsection{Branch/Jump}
 
 \begin{center}
 		\begin{tabular}{|c|c|c|c|}
-			\multicolumn{4}{c}{Jump Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt} Immediate  \hspace{10pt}   \\	\hline
-							31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill   0\\ \hline
+				\multicolumn{4}{c}{Jump Instruction Format}\\ \hline
+				\hspace{2pt} opcode \hspace{2pt}  & \hspace{3pt} Immediate[20:16] \hspace{3pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt} Immediate[15:0]  \hspace{10pt}   \\	\hline
+							31 \hfill 26& 25  \hfill 21 &20 \hfill  16& 15 \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}	
+\paragraph{Overview:} The Jump Instruction format is for changing the Program Counter. 
+All Jumps are relative, except Jump Register Instructions,
+due to the non byte aligned size (20 bits) of the immediate field. Jumps use the value in register RSa to calculate
+the new PC. For pure relative jumps, the Zero register is used as the base. For jump instructions that link the program counter, 
+the PC is stored in RA0, or R4 in the General Purpose Register file.
+\paragraph{}The following instructions use this encoding: \\
+\begin{center}
+	\begin{tabular}{|l|l|l|} \hline
+			Instruction & Description 				\\ \hline
+			j			& Jump						\\ \hline
+			jal			& Jump and Link				\\ \hline
+			jr			& Jump Register				\\ \hline
+			jrl			& Jump Register and Link	\\ \hline
+
+
+\end{tabular}
+\end{center}
+\begin{center}
+	\line(1,0){250}
+\end{center}
 
 
 \begin{center}
@@ -375,22 +540,148 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 		
 	\end{tabular}
 \end{center}
+\paragraph{Overview:} The Branch Instruction Format is used for conditionally changing the Program Counter.
+The PC is only updated with whichever operation is indicated as being true or false.\\
+\paragraph{}The following instructions use this encoding: \\
+\begin{center}
+	\begin{tabular}{|l|l|l|} \hline
+			Instruction & Description 				& Funct\\ \hline
+			beq			& Branch if Equal			& 00 \\ \hline
+			bne			& Branch if not Equal		& 01 \\ \hline
+			bgt			& Branch if Greater than	& 10 \\ \hline
+			blt			& Branch if Less than		& 11 \\ \hline
 
+\end{tabular}
+\end{center}
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
+\subsubsection{System Instructions}
 \begin{center}
 	\begin{tabular}{|c|c|c|c|c|}
 		\multicolumn{5}{c}{System Instruction Format}\\ \hline
-			\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Function  \hspace{10pt} & \hspace{8pt} Immediate[7:0] \hspace{8pt}   \\	\hline
+			\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Funct  \hspace{10pt} & \hspace{8pt} Immediate[7:0] \hspace{8pt}   \\	\hline
 		31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  8&7 \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}
+\paragraph{Overview:} The System Instruction Format is used for various system controls. Their functions
+vary, and are described in more detail in their individual listings.
+\paragraph{}The following instructions use this encoding: \\
+\begin{center}
+	\begin{tabular}{|l|l|l|l|} \hline
+			Instruction & Description 						& Funct & Uses Immediate\\ \hline
+			syscall		& System Call						& 0x00  & yes \\ \hline
+			sysret		& System Return						& 0x01  & no  \\ \hline
+			stspr		& Store Special Purpose Register	& 0x02  & yes \\ \hline
+			ldspr		& Load Special Purpose Register		& 0x03  & yes \\ \hline
+			sync		& Syncronize memory/Flush Pipeline  & 0x04  & no  \\ \hline
+			lock		& Lock Memory						& 0x05  & yes \\ \hline
+			test		& Test Lock 						& 0x06  & yes \\ \hline
+			pmir		& Permission Increase Request		& 0x07  & yes \\ \hline
+			pmd			& Permission Decrease				& 0x08  & yes \\ \hline
 
+
+\end{tabular}
+\end{center}
+\begin{center}
+	\line(1,0){250}
+\end{center}
 \subsubsection{Co-Processor}
+
 \paragraph{}Since the coprocessors can have any implementation, only the opcode is required. However, adhering to similar formatting of the instruction formats provided in previous sections is imperative and the Fusion-Core foundation will not provide an accepted coprocessor ID number. More information about coprocessors can be accessed in the Co-Processor section.
-	
+\begin{center}
+	\line(1,0){250}
+\end{center}
 \subsection{List of OPCodes}
-\subsection{List of Instructions}
+	\begin{center}
+		\begin{tabular}{|c|c|c|}
+			Op Code & Description & Instrucion Formats \\ \hline
+		\end{tabular}
+	\end{center}
+
+\subsection{Instruction Details}
+\paragraph{}This section will go into detail about the instructions that are available, with their functions and options.\\
 \subsubsection{Integer}
+
+\subsection{List of Instructions}
+
+	\begin{center}
+		\begin{longtable}{|l|l|c|}
+			\multicolumn{3}{c}{Instruction Instruction Summary Table} \\ \hline
+			\multicolumn{3}{|c|}{Integer Instructions} \\ \hline
+			Instruction & Function 										& Binary \\ \hline
+			add			& Rd = RSa + RSb 								& 000001dddddaaaaabbbbbxxxxxx0000 \\
+			sub			& Rd = RSa - RSb 								& 000001dddddaaaaabbbbbxxxxxx0001 \\
+			addc		& Rd = RSa + RSb 								& 000001dddddaaaaabbbbbxxxxxx0010 \\
+			subc		& Rd = RSa - RSb							 	& 000001dddddaaaaabbbbbxxxxxx0011 \\
+			tcmp		& Rd = !Rsa	 									& 000001dddddaaaaaxxxxxxxxxxx0100 \\
+			and			& Rd = RSa \& RSb								& 000001dddddaaaaabbbbbxxxxxx0101 \\
+			or			& Rd = RSa $|$ RSb 								& 000001dddddaaaaabbbbbxxxxxx0110 \\
+			xor			& Rd = RSa $\oplus$ RSb 						& 000001dddddaaaaabbbbbxxxxxx0111 \\
+			sal			& Rd = RSa $\ll$ RSb 							& 000001dddddaaaaabbbbbssssss1000 \\
+			sar			& Rd = RSa $\gg$ RSb 							& 000001dddddaaaaabbbbbssssss1001 \\
+			sll			& Rd = RSa $\ll$ RSb 							& 000001dddddaaaaabbbbbssssss1010 \\
+			slr			& Rd = RSa $ \ggg  $ RSb 						& 000001dddddaaaaabbbbbssssss1011 \\
+			comp		& Rd = (RSa == RSb);(RSa $>$ RSb);(RSa $<$ Rsb)	& 000001dddddaaaaaxxxxxssssss1100 \\
+			\hline
+			\multicolumn{3}{|c|}{Immediate Instructions} \\ \hline
+			addi		& Rd = RSa + Imm 								& 000011dddddaaaaaiiiiiiiiiii0000 \\
+			subi		& Rd = RSa - Imm 								& 000011dddddaaaaaiiiiiiiiiii0001 \\
+			addci		& Rd = RSa + Imm 								& 000011dddddaaaaaiiiiiiiiiii0010 \\
+			subci		& Rd = RSa - Imm							 	& 000011dddddaaaaaiiiiiiiiiii0011 \\
+			andi		& Rd = RSa \& Imm								& 000011dddddaaaaaiiiiiiiiiii0101 \\
+			ori			& Rd = RSa $|$ Imm 								& 000011dddddaaaaaiiiiiiiiiii0110 \\
+			xori		& Rd = RSa $\oplus$ Imm 						& 000011dddddaaaaaiiiiiiiiiii0111 \\
+			sali		& Rd = RSa $\ll$ Imm 							& 000011dddddaaaaaiiiiiiiiiii1000 \\
+			sari		& Rd = RSa $\gg$ Imm 							& 000011dddddaaaaaiiiiiiiiiii1001 \\
+			slli		& Rd = RSa $\ll$ Imm 							& 000011dddddaaaaaiiiiiiiiiii1010 \\
+			slri		& Rd = RSa $ \ggg  $ Imm 						& 000011dddddaaaaaiiiiiiiiiii1011 \\
+			compi		& Rd = (RSa == Imm);(RSa $>$ Imm);(RSa $<$ Imm)	& 000011dddddaaaaaiiiiiiiiiii1100 \\
+			\hline
+			\multicolumn{3}{|c|}{Load Instructions} \\ \hline
+			lw			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa00iiiiiiiiiiiii \\
+			lh			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa01iiiiiiiiiiiii \\
+			lb			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa11iiiiiiiiiiiii \\
+			lth			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa10iiiiiiiiiiiii \\
+			\hline
+			\multicolumn{3}{|c|}{Load Immediate Instructions} \\ \hline
+			li			& (GPREGF) Rd = Imm								& 000010ddddd0000iiiiiiiiiiiiiiii \\
+			lsi			& (SYSREGF) Rd = Imm							& 000010ddddd0001iiiiiiiiiiiiiiii \\
+			lgi			& (GLREGF) Rd = Imm								& 000010ddddd0010iiiiiiiiiiiiiiii \\
+			\hline
+			\multicolumn{3}{|c|}{Store Instructions} \\ \hline
+			Instruction & Function 										& Binary \\ \hline
+			sh			& RSb -$>$ Imm(RSa)								& 01101001iiiaaaaabbbbbiiiiiiiiii\\
+			sb			& RSb -$>$ Imm(RSa)								& 01101011iiiaaaaabbbbbiiiiiiiiii\\
+			sth			& RSb -$>$ Imm(RSa)								& 01101010iiiaaaaabbbbbiiiiiiiiii\\
+			\hline
+			\multicolumn{3}{|c|}{Jump Instructions} \\ \hline		
+			j			& Next PC $<$- (R0 + Imm)						& 000110iiiiiaaaaaiiiiiiiiiiiiiii\\
+			jal			& Next PC $<$- (R0 + Imm); RA0 <- PC 			& 000111iiiiiaaaaaiiiiiiiiiiiiiii\\
+			jr			& Next PC $<$- (RSa + Imm)						& 000110iiiiiaaaaaiiiiiiiiiiiiiii\\
+			jrl			& Next PC $<$- (RSa + Imm); RA0 <- PC			& 000111iiiiiaaaaaiiiiiiiiiiiiiii\\
+			\hline
+			\multicolumn{3}{|c|}{Branch Instructions} \\ \hline
+			beq			& Next PC $<$- (RSa == RSb) ? PC+Imm : PC+4		& 000101iiiiiaaaaabbbbbiiiiiiiii00\\
+			bne			& Next PC $<$- (RSa != RSb) ? PC+Imm : PC+4		& 000101iiiiiaaaaabbbbbiiiiiiiii01\\
+			bgt			& Next PC $<$- (RSa $>$ RSb) ? PC+Imm : PC+4	& 000101iiiiiaaaaabbbbbiiiiiiiii10\\
+			blt			& Next PC $<$- (RSa $<$ RSb) ? PC+Imm : PC+4	& 000101iiiiiaaaaabbbbbiiiiiiiii11\\
+			\hline
+			\multicolumn{3}{|c|}{System Instructions} \\ \hline
+			syscall		& System Call (Raise Privalege)					& 00100dddddaaaaaa00000000iiiiiiii\\
+			sysret		& System Return (Lower Privalege)				& 00100dddddaaaaaa00000001iiiiiiii\\
+			stspr		& (SYSRF) Rd $<$- RSa							& 00100dddddaaaaaa00000010xxxxxxxx\\
+			ldspr		& (SYSRF) RSa -$>$ Rd							& 00100dddddaaaaaa00000011xxxxxxxx\\
+			sync		& Flush Pipeline								& 00100xxxxxxxxxxx00000100xxxxxxxx\\
+			pmir		& PML + Imm ?									& 00100xxxxxxxxxxx00000111iiiiiiii\\
+			pmd			& PML - Imm ?									& 00100xxxxxxxxxxx00001000iiiiiiii\\
+			\hline
+		\end{longtable}
+	\end{center}
+
+
 \subsubsection{Immediate}
 \subsubsection{Load/Store}
 \subsubsection{Branch/Jump}
@@ -406,8 +697,9 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 \subsubsection{User Level}
 \subsubsection{Supervisor Level}
 
+\clearpage
 \part{Co-Processors}
-\section{Co-Processors}
+\section{Co-Processor Overview}
 \paragraph{}Co-processors are the main point of the Fusion-Core archetecture. As the ISA only defines the main core, the implementator is free to use
 whichever co-processors that would be necessary for an application. Hardware acceleration for vector instructions, encryption, floating point, communication,
 etc. There is no limitation for what kind of co-processor that could be used, only the number that could fit within the defined usable instructions.
@@ -441,6 +733,12 @@ to take the instruction fetch output directly.
 \subsubsection{System Unit}
 \subsubsection{Memory Management Unit}
 \subsubsection{Multiprocessor Communication Unit}
+
+\section{Global Register File}
+\paragraph{}The Global Register File is for simple message passing, and creating locks between co-processors.
+As it may be necessary to wait for a value to be computed by a co-processor, or lock specific parts of memory,
+the Global Register File creates an interface for ease of use between processing units.
+\paragraph{}This section is under development and will be updated to explain the connections and registers available.
 
 \section{Recommended Co-Processors}
 \paragraph{About} This section will cover some basic coprocessors that have been approved and assigned coprocessor IDs. The full list of approved coprocessors will be included in a separate document. 
