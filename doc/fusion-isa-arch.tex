@@ -340,8 +340,8 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 			Instruction & Description 				& ALU Operation (hex) \\ \hline
 			add			& Add 						& 0x0 \\ \hline
 			sub 		& Subtract					& 0x1 \\ \hline
-			addc 		& Add Carry 				& 0x2 \\ \hline
-			subc		& Subtract Carry(Borrow) 	& 0x3 \\ \hline
+			addu 		& Add Unsigned 				& 0x2 \\ \hline
+			subu		& Subtract Unsigned 		& 0x3 \\ \hline
 			tcmp		& 2's Complement			& 0x4 \\ \hline
 			and			& And						& 0x5 \\ \hline
 			or			& Or						& 0x6 \\ \hline
@@ -380,8 +380,8 @@ source register, RSa, with the other source being the immediate value. The resul
 			Instruction & Description 						& ALU Operation (hex) \\ \hline
 			addi		& Add Immediate						& 0x0 \\ \hline
 			subi 		& Subtract Immediate				& 0x1 \\ \hline
-			adci 		& Add Carry Immediate				& 0x2 \\ \hline
-			subci		& Subtract Carry(Borrow) Immediate 	& 0x3 \\ \hline
+			addui 		& Add Unsigned Immediate			& 0x2 \\ \hline
+			subui		& Subtract Immediate Immediate 	& 0x3 \\ \hline
 			andi		& And Immediate						& 0x5 \\ \hline
 			ori			& Or Immediate						& 0x6 \\ \hline
 			xori		& Exclusive Or Immediate			& 0x7 \\ \hline
@@ -442,13 +442,17 @@ to determine the byte size to read from memory. This encoding is described in th
 
 \paragraph{Overview:}The Load Immediate Instruction Format is for loading immeidate values into a register.
 The DSEL value determines the destination and function of the instruction. This is to allow the selection
-of various register files to be updated. THe DSEL bit values and their function are shown below.  \\
+of various register files to be updated. THe DSEL bit values and their function are shown below. 
+The MSB of DSEL determines if the value is unsigned (1) or signed (0). \\
 \begin{tabular}{l|l}
 		DSEL (hex) & Destination \\ \hline
 		0x0000 & General purpose register file \\
 		0x0001 & System Register File \\
 		0x0010 & Global Co-Processor Register File \\ 
-		0xXX1X & Reserved \\
+		0x0X1X & Reserved \\
+		0x1000 & General purpose register file  (Unsigned)\\
+		0x1001 & System Register File (Unsigned)\\
+		0x1010 & Global Co-Processor Register File (Unsigned)\\ 
 		
 		\end{tabular}
 
@@ -456,9 +460,12 @@ of various register files to be updated. THe DSEL bit values and their function 
 \begin{center}
 	\begin{tabular}{|l|l|l|} \hline
 			Instruction & Description 						& DSEL\\ \hline
-			li			& Load Immediate (GPRF)				& 0x0000 \\ \hline
-			lsi			& Load Immediate System				& 0x0001 \\ \hline
-			lgi			& Load Immediate Global				& 0x0002 \\ \hline
+			li			& load immediate (gprf)				& 0x0000 \\ \hline
+			lsi			& load immediate system				& 0x0001 \\ \hline
+			lgi			& load immediate global				& 0x0002 \\ \hline
+ 			lui			& load immediate (gprf)				& 0x0008 \\ \hline
+			lsui		& load immediate system				& 0x0009 \\ \hline
+			lgui		& load immediate global				& 0x000a \\ \hline 
 
 \end{tabular}
 \end{center}
@@ -614,8 +621,8 @@ vary, and are described in more detail in their individual listings.
 			Instruction & Function 										& Binary \\ \hline
 			add			& Rd = RSa + RSb 								& 000001dddddaaaaabbbbbxxxxxx0000 \\
 			sub			& Rd = RSa - RSb 								& 000001dddddaaaaabbbbbxxxxxx0001 \\
-			addc		& Rd = RSa + RSb 								& 000001dddddaaaaabbbbbxxxxxx0010 \\
-			subc		& Rd = RSa - RSb							 	& 000001dddddaaaaabbbbbxxxxxx0011 \\
+			addu		& Rd = RSa + RSb (Unsigned) 					& 000001dddddaaaaabbbbbxxxxxx0010 \\
+			subu		& Rd = RSa - RSb (Unsigned)					 	& 000001dddddaaaaabbbbbxxxxxx0011 \\
 			tcmp		& Rd = !Rsa	 									& 000001dddddaaaaaxxxxxxxxxxx0100 \\
 			and			& Rd = RSa \& RSb								& 000001dddddaaaaabbbbbxxxxxx0101 \\
 			or			& Rd = RSa $|$ RSb 								& 000001dddddaaaaabbbbbxxxxxx0110 \\
@@ -629,8 +636,8 @@ vary, and are described in more detail in their individual listings.
 			\multicolumn{3}{|c|}{Immediate Instructions} \\ \hline
 			addi		& Rd = RSa + Imm 								& 000011dddddaaaaaiiiiiiiiiii0000 \\
 			subi		& Rd = RSa - Imm 								& 000011dddddaaaaaiiiiiiiiiii0001 \\
-			addci		& Rd = RSa + Imm 								& 000011dddddaaaaaiiiiiiiiiii0010 \\
-			subci		& Rd = RSa - Imm							 	& 000011dddddaaaaaiiiiiiiiiii0011 \\
+			addui		& Rd = RSa + Imm (Unsigned)						& 000011dddddaaaaaiiiiiiiiiii0010 \\
+			subui		& Rd = RSa - Imm (Unsigned)					 	& 000011dddddaaaaaiiiiiiiiiii0011 \\
 			andi		& Rd = RSa \& Imm								& 000011dddddaaaaaiiiiiiiiiii0101 \\
 			ori			& Rd = RSa $|$ Imm 								& 000011dddddaaaaaiiiiiiiiiii0110 \\
 			xori		& Rd = RSa $\oplus$ Imm 						& 000011dddddaaaaaiiiiiiiiiii0111 \\
@@ -650,6 +657,9 @@ vary, and are described in more detail in their individual listings.
 			li			& (GPREGF) Rd = Imm								& 000010ddddd0000iiiiiiiiiiiiiiii \\
 			lsi			& (SYSREGF) Rd = Imm							& 000010ddddd0001iiiiiiiiiiiiiiii \\
 			lgi			& (GLREGF) Rd = Imm								& 000010ddddd0010iiiiiiiiiiiiiiii \\
+			li			& (GPREGF) Rd = Imm								& 000010ddddd1000iiiiiiiiiiiiiiii \\
+			lsi			& (SYSREGF) Rd = Imm							& 000010ddddd1001iiiiiiiiiiiiiiii \\
+			lgi			& (GLREGF) Rd = Imm								& 000010ddddd1010iiiiiiiiiiiiiiii \\
 			\hline
 			\multicolumn{3}{|c|}{Store Instructions} \\ \hline
 			Instruction & Function 										& Binary \\ \hline
