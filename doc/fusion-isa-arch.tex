@@ -619,75 +619,75 @@ vary, and are described in more detail in their individual listings.
 			\multicolumn{3}{c}{Instruction Instruction Summary Table} \\ \hline
 			\multicolumn{3}{|c|}{Integer Instructions} \\ \hline
 			Instruction & Function 										& Binary \\ \hline
-			add			& Rd = RSa + RSb 								& 000001dddddaaaaabbbbbxxxxxx0000 \\
-			sub			& Rd = RSa - RSb 								& 000001dddddaaaaabbbbbxxxxxx0001 \\
-			addu		& Rd = RSa + RSb (Unsigned) 					& 000001dddddaaaaabbbbbxxxxxx0010 \\
-			subu		& Rd = RSa - RSb (Unsigned)					 	& 000001dddddaaaaabbbbbxxxxxx0011 \\
-			tcmp		& Rd = !Rsa	 									& 000001dddddaaaaaxxxxxxxxxxx0100 \\
-			and			& Rd = RSa \& RSb								& 000001dddddaaaaabbbbbxxxxxx0101 \\
-			or			& Rd = RSa $|$ RSb 								& 000001dddddaaaaabbbbbxxxxxx0110 \\
-			xor			& Rd = RSa $\oplus$ RSb 						& 000001dddddaaaaabbbbbxxxxxx0111 \\
-			sal			& Rd = RSa $\ll$ RSb 							& 000001dddddaaaaabbbbbssssss1000 \\
-			sar			& Rd = RSa $\gg$ RSb 							& 000001dddddaaaaabbbbbssssss1001 \\
-			sll			& Rd = RSa $\ll$ RSb 							& 000001dddddaaaaabbbbbssssss1010 \\
-			slr			& Rd = RSa $ \ggg  $ RSb 						& 000001dddddaaaaabbbbbssssss1011 \\
-			comp		& Rd = (RSa == RSb);(RSa $>$ RSb);(RSa $<$ Rsb)	& 000001dddddaaaaaxxxxxssssss1100 \\
+			add			& Rd = RSa + RSb 								& 000001dddddaaaaabbbbbxxxxxxx0000 \\
+			sub			& Rd = RSa - RSb 								& 000001dddddaaaaabbbbbxxxxxxx0001 \\
+			addu		& Rd = RSa + RSb (Unsigned) 					& 000001dddddaaaaabbbbbxxxxxxx0010 \\
+			subu		& Rd = RSa - RSb (Unsigned)					 	& 000001dddddaaaaabbbbbxxxxxxx0011 \\
+			tcmp		& Rd = !Rsa	 									& 000001dddddaaaaaxxxxxxxxxxxx0100 \\
+			and			& Rd = RSa \& RSb								& 000001dddddaaaaabbbbbxxxxxxx0101 \\
+			or			& Rd = RSa $|$ RSb 								& 000001dddddaaaaabbbbbxxxxxxx0110 \\
+			xor			& Rd = RSa $\oplus$ RSb 						& 000001dddddaaaaabbbbbxxxxxxx0111 \\
+			sal			& Rd = RSa $\ll$ RSb 							& 000001dddddaaaaabbbbbsssssss1000 \\
+			sar			& Rd = RSa $\gg$ RSb 							& 000001dddddaaaaabbbbbsssssss1001 \\
+			sll			& Rd = RSa $\ll$ RSb 							& 000001dddddaaaaabbbbbsssssss1010 \\
+			slr			& Rd = RSa $ \ggg  $ RSb 						& 000001dddddaaaaabbbbbsssssss1011 \\
+			comp		& Rd = (RSa == RSb);(RSa $>$ RSb);(RSa $<$ Rsb)	& 000001dddddaaaaaxxxxxsssssss1100 \\
 			\hline
 			\multicolumn{3}{|c|}{Immediate Instructions} \\ \hline
-			addi		& Rd = RSa + Imm 								& 000011dddddaaaaaiiiiiiiiiii0000 \\
-			subi		& Rd = RSa - Imm 								& 000011dddddaaaaaiiiiiiiiiii0001 \\
-			addui		& Rd = RSa + Imm (Unsigned)						& 000011dddddaaaaaiiiiiiiiiii0010 \\
-			subui		& Rd = RSa - Imm (Unsigned)					 	& 000011dddddaaaaaiiiiiiiiiii0011 \\
-			andi		& Rd = RSa \& Imm								& 000011dddddaaaaaiiiiiiiiiii0101 \\
-			ori			& Rd = RSa $|$ Imm 								& 000011dddddaaaaaiiiiiiiiiii0110 \\
-			xori		& Rd = RSa $\oplus$ Imm 						& 000011dddddaaaaaiiiiiiiiiii0111 \\
-			sali		& Rd = RSa $\ll$ Imm 							& 000011dddddaaaaaiiiiiiiiiii1000 \\
-			sari		& Rd = RSa $\gg$ Imm 							& 000011dddddaaaaaiiiiiiiiiii1001 \\
-			slli		& Rd = RSa $\ll$ Imm 							& 000011dddddaaaaaiiiiiiiiiii1010 \\
-			slri		& Rd = RSa $ \ggg  $ Imm 						& 000011dddddaaaaaiiiiiiiiiii1011 \\
-			compi		& Rd = (RSa == Imm);(RSa $>$ Imm);(RSa $<$ Imm)	& 000011dddddaaaaaiiiiiiiiiii1100 \\
+			addi		& Rd = RSa + Imm 								& 000011dddddaaaaaiiiiiiiiiiii0000 \\
+			subi		& Rd = RSa - Imm 								& 000011dddddaaaaaiiiiiiiiiiii0001 \\
+			addui		& Rd = RSa + Imm (Unsigned)						& 000011dddddaaaaaiiiiiiiiiiii0010 \\
+			subui		& Rd = RSa - Imm (Unsigned)					 	& 000011dddddaaaaaiiiiiiiiiiii0011 \\
+			andi		& Rd = RSa \& Imm								& 000011dddddaaaaaiiiiiiiiiiii0101 \\
+			ori			& Rd = RSa $|$ Imm 								& 000011dddddaaaaaiiiiiiiiiiii0110 \\
+			xori		& Rd = RSa $\oplus$ Imm 						& 000011dddddaaaaaiiiiiiiiiiii0111 \\
+			sali		& Rd = RSa $\ll$ Imm 							& 000011dddddaaaaaiiiiiiiiiiii1000 \\
+			sari		& Rd = RSa $\gg$ Imm 							& 000011dddddaaaaaiiiiiiiiiiii1001 \\
+			slli		& Rd = RSa $\ll$ Imm 							& 000011dddddaaaaaiiiiiiiiiiii1010 \\
+			slri		& Rd = RSa $ \ggg  $ Imm 						& 000011dddddaaaaaiiiiiiiiiiii1011 \\
+			compi		& Rd = (RSa == Imm);(RSa $>$ Imm);(RSa $<$ Imm)	& 000011dddddaaaaaiiiiiiiiiiii1100 \\
 			\hline
 			\multicolumn{3}{|c|}{Load Instructions} \\ \hline
-			lw			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa00iiiiiiiiiiiii \\
-			lh			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa01iiiiiiiiiiiii \\
-			lb			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa11iiiiiiiiiiiii \\
-			lth			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa10iiiiiiiiiiiii \\
+			lw			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa00iiiiiiiiiiiiii \\
+			lh			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa01iiiiiiiiiiiiii \\
+			lb			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa11iiiiiiiiiiiiii \\
+			lth			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa10iiiiiiiiiiiiii \\
 			\hline
 			\multicolumn{3}{|c|}{Load Immediate Instructions} \\ \hline
-			li			& (GPREGF) Rd = Imm								& 000010ddddd0000iiiiiiiiiiiiiiii \\
-			lsi			& (SYSREGF) Rd = Imm							& 000010ddddd0001iiiiiiiiiiiiiiii \\
-			lgi			& (GLREGF) Rd = Imm								& 000010ddddd0010iiiiiiiiiiiiiiii \\
-			li			& (GPREGF) Rd = Imm								& 000010ddddd1000iiiiiiiiiiiiiiii \\
-			lsi			& (SYSREGF) Rd = Imm							& 000010ddddd1001iiiiiiiiiiiiiiii \\
-			lgi			& (GLREGF) Rd = Imm								& 000010ddddd1010iiiiiiiiiiiiiiii \\
+			li			& (GPREGF) Rd = Imm								& 000010ddddd0000iiiiiiiiiiiiiiiii \\
+			lsi			& (SYSREGF) Rd = Imm							& 000010ddddd0001iiiiiiiiiiiiiiiii \\
+			lgi			& (GLREGF) Rd = Imm								& 000010ddddd0010iiiiiiiiiiiiiiiii \\
+			li			& (GPREGF) Rd = Imm								& 000010ddddd1000iiiiiiiiiiiiiiiii \\
+			lsi			& (SYSREGF) Rd = Imm							& 000010ddddd1001iiiiiiiiiiiiiiiii \\
+			lgi			& (GLREGF) Rd = Imm								& 000010ddddd1010iiiiiiiiiiiiiiiii \\
 			\hline
 			\multicolumn{3}{|c|}{Store Instructions} \\ \hline
 			Instruction & Function 										& Binary \\ \hline
-			sw			& RSb -$>$ Imm(RSa)								& 01101000iiiaaaaabbbbbiiiiiiiiii\\
-			sh			& RSb -$>$ Imm(RSa)								& 01101001iiiaaaaabbbbbiiiiiiiiii\\
-			sb			& RSb -$>$ Imm(RSa)								& 01101011iiiaaaaabbbbbiiiiiiiiii\\
-			sth			& RSb -$>$ Imm(RSa)								& 01101010iiiaaaaabbbbbiiiiiiiiii\\
+			sw			& RSb -$>$ Imm(RSa)								& 01101000iiiaaaaabbbbbiiiiiiiiiii\\
+			sh			& RSb -$>$ Imm(RSa)								& 01101001iiiaaaaabbbbbiiiiiiiiiii\\
+			sb			& RSb -$>$ Imm(RSa)								& 01101011iiiaaaaabbbbbiiiiiiiiiii\\
+			sth			& RSb -$>$ Imm(RSa)								& 01101010iiiaaaaabbbbbiiiiiiiiiii\\
 			\hline
 			\multicolumn{3}{|c|}{Jump Instructions} \\ \hline		
-			j			& Next PC $<$- (R0 + Imm)						& 000110iiiiiaaaaaiiiiiiiiiiiiiii\\
-			jal			& Next PC $<$- (R0 + Imm); RA0 <- PC 			& 000111iiiiiaaaaaiiiiiiiiiiiiiii\\
-			jr			& Next PC $<$- (RSa + Imm)						& 000110iiiiiaaaaaiiiiiiiiiiiiiii\\
-			jrl			& Next PC $<$- (RSa + Imm); RA0 <- PC			& 000111iiiiiaaaaaiiiiiiiiiiiiiii\\
+			j			& Next PC $<$- (R0 + Imm)						& 000110iiiiiaaaaaiiiiiiiiiiiiiiii\\
+			jal			& Next PC $<$- (R0 + Imm); RA0 <- PC 			& 000111iiiiiaaaaaiiiiiiiiiiiiiiii\\
+			jr			& Next PC $<$- (RSa + Imm)						& 000110iiiiiaaaaaiiiiiiiiiiiiiiii\\
+			jrl			& Next PC $<$- (RSa + Imm); RA0 <- PC			& 000111iiiiiaaaaaiiiiiiiiiiiiiiii\\
 			\hline
 			\multicolumn{3}{|c|}{Branch Instructions} \\ \hline
-			beq			& Next PC $<$- (RSa == RSb) ? PC+Imm : PC+4		& 000101iiiiiaaaaabbbbbiiiiiiiii00\\
-			bne			& Next PC $<$- (RSa != RSb) ? PC+Imm : PC+4		& 000101iiiiiaaaaabbbbbiiiiiiiii01\\
-			bgt			& Next PC $<$- (RSa $>$ RSb) ? PC+Imm : PC+4	& 000101iiiiiaaaaabbbbbiiiiiiiii10\\
-			blt			& Next PC $<$- (RSa $<$ RSb) ? PC+Imm : PC+4	& 000101iiiiiaaaaabbbbbiiiiiiiii11\\
+			beq			& Next PC $<$- (RSa == RSb) ? PC+Imm : PC+4		& 000101iiiiiaaaaabbbbbiiiiiiiiii00\\
+			bne			& Next PC $<$- (RSa != RSb) ? PC+Imm : PC+4		& 000101iiiiiaaaaabbbbbiiiiiiiiii01\\
+			bgt			& Next PC $<$- (RSa $>$ RSb) ? PC+Imm : PC+4	& 000101iiiiiaaaaabbbbbiiiiiiiiii10\\
+			blt			& Next PC $<$- (RSa $<$ RSb) ? PC+Imm : PC+4	& 000101iiiiiaaaaabbbbbiiiiiiiiii11\\
 			\hline
 			\multicolumn{3}{|c|}{System Instructions} \\ \hline
-			syscall		& System Call (Raise Privalege)					& 00100dddddaaaaaa00000000iiiiiiii\\
-			sysret		& System Return (Lower Privalege)				& 00100dddddaaaaaa00000001iiiiiiii\\
-			stspr		& (SYSRF) Rd $<$- RSa							& 00100dddddaaaaaa00000010xxxxxxxx\\
-			ldspr		& (SYSRF) RSa -$>$ Rd							& 00100dddddaaaaaa00000011xxxxxxxx\\
-			sync		& Flush Pipeline								& 00100xxxxxxxxxxx00000100xxxxxxxx\\
-			pmir		& PML + Imm ?									& 00100xxxxxxxxxxx00000111iiiiiiii\\
-			pmd			& PML - Imm ?									& 00100xxxxxxxxxxx00001000iiiiiiii\\
+			syscall		& System Call (Raise Privalege)					& 00100dddddaaaaaa00000000iiiiiiiii\\
+			sysret		& System Return (Lower Privalege)				& 00100dddddaaaaaa00000001iiiiiiiii\\
+			stspr		& (SYSRF) Rd $<$- RSa							& 00100dddddaaaaaa00000010xxxxxxxxx\\
+			ldspr		& (SYSRF) RSa -$>$ Rd							& 00100dddddaaaaaa00000011xxxxxxxxx\\
+			sync		& Flush Pipeline								& 00100xxxxxxxxxxx00000100xxxxxxxxx\\
+			pmir		& PML + Imm ?									& 00100xxxxxxxxxxx00000111iiiiiiiii\\
+			pmd			& PML - Imm ?									& 00100xxxxxxxxxxx00001000iiiiiiiii\\
 			\hline
 		\end{longtable}
 	\end{center}
