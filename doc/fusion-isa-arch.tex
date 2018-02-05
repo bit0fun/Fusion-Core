@@ -13,7 +13,7 @@
 \hypersetup{colorlinks=false,linktoc=all}
 
 
-\title{Fusion-Core ISA Definition: Revision 0.1}
+\title{Fusion-Core ISA Definition: Revision 0.2}
 \author{Dylan Wadler}
 
 \begin{document}
@@ -25,6 +25,8 @@
 \newpage
 \part{Administrative}
 \section{Change log}
+\paragraph{Version 0.2} Added comprehensive list of Instruction usage. Added Programming Model. Changed opcode definitions to create simpler
+decode.
 \paragraph{Version 0.1} Initial Definition of the Instruction Set Architecture
 
 \section{Introduction}
@@ -158,17 +160,16 @@ for a minimal system, though more can certainly be implemented if required. Each
 			\hline
 			\multicolumn{4}{|c|}{System Registers} \\
 			\hline
-			Register Name & Description & Width (bytes) &Address (Hex) \\ \hline
-			CPUREV  & CPU Revision 				 & 	1		& 0x00000000\\ 	\hline
-			CPNUM	& Co-Processor Number		 &	1		& 0x00000001\\	\hline
-			CPO0  	& Co-Processor 0 ID 		 & 	2		& 0x00000002\\ 	\hline
-			CPO1  	& Co-Processor 1 ID 		 &	2		& 0x00000004\\ 	\hline
-			CPO2  	& Co-Processor 2 ID 		 &	2		& 0x00000006\\ 	\hline
-			CPO3  	& Co-Processor 3 ID 		 &	2		& 0x00000008\\ 	\hline
-			STAT	& Status Register			 &	1		& 0x0000000a \\ 	\hline
-			n/a		& RESERVED				 	 &	1		& 0x0000000b \\ \hline
-			OPCAR	& Opcode Allocation Pointer	 &	4		& 0x0000000c \\ \hline
-			
+			Register Name 	& Description 				 		& Width (bytes) 	& Address (Hex) \\ \hline
+			CPUREV  		& CPU Revision 				 		& 	1				& 0x00000000 	\\ \hline
+			CPNUM			& Co-Processor Number		 		&	1				& 0x00000001 	\\ \hline
+			STAT			& Status Register			 		&	1				& 0x00000002 	\\ \hline
+			n/a				& RESERVED				 	 		&	1				& 0x00000003 	\\ \hline
+			OPCARP			& Opcode Registration Table Pointer	&	4				& 0x00000004 	\\ \hline
+			CPIDTP 			& Co-Processor ID Table Pointer 	& 	4				& 0x00000008 	\\ \hline
+			RPINFO			& Running Process Info				&	4				& 0x0000000c 	\\ \hline
+			UINTEN			& User Interrupt Enable				&	4				& 0x00000010	\\ \hlinw
+
 		\end{tabular}
 	\end{center}
 \end{figure}
@@ -182,11 +183,15 @@ for a minimal system, though more can certainly be implemented if required. Each
 			\hline
 			\multicolumn{3}{|c|}{Supervisor Registers} \\
 			\hline
-			Register Name & Description & Address (Hex)\\ \hline
-			SMSTAT & Supervisor mode status register & 0x00000000 \\ 	\hline
-			PRCPR0 & Process Pointer register 0 	 & 0x00000004	\\ \hline 
-			HTINFO & Hardware Thread Info 			 & 0x00000008 \\ \hline
-			HTCTL  & Hardware Thread Control		 & 0x0000000c \\ \hline
+			Register Name 	& Description 								& Address (Hex) \\ \hline
+			SMSTAT 			& Supervisor mode status 					& 0x00000000 	\\ \hline
+			RPCPR0 			& Running Process Pointer 					& 0x00000004	\\ \hline 
+			RPITP			& Running Process Info Table Pointer		& 0x00000008	\\ \hline
+			HTINFOP			& Hardware Thread Info Table Pointer		& 0x0000000c 	\\ \hline
+			HTCTLP 			& Hardware Thread Control Table Pointer		& 0x00000010 	\\ \hline
+			ECODE			& Exception Code							& 0x00000014	\\ \hline
+			n/a				& RESERVED									& 0x00000015	\\ \hline
+			n/a				& RESERVED									& 0x00000018	\\ \hline
 		\end{tabular}
 	\end{center}
 	
@@ -208,6 +213,7 @@ The supervisor registers are aimed at higher level functions required for operat
 and can either be partially implemented or not at all. The optional parts will be noted in the register descriptions.\\
 
 \subsection{Special Purpose Registers}
+
 \subsubsection{System Registers}
 %STAT register START
 \begin{center}
@@ -231,8 +237,6 @@ and can either be partially implemented or not at all. The optional parts will b
 	\hfill  & With addition, this would set the bit to a 1 when true. \\
 	\hfill	& For subtraction, the inverse is true. \\ 
 	PML 	& Permission Level; Inidcates the running process' permission level. Read only.\\
-			%	The three registers, PML2, PML1 and PML0 are used to generate a 3 bit value to determine the permission level. The following
-		%		denotes the different states with PML1 being the left bit, and PML0 being the right bit. \\
 	\hfill	&	\begin{tabular}{l|l}
 			PML & Description \\ \hline
 			000 & Low User Level \\
@@ -246,32 +250,91 @@ and can either be partially implemented or not at all. The optional parts will b
 	\end{tabular}\\
 	\hfill & The permission levels are explained in more detailed in their dedicated section.\\
 	PEMA   & Permission Accepted; Indictates whether a privaledged systemcall request was accepted. Read only \\
-	INTN   & Interrupt Enable; Indicates whether interrupts are enabled. Read/Write \\ 
+	GINE   & Global Interrupt Enable; Indicates whether interrupts are enabled. Read/Write \\ 
 	SPCP   & Support CoProcessors; Indicates whether co-processor code is recognized as \\
-	\hfill & illegal instruction or microcode operation. \\
+	\hfill & illegal instruction or is handled by an interrupt. (0 is illegal, 1 is interrupt handled) \\
 	\hfill & Read/Write. \\
 
 \end{tabular}
-\paragraph{} In order to write to this register, the bits that are read only can be set to any value. \\
+\paragraph{} The \textbf{STAT} register provides the programmer with various information about the current state of the processor.
+\paragraph{} In order to write to this register the bits that are defined as read only should be set to 0.  \\
 \paragraph{Optionality} In the event that the permission levels are not needed, they should be hard coded to 0x7, the
 highest permission level to avoid porting code. PEMA should also be hardcoded to a logic high for the same reasons stated.\\
+
 \begin{center}
 	\line(1,0){250}
 \end{center}
 
 %STAT register END
+
+
+%UINTEN register START
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+	%	\hline
+			\multicolumn{8}{c}{\textbf{STAT}: Status Register}  \\ \hline
+
+		 	31 	& 30  	&  29   &	28	&	27	&	26 	&   25 		&	24 		\\ 
+			\hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt}	& \hspace{5pt} 	& \hspace{5pt}	& \hspace{5pt}    \\ \hline
+		 	23 	& 22  	&  21  	&	20	&	19	&	18 	&   17 		&	16 		\\ 
+			\hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt}	& \hspace{5pt} 	& \hspace{5pt}	& \hspace{5pt}    \\ \hline
+		 	15 	& 14  	&  13   &	12	&	11	&	10 	&	9 		&	8 		\\ 
+			NA 	& NA 	& NA 	& NA 	& NA 	& NA 	& NA 		& NA    \\ \hline
+		 	7 	& 6  	&  5   	&	4	&	3	&	2  	&	1 		&	0 		\\ 
+			NA 	& NA 	& NA 	& NA 	& NA 	& NA   	& ROI  		& CPMI    \\ \hline
+		
+	\end{tabular}
+\end{center}
+
+\paragraph{} The UINTEN register holds the settings for enabling various interrupts. More information about each interurpt
+is available in the interrupt section. The spots that are blank are usable by the implementation, while spots marked 'NA'
+are reserved for future use. Setting a bit field to 1 enables the interrupt vector, after ensuring that the GINE bit in \textbf{STAT} is set.
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
+%UINTEN register END
+
+
+
 \subsubsection{Supervisor Registers}
+\paragraph{} This section is still being developed. It will be updated in the future.
+
 
 \section{Permission Levels}
+\paragraph{} The various permission levels are designed to allow for protected execution between user space, a kernel, and virtual
+environments. Permission levels are changed through dedicated instructions to increase or decrease the permission level counter. System calls
+can change the permission level in order to execute specific functions, but can be revoked in order to keep security. The individual function
+calls can be defined in the System Call Function Pointer Table (SYSFPT). 
+\paragraph{} On boot, the default permission level is initialized to the highest permission level in order to properly configure the processor.
+There are no restrictionsto access. However, after configuration the permission level should be lowered as required to ensure secure execution.
 \subsection{User Levels}
-\subsubsection{Low User Level} User space programs are designed to run in this permission level. Write access to supervisor registers is revoked.
-\subsubsection{High User Level}
+
+\subsubsection{Low User Level} User space processes are designed to run in this permission level. Write access to supervisor registers is revoked,
+and all modifying system calls are checked for allowed execution. Low priority, non time sensitive applications, high security risk applications
+should be run at this level. Since the Low User Level is the most restrictive priroity level, in the event of a illegal operation by the application
+the processor should attempt to revert to a state before the illegal action and either kill or halt the offending process in order to prevent further
+illegal actions. Halting the process should be used to determine more information about the illegal action, while killing the process is ideal for
+more critical situations. 
+
+\subsubsection{High User Level} This user level is designed to keep some security between user space and supervisor space, whiling loosening
+restrictions. Only reads are allowed to system and supervisor registers, and a limited number of system calls will not need to be verified. 
+The verifide system calls are specified in the 8 system call registers: SCPMHULX. Time critical user space processes, trusted system call 
+saturated processes, and processes that require reading system and supervisor registers should use this permission level. 
+registers. 
 
 \subsection{Supervisor Levels}
-\subsubsection{Low Supervisor Level}
-\subsubsection{High Supervisor Level}
+\subsubsection{Low Supervisor Level} This permission level allows reads and writes to most system registers, with few restrictions. Hardware drivers,
+real time processes, and non configuratory kernel tasks should use this level.
+\subsubsection{High Supervisor Level} This permission level is for unrestricted access for operating system environments. Essential Kernel processes and
+bare-metal embedded applications are examples for using this permission level. All configuration registers are available, only hypervisor configuration and
+actions are restricted. If the hypervisor system is not implemented, this level is the highest permission level.
 
 \subsection{Hypervisor Levels}
+\paragraph{} This section is still under development. At this time, the Hypervisor levels simply allow access to all functions of a processor, including the
+virturalization feeatures. Since the virturalization functions are not defined yet, this is a placeholder for the time being.
+
 \subsubsection{Low Hypervisor Level}
 \subsubsection{High Hypervisor Level}
 \subsubsection{Top Hypervisor Level}
@@ -281,33 +344,100 @@ highest permission level to avoid porting code. PEMA should also be hardcoded to
 With memory capacity increasing in size as time goes on, this may change. %In order to access 
 %larger sections of memory, the use of an offset register may be implemented to create 64 bit addresses.
 %The use of virtual memory with said offset register is also accepted.
+\paragraph{} The Fusion-ISA uses a modified harvard architecture, such that the programmer should have the appearance of a harvard architecture.
+Compliance to this is not strict, as any variation inbetween is allowed, but the separation between data and instruction memory should be made.
 
 \subsection{Memory Locations for Vector Table}
 \subsubsection{Interrupt Vector Table}
-\subsubsection{Exception Vector Table}
-
+\paragraph{} The table below is the definition for the Interrupt Vectors. The vectors are padded by two addresses
+in order to give enough space for a call macro, which expands to two instructions. Additional interrupt vectors 
+can be created, though the ones specified are necessary.
 
 \begin{figure}[!h]
 	\begin{center}
 		\begin{tabular}{|l|l|}
 			\hline
-			Address (32 bit) &  Definition\\ \hline
-			0x0000 & Reset \\ 	\hline
-			0x0004 & Co-Processor Microcode Exception \\ 	\hline
-			0x0008 &  \\ 	\hline
-			0x000c &  \\ 	\hline
-			0x0010 &  \\ 	\hline
-			0x0014 &  \\	\hline
+			Address (32 bit) 	& Name  & Definition						\\  \hline
+			0x0000 				& Reset & Reset processor					\\ 	\hline
+			0x0008 				& CPMI  & Co-Processor Microcode Interrupt 	\\ 	\hline
+			0x0010 				& ROI	& Register Overflow (Arithmetic)	\\ 	\hline
+			0x0018				&  \\ 	\hline
+			0x0020 				&  \\ 	\hline
+			0x0028 				&  \\	\hline
 		\end{tabular} 
-		\caption{Exception Vector Table}
+		\caption{Interrupt Vector Table}
 	\end{center}
 	
 \end{figure} 
+
+\subsubsection{Exception List}
+
+\begin{figure}[!h]
+	\begin{center}
+		\begin{tabular}{|l|l|}
+			\hline
+			Exception Code 		& Name		& Definition						\\ \hline
+			0x0000 				& INSFPEM	& Insufficient Permissions 			\\ \hline
+			0x0001 				& MISALL	& Misaligned Address	 			\\ \hline
+			0x0002 				& HALT		& Halt Request			 			\\ \hline
+			0x0003 				& PTERM		& Terminate Process		 			\\ \hline
+			0x0004 				& PKILL		& Kill Process			 			\\ \hline
+			0x0005				& PEXIT		& Process Exit (End)				\\ \hline
+			0x0006				& TTERM		& Terminate Thread					\\ \hline
+			0x0007				& TKILL		& Kill Thread						\\ \hline
+			0x0008				& TEXIT		& Exit Thread (End)					\\ \hline
+		\end{tabular} 
+		\caption{Exception List}
+	\end{center}
+	
+\end{figure} 
+
 
 \begin{center}
 	\line(1,0){250}
 \end{center}
 
+\clearpage
+\section{Instruction Usage}
+\paragraph{}This section will go over programming use of the instructions including the affects on the processor. Information on the 
+instruction encodings and list of binary representations of each instruction is available in the 'Instructions' Section.
+\subsection{Integer}
+\paragraph{} The following instructions operate on two registers, RSa and RSb, and store the result into Rd. The Z and OV flags are affected
+by the output of the instructions listed below. Overflows of register operations can be handled by the program, or the processor by checking the
+OV flag in the \textbf{STAT} register, or enabling the ROI interrupt. The Z flag is available as well to the programmer, but it does not have
+it's own interrupt to use. Since branch instructions exist to check if a register is equal to zero, the Z flag does not serve a purpose at this time.
+\paragraph{} Since arithmetic functions are simple to explain, the following table will denote the operands and function of the Integer instructions. 
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
+\subsection{Immediate}
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+\subsection{Load/Store}
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+\subsection{Branch/Jump}
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+\subsection{System}
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+\clearpage
+\section{Co-Processor Instruction Usage}
+\paragraph{}This section is similar to the last, but pertains to instructions specific to various defined co-processors.
+\subsection{Math Unit}
+\subsection{Vector Operations Unit}
+\subsection{}
 \clearpage
 
 \part{Instructions}
@@ -385,7 +515,8 @@ source register, RSa, with the other source being the immediate value. The resul
 			addi		& Add Immediate						& 0x0 \\ \hline
 			subi 		& Subtract Immediate				& 0x1 \\ \hline
 			addui 		& Add Unsigned Immediate			& 0x2 \\ \hline
-			subui		& Subtract Immediate Immediate 	& 0x3 \\ \hline
+			subui		& Subtract Immediate 				& 0x3 \\ \hline
+			noti		& Invert Immediate					& 0x4 \\ \hline
 			andi		& And Immediate						& 0x5 \\ \hline
 			ori			& Or Immediate						& 0x6 \\ \hline
 			xori		& Exclusive Or Immediate			& 0x7 \\ \hline
@@ -624,11 +755,29 @@ vary, and are described in more detail in their individual listings.
 \newpage
 \subsection{List of OPCodes}
 	\begin{center}
-		\begin{tabular}{|c|c|c|}
-			Op Code & Description & Instrucion Formats \\ \hline
+		\begin{tabular}{|c|c|}
+			\hline
+			Op Code & Description 				 	\\ \hline
+			000001	& Register ALU instructions	 	\\ \hline
+			000010	& Load Immediate instructions 	\\ \hline
+			000011	& Immediate ALU instructions	\\ \hline
+			000101	& Branch Instructions		\\ \hline
+			000110	& Jump Instructions				\\ \hline
+			000111	& Jump and Link Instructions	\\ \hline
+			001XXX	& System Instructions			\\ \hline
+			010010	& Load Instructions				\\ \hline
+			011010	& Store Instructions			\\ \hline
+			1XXXXX	& Co-Processor Instructions		\\ \hline
+
 		\end{tabular}
 	\end{center}
-
+\paragraph{} Each bit of the opcode directly affects the resources required for each instruction. This choice was made 
+in hopes of reducing decode complexity. The MSB of the opcode selects if the instruction is for the co-processor,
+or main core. This makes it incredibly easy to determine which core the instruction goes to, without sacrificing
+more opcode bits. The LSB of the opcode selects ALU usage, the second to last bit selects the immediate field.
+\paragraph{} However, in some cases the more significant bit will modify the functions of the later bits. The 3rd to last
+bit in the opcode selects a change in PC, but the following bits do not correspond to the previous meanings mentioned. The
+4th bit denotes a system instruction, and the 5th bit denotes memory access. 
 \newpage
 \subsection{Instruction Details}
 \paragraph{}This section will go into detail about the instructions that are available, with their functions and options.\\
@@ -660,6 +809,7 @@ vary, and are described in more detail in their individual listings.
 			subi		& Rd = RSa - Imm 								& 000011dddddaaaaaiiiiiiiiiiii0001 \\
 			addui		& Rd = RSa + Imm (Unsigned)						& 000011dddddaaaaaiiiiiiiiiiii0010 \\
 			subui		& Rd = RSa - Imm (Unsigned)					 	& 000011dddddaaaaaiiiiiiiiiiii0011 \\
+			noti		& Rd = ! Imm									& 000011ddddd00000iiiiiiiiiiii0100 \\
 			andi		& Rd = RSa \& Imm								& 000011dddddaaaaaiiiiiiiiiiii0101 \\
 			ori			& Rd = RSa $|$ Imm 								& 000011dddddaaaaaiiiiiiiiiiii0110 \\
 			xori		& Rd = RSa $\oplus$ Imm 						& 000011dddddaaaaaiiiiiiiiiiii0111 \\
@@ -731,42 +881,52 @@ vary, and are described in more detail in their individual listings.
 
 
 \section{Exceptions and Interrupts}
-\subsection{Exceptions}
+\paragraph{} This ISA differentiates between Exceptions and Interrupts based on function. Interrupts are vectored, to allow
+the running process to define what should be done. Exceptions are more based in hardware, and require minimal setup in software.
 
+\subsection{Exceptions}
+\paragraph{} This section is still under development. 
 
 \subsection{Interrupts}
+\paragraph{} This section is still under development.
 \subsubsection{User Level}
 \subsubsection{Supervisor Level}
 
 \clearpage
 \part{Co-Processors}
 \section{Co-Processor Overview}
-\paragraph{}Co-processors are the main point of the Fusion-Core archetecture. As the ISA only defines the main core, the implementator is free to use
-whichever co-processors that would be necessary for an application. Hardware acceleration for vector instructions, encryption, floating point, communication,
-etc. There is no limitation for what kind of co-processor that could be used, only the number that could fit within the defined usable instructions.
-\paragraph{}It is important to note that the co-processors do not need to be of a RISC construction, due to this reliance on co-processors without
-specifying how they should be implemented. The main core is indeed RISC, as only the simplest instructions are defined that something as small as a microcontroller
-could use without issue.
-\paragraph{}The idea behind the separation of processor is to create different pipelines for each core. In doing so, the main core could be clocked faster that of
-a pipeline requiring integer multiplication, or some other time consuming operation. As well, the individual cores could be clocked at their respective 
-fastest frequencies, thus resulting in the fastest possible performance of each part. To deal with writing to memory with varying clock speeds for each core,
-a FIFO buffer is used to send each write to main memory. This FIFO is to create the illusion of write atomicity. The FIFO should have connections to allow
-for a seeming atomic read though, the programmer should note that reads require care; if there is a dependancy on a slow core's written value. This programming 
-paradigm is similar to that of parallel threads, where certain values may not be available until an unknown time. The ISA does not define any particular ways
-to handle this and it is either left up to the implementation, or programmer depending.
-\paragraph{}As shown in the instruction section, there are predefined regions for the co-processor slots. 
-This is defined to allow for the compiler/assembler to work across implementations. At this time, only a fixed number of co-processors can be used on 
-an implementation at a time, though future expansions to the ISA may change this.  
+\paragraph{}Co-processors are the main point of the Fusion-Core archetecture. As the ISA strictly specifies the main core for code compatibility,
+the implementator is free to use whichever co-processors that would be necessary for an application. As speeding up the common case is the main goal in CPU design,
+these co-processors should enhance the common case for the specific implementation. The ISA has no specific restrictions for a co-processor, but for non-memory
+mapped co-processors, they should be created as dictated by the interface speicifed below.
+
+\paragraph{} Examples of co-processors could be hardware acceleration for vector instructions, encryption, floating point, or communication.
+The co-processor can be as complex, or as simple as one requires. There is no limitation for what kind of co-processor that could be used, 
+only the number of co-processors that can utilize the opcode space allocated for co-processors. The co-processors can also share the same opcode, which
+can help create vectorized instruction units such as GPU like co-processors, coupled directly to the main core's instruction flow. The programmer would
+be able to exploit more locality in programming as switching to different sections of memory is not required. It should be noted that this last sentence is
+not a requirement, but just a possibility and the current implementation of the default case for the GNU Binutils port. This can easily be modified with a 
+custom linker script.
+
+\paragraph{} The reasoning behind co-processors use is to allow for code compatibility between nearly all implementations of the Fusion-Core ISA, and
+allowing for an enhancement to the common case of a processor's use. Most architectures do not allow for radical implementaitons in the architecture itself,
+only the microarchitecture. And by keeping complex instructions away from the main core, a simple decode unit can be created to allow for potentially faster
+pipelining. 
 
 \subsection{Co-Processor Interface}
-\paragraph{}The interface is designed to be extremely simple, as to make co-processors easy to implement. The inputs is just the output from the instruction fetch
-passthrough on the decode unit. As shown in the instruction list, there is a section of 6 bits for the co-processor's opcode. Please also note
-that this section of the instruction is different than the opcode , 0x3f (may change to 0x20 to allow for more opcodes for the co-processors) , which indicates that the instruction is for the co-processor. To save connections, 
-the normal opcode section is removed, leaving 26 bit physical instructions. Using more bits per instruction is not supported at this time, though it is possible
-to take the instruction fetch output directly. 
+
+\paragraph{Co-Processor Opcode space} Co-processor instructions are enabled through use of the most significant bit of the opcode field. 
+The processor should be able to distinguish between main core and co-processor instructions quickly, and a single bit is the simplest way of doing so.
+The other 5 bits are completely usable for whichever purpose the implementation could desire.
+
+\paragraph{} In order to let the programmer know what co-processors are available, the opcode registration table should contain the co-processor ID (CPID).
+This ID is provided by the Fusion-Core developers. Please send an email to cpid@fusion-core.org for making requests for a new co-processor.
+This ID will be implemented to allow for proper disassembly and assembly of the instructions in the GNU Binutils port. It is also possible to not use an official
+CPID, however no support will be given to the developers of the co-processor.
+
+\subsubsection{Decode unit Connections}
 \subsubsection{Co-Processor Conventions}
 \subsubsection{Register Connections}
-\subsubsection{Decode unit Connections}
 \subsection{Interface Connection Definitions}
 \subsection{Adding custom Co-Processor}
 \subsection{List of Co-Processors}
