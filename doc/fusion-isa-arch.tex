@@ -25,46 +25,59 @@
 \newpage
 \part{Administrative}
 \section{Change log}
-\paragraph{Version 0.2} Added comprehensive list of Instruction usage. Added Programming Model. Changed opcode definitions to create simpler
-decode.
+\paragraph{Version 0.2} Added comprehensive list of Instruction usage for programmers. Changed opcode definitions to create simpler
+decode, with availability to create new instructions from the existing opcodes. Including more information about special purpose registers.
 \paragraph{Version 0.1} Initial Definition of the Instruction Set Architecture
 
 \section{Introduction}
 
 \subsection{About}
-\paragraph{Introduction}The Fusion-Core ISA is dedicated to creating an easily expandible architecture without having to 
+\paragraph{Introduction}The Fusion-Core ISA is dedicated to creating an easily expandable architecture without having to 
 recompile a program's binary. By use of defining an easy interface with a simple core instruction set, this allows for
-more freedom in implementation. High end processors and microcontrollers would only require slight varaitions in
+more freedom in implementation. High end processors and microcontrollers would only require slight variations in
 configuration, as their core would remain identical save for easy to maintain and scalable co-processors.
 \paragraph{Main Ideas}The architecture is Big endian, with a core instruction set that is RISC, but the co-processors do not need to adhere to the RISC philosophy. This allows for more flexibility in design, and possibly faster core clock speeds as the pipeline would depend on smaller amounts of logic. Only the instructions provided in this document are to be implemented in the main processor. The co-processors defined in this document are recommended, but not required for normal function. Co-processor documentation is to be provided by the creator, and should adhere to the standards of clarity and conciseness such that it can be easily implemented from the documentation alone in a HDL. 
 \paragraph{64 Bit instructions:}At this moment in time, the Fusion-Core ISA is only a 32 bit ISA. Due to the focus on co-processors,
 older implementations could easily be modified to include 64 bit operations.
 \paragraph{Co-Processors}The Co-Processor interface is currently defined by setting the MSB within the OP Code field of 
-an instruction, to decrease complexity of the Decode unit. In doing so, this allows for coprocessor code to be written in the same memory space as the main processor code. In the current iteration, up to 32 different coprocessors can be used, with the option for dynamic or static allocation of the OP Codes. The interface for the coprocessors is explained further in the dedicated section.
+an instruction, to decrease complexity of the Decode unit. In doing so, this allows for co-processor code to be written in the same memory space as the main processor code. In the current iteration, up to 32 different co-processors can be used, with the option for dynamic or static allocation of the OP Codes. The interface for co-processors is explained further in the dedicated section.
 
 \subsection{Goals}
 \paragraph{}The main goal is to provide an architecture with a simple decoding unit and the ability to utilize a single binary for all implementations of the architecture.
+In order to do this, a strict implementation of the main core is outlined in this document, along with registering co-processors to provide consistency. 
+Mechanisms to allow for co-processor instructions to be executed in software are also available; more information is available in the respected section.
 \subsection{Conventions}
 \paragraph{Document Conventions:}Example code will be shown with \texttt{monospace} text. General purpose registers will be denoted with
 \$R\# where \# is the number of the register. Special purpose registers will be written with \textbf{bold} text.
 %\paragraph{Naming Conventions:}The name of input signals will have "\_in" after the signal name, with "\_out" after output signals.
 %This is mainly used in the verilog example implementation. If a naming convention is not globally used, it will be stated in the individual section that it pertains to. 
-
+\begin{center}
+	\line(1,0){250}
+\end{center}
+\clearpage
 \part{Programming Information}
 \section{Register File Definitions}
 \paragraph{}This section goes over the different registers available in the ISA. Each register file name begins with 
 "REGF", such as the first General Purpose Register File being REGFGP0. Any additional register files require the number after the
 name of the register file. Register files with additional numbers after them are bank switched to reduce space, hence why the number is
 required to denote the register file space used.
-\paragraph{}To alleviate context switching delays, three general purpose register files are bank availble by bank switching. Only these register files are required
-for a minimal system, though more can certainly be implemented if required. Each register file can be accessed by changing the value in the BSELRF register. 
-\subsection{Register File List}
+%\paragraph{}To alleviate context switching delays, three general purpose register files are bank availble by bank switching. Only these register files are required
+%for a minimal system, though more can certainly be implemented if required. Each register file can be accessed by changing the value in the BSELRF register. 
+\clearpage
+\subsection{General Purpose Registers}
+\paragraph{}32 general purpose registers that are 32 bits wide are available, as shown in Figure 1, in the previous section. 
+There is a distinction between the System Register File and the General Purpose Register File, as during certain syscall
+instructions, the register files are bank switched. Only GP0 through GP7 are saved, for passing between the different banks. 
+
+\paragraph{}While it is not defined by the architecture, larger general purpose registers can be used instead of 32 bit wide registers. The System Register File allows 8 bit addressing for the registers to be accessed, in order to utilize more of the memory space.
+If larger registers are needed, consider using a co-processor to for instructions that require larger operands. 
+This provides code compatibility between different implementations.
 \begin{figure}[!h]
 	\caption{General Purpose Registers}
 	%	\begin{center}
 	\parbox{0.5\linewidth}{
 		\centering
-		\fontsize{6}{8}\selectfont
+		\fontsize{10}{12}\selectfont
 		\begin{tabular}{|l|l|}
 			\hline
 			\multicolumn{2}{|c|}{GPREGF} \\
@@ -106,8 +119,8 @@ for a minimal system, though more can certainly be implemented if required. Each
 	}
 	\hfill
 	\parbox{0.5\linewidth}{
-		\centering\fontsize{6}{8}\selectfont
-		\fontsize{6}{8}\selectfont
+		\centering
+		\fontsize{10}{12}\selectfont
 		\begin{tabular}{|l|l|}
 			\hline
 			\multicolumn{2}{|c|}{SYSREGF} \\
@@ -150,12 +163,22 @@ for a minimal system, though more can certainly be implemented if required. Each
 	%		\end{center}
 \end{figure}
 
+\clearpage
 
-\begin{figure}
+
+\subsection{Special Purpose Registers}
+\paragraph{}The special registers are sorted between the System Registers and the Supervisor Registers. The system registers provide
+simple configuration values and some read-only registers to give the programmer information about the implementation.
+The registers defined in this manual are the bare minimum special purpose registers, and
+should be included for code compatibility. \\
+The supervisor registers are aimed at higher level functions required for operating system environments. They are not essential for operation,
+and can either be partially implemented or not at all. The optional parts will be noted in the register descriptions.\\
+
+\begin{figure}[!h]
 	
-	\caption{Special Registers}
+	\caption{System Registers}
 	\begin{center}
-		\fontsize{6}{8}\selectfont
+		\fontsize{10}{12}\selectfont
 		\begin{tabular}{|l|l|l|l|}
 			\hline
 			\multicolumn{4}{|c|}{System Registers} \\
@@ -167,18 +190,20 @@ for a minimal system, though more can certainly be implemented if required. Each
 			n/a				& RESERVED				 	 		&	1				& 0x00000003 	\\ \hline
 			OPCARP			& Opcode Registration Table Pointer	&	4				& 0x00000004 	\\ \hline
 			CPIDTP 			& Co-Processor ID Table Pointer 	& 	4				& 0x00000008 	\\ \hline
-			RPINFO			& Running Process Info				&	4				& 0x0000000c 	\\ \hline
-			UINTEN			& User Interrupt Enable				&	4				& 0x00000010	\\ \hlinw
+			UINTEN			& User Interrupt Enable				&	4				& 0x0000000c	\\ \hline
+			RPTINFO			& Running Process Thread Info		&	4				& 0x00000010 	\\ \hline
+			RPID			& Running Process ID				&	2				&	0x00000012  \\ \hline
 
+			
 		\end{tabular}
 	\end{center}
 \end{figure}
 
-\begin{figure}
+\begin{figure} [!h]
 	\caption{Supervisor Registers}
 	
 	\begin{center}
-		\fontsize{6}{8}\selectfont
+		\fontsize{10}{12}\selectfont
 		\begin{tabular}{|l|l|l|}
 			\hline
 			\multicolumn{3}{|c|}{Supervisor Registers} \\
@@ -196,25 +221,86 @@ for a minimal system, though more can certainly be implemented if required. Each
 	\end{center}
 	
 \end{figure}
-\subsection{General Purpose Registers}
-\paragraph{}32 general purpose registers that are 32 bits wide are available, as shown in Figure 1, in the previous section. 
-There is a distinction between the System Register File and the General Purpose Register File, as during certain syscall
-instructions, the register files are bank switched. Only GP0 through GP7 are saved, for passing between the different banks. 
-
-\paragraph{}While it is not defined by the architecture, larger general purpose registers can be used instead of 32 bit wide registers. The System Register File allows 8 bit addressing for the registers to be accessed, in order to utilize more of the memory space.
-If larger registers are needed, consider using a co-processor to for instructions that require larger operands. 
-This provides code compatibility between different implementations.
-\subsection{Special Registers}
-\paragraph{}The special registers are sorted between the System Registers and the Supervisor Registers. The system registers provide
-simple configuration values and some read-only registers to give the programmer information about the implementation.
-The registers defined in this manual are the bare minimum special purpose registers, and
-should be included for code compatibility. \\
-The supervisor registers are aimed at higher level functions required for operating system environments. They are not essential for operation,
-and can either be partially implemented or not at all. The optional parts will be noted in the register descriptions.\\
-
-\subsection{Special Purpose Registers}
+\clearpage
+\subsection{Special Purpose Register Definitions}
 
 \subsubsection{System Registers}
+
+% Register Template 8 bits
+%REGNAME register START
+%\begin{center}
+%	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+%		\multicolumn{8}{c}{\textbf{}:  Register} \\ \hline
+%		7 & 6  &  5   &	4	 &	3	&	2  &	1 &	0 \\ \hline
+%		&  &  &  &  &  &  &   \\ \hline
+		
+%	\end{tabular}
+%\end{center}
+
+
+%\begin{center}
+%	\line(1,0){250}
+%\end{center}
+
+%REGNAME register END
+
+
+
+
+
+
+%CPUREV register START
+\begin{center}
+	\begin{tabular}{|cccc|cccc|}
+		\multicolumn{8}{c}{\textbf{CPUREV}: CPU Revision Register} \\ \hline
+		7 \hfill &\hfill & \hfill&\hfill4\hfill &\hfill3\hfill &\hfill &\hfill &\hfill0 \\ \hline
+		\multicolumn{4}{|c|}{Major CPU Revision} & \multicolumn{4}{|c|}{ Minor CPU Revision}  \\ \hline
+		
+	\end{tabular}
+\end{center}
+
+\paragraph{} The \textbf{CPUREV} register holds the revision number for the processor
+implementation. The upper 4 bits hold the major revision number, the lower 4 bits the 
+minor revision number. This number is hard coded by the implementation. The
+major revision number should refer to the company implementation, with the minor
+revision number is for the implementation's revision.
+\paragraph{} Any permission level can read this register. Since it should be hard coded,
+there is no way to write to this register.
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+\vspace{0.2 cm}
+%CPUREV register END
+
+
+%CPNUM register START
+\begin{center}
+	\begin{tabular}{|cccccccc|}
+		\multicolumn{8}{c}{\textbf{CPNUM}: Co-Processor Number Register} \\ \hline
+		7 & \hfill  & \hfill & \hfill & \hfill & \hfill & \hfill &\hfill	0 \\ \hline
+		\multicolumn{8}{|c|}{Number of Co-processors}   \\ \hline
+
+	\end{tabular}
+\end{center}
+
+\paragraph{} The \textbf{CPNUM} register simply holds the number of different types of
+co-processors in the processor implementation. This register is used for finding out how many CPIDs to check, for determining whether to use microcode or the co-processor
+hardware available for each co-processor.
+\paragraph{} This register can be read by with any permission level. This register
+should be hard coded, so no writes are possible.
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+\vspace{0.2 cm}
+%CPNUM register END
+
+
+
+
+\clearpage
+
 %STAT register START
 \begin{center}
 	\begin{tabular}{|c|c|c|c|c|c|c|c|}
@@ -227,10 +313,12 @@ and can either be partially implemented or not at all. The optional parts will b
 \end{center}
 
 \begin{tabular}{l l}
-	STAT	& Read only register for various processor state information. The flags are \\
-	\hfill 	& explained in detail below. \\
-	Z		& Zero Flag; Indicates whether the processed instruction's resulted in zero. Read Only\\
-	\hfill	& The flag is set to 0 when the ALU calculation is 0, and 1 when the output it non-zero. \\
+	STAT	& Read only register for various processor state information. The flags are \\ 
+	\hfill 	& explained in detail below. \\ \hline
+	\hfill	&	\hfill \\ 
+	Z		& Zero Flag; Indicates whether the processed instruction's resulted in zero. \\
+	\hfill	& Read Only. The flag is set to 0 when the ALU calculation is 1, and 0 when \\
+	\hfill &  the output is non-zero. \\
 	OV		& Overflow Flag; Indicated whether the processed instruction's result \\
 	\hfill	& overflowed the 32 bit space. Read only. \\
 	\hfill	& The overflow flag is set to the output of the carry out of the ALU. \\
@@ -249,103 +337,203 @@ and can either be partially implemented or not at all. The optional parts will b
 			111 & Top Hypervisor Level  \\
 	\end{tabular}\\
 	\hfill & The permission levels are explained in more detailed in their dedicated section.\\
-	PEMA   & Permission Accepted; Indictates whether a privaledged systemcall request was accepted. Read only \\
+	PEMA   & Permission Accepted; Indictates whether a privaledged system call  \\
+	\hfill & request was accepted. Read only \\
 	GINE   & Global Interrupt Enable; Indicates whether interrupts are enabled. Read/Write \\ 
 	SPCP   & Support CoProcessors; Indicates whether co-processor code is recognized as \\
-	\hfill & illegal instruction or is handled by an interrupt. (0 is illegal, 1 is interrupt handled) \\
-	\hfill & Read/Write. \\
+	\hfill & illegal instruction or is handled by an interrupt. (0 is illegal, 1 is  \\
+	\hfill & interrupt handled) Read/Write. \\
 
 \end{tabular}
 \paragraph{} The \textbf{STAT} register provides the programmer with various information about the current state of the processor.
 \paragraph{} In order to write to this register the bits that are defined as read only should be set to 0.  \\
-\paragraph{Optionality} In the event that the permission levels are not needed, they should be hard coded to 0x7, the
+\paragraph{Optional} In the event that the permission levels are not needed, they should be hard coded to 0x7, the
 highest permission level to avoid porting code. PEMA should also be hardcoded to a logic high for the same reasons stated.\\
 
 \begin{center}
 	\line(1,0){250}
 \end{center}
-
+\vspace{0.2 cm}
 %STAT register END
+
+\clearpage
+
+%OPCARP register START
+\begin{center}
+	\begin{tabular}{|cccccccc|}
+		\multicolumn{8}{c}{\textbf{OPCARP}: Opcode Registration Table Pointer  Register} \\ \hline
+		31\hfill & \hfill  & \hfill & \hfill & \hfill & \hfill & \hfill &\hfill	0 \\ \hline
+		\multicolumn{8}{|c|}{Address}   \\ \hline
+
+	\end{tabular}
+\end{center}
+
+\paragraph{} The \textbf{OPCARP} register is a pointer for the Opcode Registration Table.
+This table exists to map co-processor opcodes to available opcodes in the processor.
+It is not necessary for the table to be hard coded, and this option is left up
+to the implementation.
+\paragraph{} Only permission levels higher than or equal to the High Supervisor Level
+can read or write to this register. If this register is not configured correctly
+before running an Operating System or bare-metal program, unintentional CPMI interrupts
+may occur with no proper service routine.
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
+%OPCARP register END
+\vspace{1 cm}
+
+%CPIDTP register START
+\begin{center}
+	\begin{tabular}{|cccccccc|}
+		\multicolumn{8}{c}{\textbf{CPIDTP}: Co-Processor ID Table Pointer  Register} \\ \hline
+		31\hfill & \hfill  & \hfill & \hfill & \hfill & \hfill & \hfill &\hfill	0 \\ \hline
+		\multicolumn{8}{|c|}{Address}   \\ \hline
+		
+	\end{tabular}
+\end{center}
+
+\paragraph{} The \textbf{CPIDTP} register is a pointer for the Co-Processor ID Table.
+This table holds all co-processor IDs to allow the programmer to know how to handle software implementations of various co-processors.
+\paragraph{} All permission levels can read from the CPIDTP register. Only permission
+levels higher than the High Supervisor Level can write to this register, if it
+has not been hard coded.
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
+%CPIDTP register END
+\vspace{1 cm}
+
 
 
 %UINTEN register START
 \begin{center}
-	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 	%	\hline
-			\multicolumn{8}{c}{\textbf{STAT}: Status Register}  \\ \hline
+			\multicolumn{16}{c}{\textbf{UINTEN}: Interrupt Enable Register}  \\ \hline
 
-		 	31 	& 30  	&  29   &	28	&	27	&	26 	&   25 		&	24 		\\ 
+		 	31 	& 30  	&  29   &	28	&	27	&	26 	&   25 		&	24 & 23 	& 22  	&  21  	&	20	&	19	&	18 	&   17 		&	16 		\\ 
+			\hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt}	& \hspace{5pt} 	& \hspace{5pt}	& \hspace{5pt}   &
 			\hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt}	& \hspace{5pt} 	& \hspace{5pt}	& \hspace{5pt}    \\ \hline
-		 	23 	& 22  	&  21  	&	20	&	19	&	18 	&   17 		&	16 		\\ 
-			\hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt} 	& \hspace{5pt}	& \hspace{5pt} 	& \hspace{5pt}	& \hspace{5pt}    \\ \hline
-		 	15 	& 14  	&  13   &	12	&	11	&	10 	&	9 		&	8 		\\ 
-			NA 	& NA 	& NA 	& NA 	& NA 	& NA 	& NA 		& NA    \\ \hline
-		 	7 	& 6  	&  5   	&	4	&	3	&	2  	&	1 		&	0 		\\ 
+		 	15 	& 14  	&  13   &	12	&	11	&	10 	&	9 		&	8 & 7 	& 6  	&  5   	&	4	&	3	&	2  	&	1 		&	0 		\\ 
+			NA 	& NA 	& NA 	& NA 	& NA 	& NA 	& NA 		& NA   &
 			NA 	& NA 	& NA 	& NA 	& NA 	& NA   	& ROI  		& CPMI    \\ \hline
 		
 	\end{tabular}
 \end{center}
 
-\paragraph{} The UINTEN register holds the settings for enabling various interrupts. More information about each interurpt
+\paragraph{} The \textbf{UINTEN} register holds the settings for enabling various interrupts. More information about each interrupt
 is available in the interrupt section. The spots that are blank are usable by the implementation, while spots marked 'NA'
 are reserved for future use. Setting a bit field to 1 enables the interrupt vector, after ensuring that the GINE bit in \textbf{STAT} is set.
 
 \begin{center}
 	\line(1,0){250}
 \end{center}
-
+\vspace{0.2 cm}
 %UINTEN register END
+\clearpage
+
+
+%RPTINFO register START
+\begin{center}
+	\begin{tabular}{|cc|cc|cccc|}
+		\multicolumn{8}{c}{\textbf{RPTINFO}: Running Process Thread Info Register} \\ \hline
+		31\hfill & 16\hfill  & 15\hfill & \hfill 8 & 7 \hfill & \hfill & \hfill &\hfill	0 \\ \hline
+		 \multicolumn{2}{|c|}{PPID} & \multicolumn{2}{|c|}{CHPID} & \multicolumn{4}{|c|}{RESERVED} \\ \hline
+		
+	\end{tabular}
+\end{center}
+
+\paragraph{} The \textbf{RPTINFO} register provides information about a process's threads. This information includes information for parent and child processes. The register fields are described in detail below.
+
+\begin{tabular}{l l}
+
+	PPID		& Parent Process ID. Holds the parent's process ID. \\
+	CHPID		& Child Process ID. The current thread number is stored here. \\
+	\hfill		& 256 total threads are currently possible with using this scheme. \\
+	RESERVED	& Reserved for future use. \\
+\end{tabular}
+\paragraph{} All permission levels can read this register. Only permission levels equal to or higher than the High Supervisor Levels can write to this register. 
+\begin{center}
+	\line(1,0){250}
+\end{center}
+\vspace{1cm}
+%RPTINFO register END
+
+%RPID register START
+\begin{center}
+	\begin{tabular}{|cccccccc|}
+		\multicolumn{8}{c}{\textbf{RPID}: Running Process ID  Register} \\ \hline
+		16 & \hfill & \hfill & \hfill &	\hfill & \hfill & \hfill & \hfill0 \\ \hline
+		\multicolumn{8}{|c|}{ID number}  \\ \hline
+
+	\end{tabular}
+\end{center}
+
+\paragraph{} The RPID register holds the running process' ID number. This register
+is to be set by the kernel, and is not necessary otherwise. All permission levels
+can read from the register. Only permission levels equal to or higher than the High Supervisor Levels can write to this register. 
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
+%RPID register END
 
 
 
+\clearpage
 \subsubsection{Supervisor Registers}
 \paragraph{} This section is still being developed. It will be updated in the future.
 
-
+\clearpage
 \section{Permission Levels}
 \paragraph{} The various permission levels are designed to allow for protected execution between user space, a kernel, and virtual
 environments. Permission levels are changed through dedicated instructions to increase or decrease the permission level counter. System calls
 can change the permission level in order to execute specific functions, but can be revoked in order to keep security. The individual function
 calls can be defined in the System Call Function Pointer Table (SYSFPT). 
 \paragraph{} On boot, the default permission level is initialized to the highest permission level in order to properly configure the processor.
-There are no restrictionsto access. However, after configuration the permission level should be lowered as required to ensure secure execution.
+There are no restrictions to access. However, after configuration the permission level should be lowered as required to ensure secure execution.
 \subsection{User Levels}
 
 \subsubsection{Low User Level} User space processes are designed to run in this permission level. Write access to supervisor registers is revoked,
 and all modifying system calls are checked for allowed execution. Low priority, non time sensitive applications, high security risk applications
-should be run at this level. Since the Low User Level is the most restrictive priroity level, in the event of a illegal operation by the application
+should be run at this level. Since the Low User Level is the most restrictive priority level, in the event of a illegal operation by the application
 the processor should attempt to revert to a state before the illegal action and either kill or halt the offending process in order to prevent further
 illegal actions. Halting the process should be used to determine more information about the illegal action, while killing the process is ideal for
 more critical situations. 
 
 \subsubsection{High User Level} This user level is designed to keep some security between user space and supervisor space, whiling loosening
 restrictions. Only reads are allowed to system and supervisor registers, and a limited number of system calls will not need to be verified. 
-The verifide system calls are specified in the 8 system call registers: SCPMHULX. Time critical user space processes, trusted system call 
+The verified system calls are specified in the 8 system call registers: SCPMHULX. Time critical user space processes, trusted system call 
 saturated processes, and processes that require reading system and supervisor registers should use this permission level. 
 registers. 
 
 \subsection{Supervisor Levels}
 \subsubsection{Low Supervisor Level} This permission level allows reads and writes to most system registers, with few restrictions. Hardware drivers,
-real time processes, and non configuratory kernel tasks should use this level.
+real time processes, and kernel tasks that do not require low level configuration should use this level.
 \subsubsection{High Supervisor Level} This permission level is for unrestricted access for operating system environments. Essential Kernel processes and
 bare-metal embedded applications are examples for using this permission level. All configuration registers are available, only hypervisor configuration and
 actions are restricted. If the hypervisor system is not implemented, this level is the highest permission level.
 
 \subsection{Hypervisor Levels}
 \paragraph{} This section is still under development. At this time, the Hypervisor levels simply allow access to all functions of a processor, including the
-virturalization feeatures. Since the virturalization functions are not defined yet, this is a placeholder for the time being.
+virtualization features. Since the virtualization functions are not defined yet, this is a placeholder for the time being.
 
-\subsubsection{Low Hypervisor Level}
-\subsubsection{High Hypervisor Level}
-\subsubsection{Top Hypervisor Level}
-
+%\subsubsection{Low Hypervisor Level}
+%\subsubsection{High Hypervisor Level}
+%\subsubsection{Top Hypervisor Level}
+\clearpage
 \section{Memory}
 \paragraph{}At this point in time, the ISA only handles 32 bit addresses.
 With memory capacity increasing in size as time goes on, this may change. %In order to access 
 %larger sections of memory, the use of an offset register may be implemented to create 64 bit addresses.
 %The use of virtual memory with said offset register is also accepted.
-\paragraph{} The Fusion-ISA uses a modified harvard architecture, such that the programmer should have the appearance of a harvard architecture.
-Compliance to this is not strict, as any variation inbetween is allowed, but the separation between data and instruction memory should be made.
+\paragraph{} The Fusion-ISA uses a modified Harvard architecture, such that the programmer should have the appearance of a Harvard architecture.
+Compliance to this is not strict, as any variation in between is allowed, but the separation between data and instruction memory should be made.
 
 \subsection{Memory Locations for Vector Table}
 \subsubsection{Interrupt Vector Table}
@@ -361,9 +549,9 @@ can be created, though the ones specified are necessary.
 			0x0000 				& Reset & Reset processor					\\ 	\hline
 			0x0008 				& CPMI  & Co-Processor Microcode Interrupt 	\\ 	\hline
 			0x0010 				& ROI	& Register Overflow (Arithmetic)	\\ 	\hline
-			0x0018				&  \\ 	\hline
-			0x0020 				&  \\ 	\hline
-			0x0028 				&  \\	\hline
+			0x0018				&  RESERVED&\\ 	\hline
+			0x0020 				& RESERVED &\\ 	\hline
+			0x0028 				& RESERVED &\\	\hline
 		\end{tabular} 
 		\caption{Interrupt Vector Table}
 	\end{center}
@@ -382,7 +570,7 @@ can be created, though the ones specified are necessary.
 			\hline
 			Exception Code 		& Name		& Definition						\\ \hline
 			0x0000 				& INSFPEM	& Insufficient Permissions 			\\ \hline
-			0x0001 				& MISALL	& Misaligned Address	 			\\ \hline
+			0x0001 				& MISADDR	& Misaligned Address	 			\\ \hline
 			0x0002 				& HALT		& Halt Request			 			\\ \hline
 			0x0003 				& PTERM		& Terminate Process		 			\\ \hline
 			0x0004 				& PKILL		& Kill Process			 			\\ \hline
@@ -399,9 +587,9 @@ can be created, though the ones specified are necessary.
 \end{figure} 
 
 
-\begin{center}
-	\line(1,0){250}
-\end{center}
+%\begin{center}
+%	\line(1,0){250}
+%\end{center}
 
 \clearpage
 \section{Instruction Usage}
@@ -427,23 +615,33 @@ it's own interrupt to use. Since branch instructions exist to check if a registe
 			subu 				& Subtracts RSb from RSa, result stored in Rd							& \texttt{subu \$Rd, \$RSa, \$RSb}	\\ 
 			\hfill				& Does not affect OV flag												& \hfill 							\\ \hline
 			not					& Logically inverts RSa, result stored in Rd							& \texttt{not \$Rd, \$RSa} 			\\ \hline
-			and					& Logic AND operation on RSa and RSb, result stored in Rd				& \texttt{and \$Rd, \$RSa, \$RSb}	\\ \hline	
-			or					& Logic OR operation on RSa and RSb, result stored in Rd				& \texttt{or \$Rd, \$RSa, \$RSb	}	\\ \hline	
-			xor					& Logic XOR operation on RSa and RSb, result stored in Rd				& \texttt{xor \$Rd, \$RSa, \$RSb}	\\ \hline	
-			sal					& Arithmetic Shift RSa Left by the value of RSb, result stored in Rd	& \texttt{sal \$Rd, \$RSa, \$RSb}	\\ \hline	
-			sar					& Arithmetic Shift RSa Right by the value of RSb, result stored in Rd	& \texttt{sar \$Rd, \$RSa, \$RSb}	\\ \hline	
-			sll					& Logic Shift RSa Left by the value of RSb, result stored in Rd			& \texttt{sll \$Rd, \$RSa, \$RSb}	\\ \hline	
-			slr					& Logic Shift RSa Right by the value of RSb, result stored in Rd		& \texttt{slr \$Rd, \$RSa, \$RSb}	\\ \hline	
-			comp				& Compares the values of RSa and RSb. Sets Rd to 0x0 if equal,			& \texttt{comp \$Rd, \$RSa, \$RSb}	\\
-			\hfill				& 1 if RSa is greater than RSb, and -1 if RSa is less than RSb			&	\hfill							\\ \hline
+			and					& Logic AND operation on RSa and RSb, result							& \texttt{and \$Rd, \$RSa, \$RSb}	\\	
+			\hfill				& stored in Rd															& \hfill 							\\ \hline
+			or					& Logic OR operation on RSa and RSb, 									& \texttt{or \$Rd, \$RSa, \$RSb	}	\\ 	
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline
+			xor					& Logic XOR operation on RSa and RSb,									& \texttt{xor \$Rd, \$RSa, \$RSb}	\\ 
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline	
+			sal					& Arithmetic Shift RSa Left by the value of RSb,						& \texttt{sal \$Rd, \$RSa, \$RSb}	\\ 	
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline
+			sar					& Arithmetic Shift RSa Right by the value of RSb,						& \texttt{sar \$Rd, \$RSa, \$RSb}	\\ 	
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline
+			sll					& Logic Shift RSa Left by the value of RSb,								& \texttt{sll \$Rd, \$RSa, \$RSb}	\\ 
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline	
+			slr					& Logic Shift RSa Right by the value of RSb, 							& \texttt{slr \$Rd, \$RSa, \$RSb}	\\ 	
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline
+			comp				& Compares the values of RSa and RSb. 									& \texttt{comp \$Rd, \$RSa, \$RSb}	\\
+			\hfill				& Sets Rd to 0x0 if equal,												& \hfill							\\
+			\hfill				& 1 if RSa is greater than RSb, 										&	\hfill							\\ 
+			\hfill				& and -1 if RSa is less than RSb										& \hfill							\\ \hline
 		\end{tabular} 
 	\end{center}
 	
 \end{figure} 
 
-\begin{center}
-	\line(1,0){250}
-\end{center}
+%\begin{center}
+%	\line(1,0){250}
+%\end{center}
+
 \clearpage
 \subsection{Immediate}
 \paragraph{} Similar to the Integer instructions, the Immediate instructions perform arithmetic operations on the RSa register and a 12 bit immediate.
@@ -464,15 +662,23 @@ The table shown below describes the instructions available.
 			subui 				& Subtracts Immediate from RSa, result stored in Rd						& \texttt{subui \$Rd, \$RSa, 0xfff}	\\ 
 			\hfill				& Does not affect OV flag												& \hfill 							\\ \hline
 			noti				& Logically inverts Immediate, result stored in Rd						& \texttt{noti \$Rd, 	0xfff}		\\ \hline
-			andi				& Logic AND operation on RSa and Immediate, result stored in Rd			& \texttt{andi \$Rd, \$RSa, 0xfff}	\\ \hline	
-			ori					& Logic OR operation on RSa and Immediate, result stored in Rd			& \texttt{ori \$Rd, \$RSa, 0xfff}	\\ \hline	
-			xori				& Logic XOR operation on RSa and Immediate, result stored in Rd			& \texttt{xori \$Rd, \$RSa, 0xfff}	\\ \hline	
-			sali				& Arithmetic Shift RSa Left by the Immediate value, result stored in Rd	& \texttt{sali \$Rd, \$RSa, 0xfff}	\\ \hline	
-			sari				& Arithmetic Shift RSa Right by the Immediate value, result stored in Rd& \texttt{sari \$Rd, \$RSa, 0xfff}	\\ \hline	
-			slli				& Logic Shift RSa Left by the Immediate value, result stored in Rd		& \texttt{slli \$Rd, \$RSa, 0xfff}	\\ \hline	
-			slri				& Logic Shift RSa Right by the Immediate value, result stored in Rd		& \texttt{slri \$Rd, \$RSa, 0xfff}	\\ \hline	
-			compi				& Compares the RSa and the Immedaite value. Sets Rd to 0x0 if equal,	& \texttt{compi \$Rd, \$RSa, 0xfff}	\\
-			\hfill				& 1 if RSa is greater than the Immediate value, and -1 if RSa is less	& \hfill							\\
+			andi				& Logic AND operation on RSa and Immediate, 							& \texttt{andi \$Rd, \$RSa, 0xfff}	\\ 
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline	
+			ori					& Logic OR operation on RSa and Immediate, 								& \texttt{ori \$Rd, \$RSa, 0xfff}	\\ 
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline		
+			xori				& Logic XOR operation on RSa and Immediate, 							& \texttt{xori \$Rd, \$RSa, 0xfff}	\\ 
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline					
+			sali				& Arithmetic Shift RSa Left by the Immediate value,						& \texttt{sali \$Rd, \$RSa, 0xfff}	\\ 	
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline				
+			sari				& Arithmetic Shift RSa Right by the Immediate value,					& \texttt{sari \$Rd, \$RSa, 0xfff}	\\ 	
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline				
+			slli				& Logic Shift RSa Left by the Immediate value, 							& \texttt{slli \$Rd, \$RSa, 0xfff}	\\ 	
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline				
+			slri				& Logic Shift RSa Right by the Immediate value, 						& \texttt{slri \$Rd, \$RSa, 0xfff}	\\ 	
+			\hfill				& result stored in Rd													& \hfill 							\\ \hline				
+			compi				& Compares the RSa and the Immediate value. 							& \texttt{compi \$Rd, \$RSa, 0xfff}	\\
+			\hfill				& Sets Rd to 0x0 if equal, 1 if RSa is greater than the					& \hfill							\\
+			\hfill				& Immediate value, and -1 if RSa is less								& \hfill							\\
 			\hfill				& than the Immediate value												& \hfill 							\\ \hline
 		\end{tabular} 
 	\end{center}
@@ -493,15 +699,15 @@ a two byte value into Rd, the address in RSa and the next byte will be placed in
 		\begin{tabular}{|l|l|l|}
 			\hline
 			\multicolumn{3}{c}{Load Instructions} \\ \hline
-			Instruction Name	& Definition																		& Usage 							\\ \hline
-			lw					& Reads a 4 byte value from Memory at address RSa with a 14 bit Immediate offset,	& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
-			\hfill				& puts result in Rd										\hfill						& \hfill 							\\ \hline
-			lh					& Reads a 2 byte value from Memory at address RSa with a 14 bit Immediate offset,	& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
-			\hfill				& puts result in Rd										\hfill						& \hfill 							\\ \hline
-			lb					& Reads a 1 byte value from Memory at address RSa with a 14 bit Immediate offset,	& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
-			\hfill				& puts result in Rd										\hfill						& \hfill 							\\ \hline
-			lth					& Reads a 3 byte value from Memory at address RSa with a 14 bit Immediate offset,	& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
-			\hfill				& puts result in Rd										\hfill						& \hfill 							\\ \hline
+			Instruction Name	& Definition											& Usage 							\\ \hline
+			lw					& Reads a 4 byte value from Memory at address RSa 		& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
+			\hfill				& with a 14 bit Immediate offset, puts result in Rd		& \hfill 							\\ \hline
+			lh					& Reads a 2 byte value from Memory at address RSa 		& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
+			\hfill				& with a 14 bit Immediate offset, puts result in Rd		& \hfill 							\\ \hline			
+			lb					& Reads a 1 byte value from Memory at address RSa 		& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
+			\hfill				& with a 14 bit Immediate offset, puts result in Rd		& \hfill 							\\ \hline			
+			lth					& Reads a 3 byte value from Memory at address RSa 		& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
+			\hfill				& with a 14 bit Immediate offset, puts result in Rd		& \hfill 							\\ \hline			
 		
 		\end{tabular} 
 	\end{center}
@@ -513,7 +719,7 @@ a two byte value into Rd, the address in RSa and the next byte will be placed in
 \end{center}
 
 \paragraph{} The Store Instructions are similar in nature to the Load instructions, with a 14 bit immediate value offset to the base address of \$RSa.
-The value of \$RSb will be written to the address calculated from the aformentioned sources. For writing values smaller than 32 bits wide, the lower
+The value of \$RSb will be written to the address calculated from the aforementioned sources. For writing values smaller than 32 bits wide, the lower
 bytes will be written in a big endian fashion to memory. For example, writing a two byte value to memory, would take the lower two bytes of \$RSb, and write
 the higher byte to the address calculated and the lower byte to the address calculated plus 1. 
 \begin{figure}[!h]
@@ -521,11 +727,15 @@ the higher byte to the address calculated and the lower byte to the address calc
 		\begin{tabular}{|l|l|l|}
 			\hline
 			\multicolumn{3}{c}{Store Instructions} \\ \hline
-			Instruction Name	& Definition																			& Usage 							\\ \hline
-			sw					& Writes the value of RSb at address RSa with a 14 bit Immediate offset.				& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ \hline
-			sh					& Writes the lower two bytes of RSb at address RSa with a 14 bit Immediate offset.		& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ \hline
-			sb					& Writes the least significat byte of RSb at address RSa with a 14 bit Immediate offset.& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ \hline
-			sth					& Writes the lower three bytes of RSb at address RSa with a 14 bit Immediate offset.	& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ \hline
+			Instruction Name	& Definition											& Usage 							\\ \hline
+			sw					& Writes the value of RSb at address RSa				& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ 
+			\hfill				& with a 14 bit Immediate offset.						& \hfill 							\\ \hline
+			sh					& Writes the lower two bytes of RSb 					& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ 
+			\hfill				& at address RSa with a 14 bit Immediate offset.		& \hfill 							\\ \hline
+			sb					& Writes the least significant byte of RSb 				& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ 
+			\hfill				& at address RSa with a 14 bit Immediate offset.		& \hfill 							\\ \hline
+			sth					& Writes the lower three bytes of RSb 					& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ 
+			\hfill				& at address RSa with a 14 bit Immediate offset.		& \hfill 							\\ \hline
 		 		\end{tabular} 
 	\end{center}
 	
@@ -534,7 +744,7 @@ the higher byte to the address calculated and the lower byte to the address calc
 \begin{center}
 	\line(1,0){250}
 \end{center}
-
+\clearpage
 \paragraph{} The Load Immediate Instructions are for putting immediate values into registers. A 16 bit immediate value is stored into Rd, with variations on
 register file and location within the register.
 \begin{figure}[!h]
@@ -542,22 +752,34 @@ register file and location within the register.
 		\begin{tabular}{|l|l|l|}
 			\hline
 			\multicolumn{3}{c}{Load Immediate Instructions} \\ \hline
-			Instruction Name	& Definition																	& Usage 						\\ \hline
-			li					& Put Immediate value into the lower two bytes of Rd in the GPREGF				& \texttt{li \$Rd, 0xffff}		\\ \hline
-			lui					& Put Immediate value into the upper two bytes of Rd in the GPREGF				& \texttt{lui \$Rd, 0xffff}		\\ \hline
-			lni					& Put unsigned Immediate value into the lower two bytes of Rd in the GPREGF		& \texttt{lni \$Rd, 0xffff}		\\ \hline
-			luni				& Put unsigned Immediate value into the upper two bytes of Rd in the GPREGF		& \texttt{luni \$Rd, 0xffff}	\\ \hline
+			Instruction Name	& Definition								& Usage 						\\ \hline
+			li					& Put Immediate value into the 				& \texttt{li \$Rd, 0xffff}		\\ 
+			\hfill				& lower two bytes of Rd in the GPREGF		& \hfill						\\ \hline
+			lui					& Put Immediate value into the  			& \texttt{lui \$Rd, 0xffff}		\\ 	
+			\hfill				& upper two bytes of Rd in the GPREGF		& \hfill 						\\ \hline
+			lni					& Put unsigned Immediate value into the		& \texttt{lni \$Rd, 0xffff}		\\ 
+			\hfill				& lower two bytes of Rd in the GPREGF		& \hfill						\\ \hline
+			luni				& Put unsigned Immediate value into the		& \texttt{luni \$Rd, 0xffff}	\\ 
+			\hfill				& upper two bytes of Rd in the GPREGF		& \hfill 						\\ \hline
 
-			lgi					& Put Immediate value into the lower two bytes of Rd in the GLBREGF				& \texttt{lgi \$Rd, 0xffff}		\\ \hline
-			lugi				& Put Immediate value into the upper two bytes of Rd in the GLBREGF				& \texttt{lugi \$Rd, 0xffff}	\\ \hline
-			lngi				& Put unsigned Immediate value into the lower two bytes of Rd in the GLBREGF	& \texttt{lngi \$Rd, 0xffff}	\\ \hline
-			lungi				& Put unsigned Immediate value into the upper two bytes of Rd in the GLBREGF	& \texttt{lungi \$Rd, 0xffff}	\\ \hline
+			lgi					& Put Immediate value into the 				& \texttt{lgi \$Rd, 0xffff}		\\ 
+			\hfill				& lower two bytes of Rd in the GLBREGF		& \hfill						\\ \hline
+			lugi				& Put Immediate value into the 				& \texttt{lugi \$Rd, 0xffff}	\\ 
+			\hfill				& upper two bytes of Rd in the GLBREGF		& \hfill						\\ \hline
+			lngi				& Put unsigned Immediate value into the		& \texttt{lngi \$Rd, 0xffff}	\\ 
+			\hfill				& lower two bytes of Rd in the GLBREGF		& \hfill						\\ \hline
+			lungi				& Put unsigned Immediate value into the 	& \texttt{lungi \$Rd, 0xffff}	\\ 
+			\hfill				& upper two bytes of Rd in the GLBREGF		& \hfill						\\ \hline
 
 
-			lsi					& Put Immediate value into the lower two bytes of Rd in the SYSREGF				& \texttt{lsi \$Rd, 0xffff}		\\ \hline
-			lusi				& Put Immediate value into the upper two bytes of Rd in the SYSREGF				& \texttt{lusi \$Rd, 0xffff}	\\ \hline
-			lnsi				& Put unsigned Immediate value into the lower two bytes of Rd in the SYSREGF	& \texttt{lnsi \$Rd, 0xffff}	\\ \hline
-			lunsi				& Put unsigned Immediate value into the upper two bytes of Rd in the SYSREGF	& \texttt{lunsi \$Rd, 0xffff}	\\ \hline
+			lsi					& Put Immediate value into the 				& \texttt{lsi \$Rd, 0xffff}		\\ 
+			\hfill				& lower two bytes of Rd in the SYSREGF		& \hfill 						\\ \hline
+			lusi				& Put Immediate value into the 				& \texttt{lusi \$Rd, 0xffff}	\\ 
+			\hfill				& upper two bytes of Rd in the SYSREGF		& \hfill						\\ \hline
+			lnsi				& Put unsigned Immediate value into the 	& \texttt{lnsi \$Rd, 0xffff}	\\ 
+			\hfill				& lower two bytes of Rd in the SYSREGF		& \hfill 						\\ \hline
+			lunsi				& Put unsigned Immediate value into the 	& \texttt{lunsi \$Rd, 0xffff}	\\ 
+			\hfill				& upper two bytes of Rd in the SYSREGF		& \hfill						\\ \hline			
 		\end{tabular} 
 	\end{center}
 	
@@ -566,7 +788,8 @@ register file and location within the register.
 \begin{center}
 	\line(1,0){250}
 \end{center}
-
+ 
+ \newpage
 \subsection{Branch/Jump}
 \paragraph{} The Branch Instructions conditionally change the Program Counter based off of the operation of RSa and RSb. The 14 bit
 immediate field is PC relative to the address of the branch instruction.
@@ -575,12 +798,16 @@ immediate field is PC relative to the address of the branch instruction.
 	\begin{center}
 		\begin{tabular}{|l|l|l|}
 			\hline
-			\multicolumn{3}{c}{Branch Instructions} \\ \hline
-			Instruction Name	& Definition																& Usage 							\\ \hline
-			beq					& Branch to PC relative Immediate address when RSa and RSb are equal		& \texttt{beq \$RSa, \$RSb, 0x3fff}	\\ \hline
-			bne					& Branch to PC relative Immediate address when RSa and RSb are not equal 	& \texttt{bne \$RSa, \$RSb, 0x3fff}	\\ \hline
-			bgt					& Branch to PC relative Immediate address when RSa is greater than RSb	 	& \texttt{bgt \$RSa, \$RSb, 0x3fff}	\\ \hline
-			blt					& Branch to PC relative Immediate address when RSa is less than RSb			& \texttt{blt \$RSa, \$RSb, 0x3fff}	\\ \hline
+			\multicolumn{3}{|c|}{Branch Instructions} \\ \hline
+			Instruction Name	& Definition									& Usage 							\\ \hline
+			beq					& Branch to PC relative Immediate address		& \texttt{beq \$RSa, \$RSb, 0x3fff}	\\ 
+			\hfill				& when RSa and RSb are equal					& \hfill 							\\ \hline
+			bne					& Branch to PC relative Immediate address		& \texttt{bne \$RSa, \$RSb, 0x3fff}	\\ 
+			\hfill				& when RSa and RSb are not equal				& \hfill 							\\ \hline
+			bgt					& Branch to PC relative Immediate address		& \texttt{bgt \$RSa, \$RSb, 0x3fff}	\\ 
+			\hfill				& when RSa is greater than RSb					& \hfill 							\\ \hline
+			blt					& Branch to PC relative Immediate address		& \texttt{blt \$RSa, \$RSb, 0x3fff}	\\ 
+			\hfill				& when RSa is less than RSb						& \hfill 							\\ \hline
 		 		\end{tabular} 
 	\end{center}
 	
@@ -588,6 +815,7 @@ immediate field is PC relative to the address of the branch instruction.
 \begin{center}
 	\line(1,0){250}
 \end{center}
+
 
 
 \paragraph{} The Jump Instructions change the Program Counter with a 21 bit immediate relative offset. The immediate is relative to the address
@@ -598,13 +826,14 @@ Jump instructions that link save the return address into RA. The return address 
 	\begin{center}
 		\begin{tabular}{|l|l|l|}
 			\hline
-			\multicolumn{3}{c}{Immediate Instructions} \\ \hline
-			Instruction Name	& Definition																& Usage 							\\ \hline
-			j					& PC relative jump															& \texttt{j 0x1fffff}	\\ \hline
-			jal					& PC relative jump, save return address 									& \texttt{jal	0x1fffff}	\\ \hline
-			jr					& Jump register instruction, address calculated by immediate field plus RSa	& \texttt{jr 0x1fffff(\$RSa)}	\\ \hline
-			jrl					& Jump register instruction, address calculated by immediate field plus RSa,& \texttt{jrl 0x1fffff(\$RSa)}	\\ \hline
-			\hfill				& save return address
+			\multicolumn{3}{|c|}{Jump Instructions} \\ \hline
+			Instruction Name	& Definition										& Usage 							\\ \hline
+			j					& PC relative jump									& \texttt{j 0x1fffff}	\\ \hline
+			jal					& PC relative jump, save return address 			& \texttt{jal	0x1fffff}	\\ \hline
+			jr					& Jump register instruction, address calculated by	& \texttt{jr 0x1fffff(\$RSa)}	\\
+			\hfill				& immediate field plus RSa, save return address		&		\hfill				\\ \hline
+			jrl					& Jump register instruction, address calculated by	& \texttt{jrl 0x1fffff(\$RSa)}	\\ 
+			\hfill				& immediate field plus RSa, save return address		&		\hfill				\\ \hline
 		 		\end{tabular} 
 	\end{center}
 	
@@ -612,6 +841,8 @@ Jump instructions that link save the return address into RA. The return address 
 \begin{center}
 	\line(1,0){250}
 \end{center}
+
+\newpage
 
 \subsection{System}
 \paragraph{} The system instructions are more complex, but designed to utilize similar features to the rest of the main core or simplistic
@@ -621,8 +852,9 @@ not having a lot of similarities between them.
 
 \begin{figure}[!h]
 	\begin{center}
-		\begin{tabular}{|l|l|l|}
+		\begin{tabular}{|l|l|}
 			\hline
+			Name		& Usage \\ \hline
 			syscall		& \texttt{syscall 0xff}	\\ \hline
 			sysret		& \texttt{sysret}	\\ \hline
 		 		\end{tabular} 
@@ -644,8 +876,9 @@ to the user space register file as well as lowering permissions.
 
 \begin{figure}[!h]
 	\begin{center}
-		\begin{tabular}{|l|l|l|}
+		\begin{tabular}{|l|l|}
 			\hline
+			Name		& Usage \\ \hline
 			stspr		& \texttt{stspr \$RSa, SPR}	\\ \hline
 			ldspr		& \texttt{ldspr \$Rd, SPR}	\\ \hline
 		 		\end{tabular} 
@@ -653,7 +886,7 @@ to the user space register file as well as lowering permissions.
 	
 \end{figure}
 \paragraph{} These instructions are for writing and reading to special purpose registers, respectively. The special purpose register address is put
-into the immediate field. Depending on the permission level setting of the regsiters, an Invalid Permission Level exception may be raised.
+into the immediate field. Depending on the permission level setting of the registers, an Invalid Permission Level exception may be raised.
 Refer to the specific registers to determine if the permission level is adequate.
 
 \begin{center}
@@ -663,15 +896,16 @@ Refer to the specific registers to determine if the permission level is adequate
 
 \begin{figure}[!h]
 	\begin{center}
-		\begin{tabular}{|l|l|l|}
+		\begin{tabular}{|l|l|}
 			\hline
+			Name		& Usage \\ \hline
 			sync		& \texttt{sync}	\\ \hline
 		 		\end{tabular} 
 	\end{center}
 	
 \end{figure}
-\paragraph{} The sync instruction is for ensuring memory synchronization. After the sync function is executed, the preceeding instructions
-finish executing and all pending memory accesses to finish. The result allows a clean transistion for context switches.
+\paragraph{} The sync instruction is for ensuring memory synchronization. After the sync function is executed, the preceding instructions
+finish executing and all pending memory accesses to finish. The result allows a clean transition for context switches.
 
 \begin{center}
 	\line(1,0){250}
@@ -679,8 +913,9 @@ finish executing and all pending memory accesses to finish. The result allows a 
 
 \begin{figure}[!h]
 	\begin{center}
-		\begin{tabular}{|l|l|l|}
+		\begin{tabular}{|l|l|}
 			\hline
+			Name		& Usage \\ \hline
 			lock		& \texttt{lock \$Rd, \$RSa}	\\ \hline
 			test		& \texttt{test \$Rd, \$RSa}	\\ \hline
 		 		\end{tabular} 
@@ -689,8 +924,8 @@ finish executing and all pending memory accesses to finish. The result allows a 
 \end{figure}
 \paragraph{} The test and lock instructions provide exclusivity in multi-processor configurations, and between co-processors. The
 value in RSa is the address of the resource or memory location, and the success of the action is placed in Rd. If successful,
-the result will be zero. If unsuccessful, the resouce that was attempted to be accessed will put an error code within Rd.
-The error code depends on the resource, and should be consulted in the respect location in the documenation of the co-processor or
+the result will be zero. If unsuccessful, the resource that was attempted to be accessed will put an error code within Rd.
+The error code depends on the resource, and should be consulted in the respect location in the documentation of the co-processor or
 various other resource.
 
 \begin{center}
@@ -699,8 +934,9 @@ various other resource.
 
 \begin{figure}[!h]
 	\begin{center}
-		\begin{tabular}{|l|l|l|}
+		\begin{tabular}{|l|l|}
 			\hline
+			Name		& Usage \\ \hline
 			pmir	& \texttt{pmir	0xff}	\\ \hline
 			pmd		& \texttt{test	0xff}	\\ \hline
 		 		\end{tabular} 
@@ -710,7 +946,7 @@ various other resource.
 \paragraph{} These instructions are for increasing or decreasing the current permission level. The immediate field
 denotes the permission level that the processor should change to. In the event that a permission level cannot be changed,
 an Invalid Permission Level exception will be raised. Depending on the severity of the infraction, the running program
-may be terminated or halted. More information will be availble in the permission level section.
+may be terminated or halted. More information will be available in the permission level section.
 
 \begin{center}
 	\line(1,0){250}
@@ -724,9 +960,10 @@ may be terminated or halted. More information will be availble in the permission
 	\begin{center}
 		\begin{tabular}{|l|l|l|}
 			\hline
-			call	& \texttt{call	address\_label}	\\ \hline
-			ret		& \texttt{ret	}	\\ \hline
-			la		& \texttt{la \$Rd, address\_label} \\ \hline
+			Name		& Usage & Number of Instructions\\ \hline
+			call	& \texttt{call	address\_label}		&	2	\\ \hline
+			ret		& \texttt{ret	}					&	1	\\ \hline
+			la		& \texttt{la \$Rd, address\_label}	& 	2	\\ \hline
 		 		\end{tabular} 
 	\end{center}
 	
@@ -734,7 +971,7 @@ may be terminated or halted. More information will be availble in the permission
 \paragraph{} The call macro expands to a lui instruction and a jrl instruction with an immediate offset. The lower two bytes
 are used as the offset for the jump register, while the lui instruction loads the upper two bytes into register TMP0. 
 TMP0 should be ensured to be cleared before using a call instruction, or an undefined sequence of events may occur.
-This regsiter choice may change in the future to ensure better compatibility and resource usage, however register TMP0 should
+This register choice may change in the future to ensure better compatibility and resource usage, however register TMP0 should
 be avoided in use around call instructions as it may cause unintentional side effects. 
 
 \paragraph{} The ret macro allows the program to return to the program from the subroutine. It expands into a jr instruction
@@ -743,7 +980,7 @@ with no immediate offset. The RA register stores the return address, which the j
 \paragraph{} The la macro loads the upper and lower bytes into the specified register, Rd. It expands into two instructions,
 li and lui. Currently there is no way to merge the two values into one register, however the macro will be updated soon to do so.
 It is advised against using this macro until further notice. The same functionality can be achieved with an or instruction and
-a li and lui instruction, however due to regsiter usage this is not ideal to create as a macro.
+a li and lui instruction, however due to register usage this is not ideal to create as a macro.
 \begin{center}
 	\line(1,0){250}
 \end{center}
@@ -754,20 +991,22 @@ a li and lui instruction, however due to regsiter usage this is not ideal to cre
 no co-processors have been fully developed, nor verified, so this is left here as a placeholder for future revisions of the documentation.
 \subsection{Math Unit}
 \subsection{Vector Operations Unit}
+\subsection{Memory Management Unit}
 \subsection{Inter-Processor Communications Unit}
+
 \clearpage
 
 \part{Instructions}
 \section{Instruction Definitions}
 \subsection{Instruction Format Types}
 \paragraph{}This section will talk about the different instructions available in the core processor, their encodings, function, and hazards
-they cause or registers they affect in the processor. The Co-Processor instructions are purlely generic and allow the implementation of
+they cause or registers they affect in the processor. The Co-Processor instructions are purely generic and allow the implementation of
 each Co-Processor to determine how their respective instructions will be decoded. Only the Operation Codes will be defined for each 
 Co-Processor slot to allow for more customization.
 
 \newpage
 \subsubsection{Integer}
-\paragraph{}The interger instructions are the heart of this processor's arithmetic abilities and is vital to ensure fast execution. A semi-strict
+\paragraph{}The integer instructions are the heart of this processor's arithmetic abilities and is vital to ensure fast execution. A semi-strict
 adherence to RISC philosophy in this architecture is required to exploit any benefits to this ISA in a real implementation.
 \paragraph{}The integer instruction coding with descriptions, is shown in the diagrams below.
 
@@ -791,7 +1030,7 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 			sub 		& Subtract					& 0x1 \\ \hline
 			addu 		& Add Unsigned 				& 0x2 \\ \hline
 			subu		& Subtract Unsigned 		& 0x3 \\ \hline
-			tcmp		& 2's Complement			& 0x4 \\ \hline
+			not		& Not			& 0x4 \\ \hline
 			and			& And						& 0x5 \\ \hline
 			or			& Or						& 0x6 \\ \hline
 			xor			& Exclusive Or				& 0x7 \\ \hline
@@ -841,7 +1080,7 @@ source register, RSa, with the other source being the immediate value. The resul
 			sari		& Arithmetic Shift Right			& 0x9 \\ \hline
 			slli		& Logic Shift Left 					& 0xa \\ \hline
 			slri		& Logic Shift Right					& 0xb \\ \hline
-			compi		& Compare Immedaite					& 0xc \\ \hline
+			compi		& Compare Immediate					& 0xc \\ \hline
 
 	\end{tabular} \\
 \end{center}
@@ -886,16 +1125,16 @@ to determine the byte size to read from memory. This encoding is described in th
 
 \begin{center}
 		\begin{tabular}{|c|c|c|c|}
-				\multicolumn{4}{c}{Load Immediate Instrution Format}\\ \hline
+				\multicolumn{4}{c}{Load Immediate Instruction Format}\\ \hline
 				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} DSEL \hspace{4pt} & \hspace{10pt}Immediate  \hspace{10pt}   \\	\hline
 			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15  \hfill   0\\ \hline
 		
 	\end{tabular}
 \end{center}
 
-\paragraph{Overview:}The Load Immediate Instruction Format is for loading immeidate values into a register.
+\paragraph{Overview:}The Load Immediate Instruction Format is for loading immediate values into a register.
 The DSEL value determines the destination and function of the instruction. This is to allow the selection
-of various register files to be updated. THe DSEL bit values and their function are shown below. 
+of various register files to be updated. The DSEL bit values and their function are shown below. 
 The MSB of DSEL determines if the value is unsigned (1) or signed (0). \\
 \begin{tabular}{l|l}
 		DSEL (bin) & Destination \\ \hline
@@ -948,27 +1187,30 @@ The MSB of DSEL determines if the value is unsigned (1) or signed (0). \\
 		
 	\end{tabular}
 \end{center}
+
 \paragraph{Overview:}The Store Instruction Format is for writing register values to memory. A 14 bit immediate is used
 for a relative address calculation with RSa as the base address. The value in RSb is then written to memory. The funct field is used
 to determine the byte size to write to memory. This encoding is described in the table below. \\
-\begin{tabular}{l|l}
+	\begin{tabular}{l|l}
 		Funct & Description \\ \hline
 		00	  & 1 word (32 bits) \\
 		01	  & half word (16 bits, upper) \\ 
 		10	  & 24 bits, upper \\
 		11	  & byte, upper		\\
-		\end{tabular}
+	\end{tabular}
 \paragraph{}The following instructions use this encoding: \\
-\begin{center}
-	\begin{tabular}{|l|l|l|} \hline
+
+	\begin{center}
+		\begin{tabular}{|l|l|l|} \hline
 			Instruction & Description 						& Funct\\ \hline
 			sw			& Store Word							& 0x0 \\ \hline
 			sh			& Store Half Word					& 0x1 \\ \hline
 			sb			& Store Byte							& 0x3 \\ \hline
 			sth			& Store Three (Bytes, 24 bits)		& 0x2 \\ \hline
 
-\end{tabular}
-\end{center}
+		\end{tabular}
+	\end{center}
+
 \begin{center}
 	\line(1,0){250}
 \end{center}
@@ -991,7 +1233,7 @@ the new PC. For pure relative jumps, the Zero register is used as the base. For 
 the PC is stored in RA0, or R4 in the General Purpose Register file.
 \paragraph{}The following instructions use this encoding: \\
 \begin{center}
-	\begin{tabular}{|l|l|l|} \hline
+	\begin{tabular}{|l|l|} \hline
 			Instruction & Description 				\\ \hline
 			j			& Jump						\\ \hline
 			jal			& Jump and Link				\\ \hline
@@ -1051,7 +1293,7 @@ vary, and are described in more detail in their individual listings.
 			sysret		& System Return						& 0x01  & no  \\ \hline
 			stspr		& Store Special Purpose Register	& 0x02  & yes \\ \hline
 			ldspr		& Load Special Purpose Register		& 0x03  & yes \\ \hline
-			sync		& Syncronize memory/Flush Pipeline  & 0x04  & no  \\ \hline
+			sync		& Synchronize memory/Flush Pipeline  & 0x04  & no  \\ \hline
 			lock		& Lock Memory						& 0x05  & yes \\ \hline
 			test		& Test Lock 						& 0x06  & yes \\ \hline
 			pmir		& Permission Increase Request		& 0x07  & yes \\ \hline
@@ -1066,27 +1308,60 @@ vary, and are described in more detail in their individual listings.
 \newpage
 \subsubsection{Co-Processor}
 
-\paragraph{}Since the coprocessors can have any implementation, only the opcode is required. However, adhering to similar formatting of the instruction formats provided in previous sections is imperative and the Fusion-Core foundation will not provide an accepted coprocessor ID number. More information about coprocessors can be accessed in the Co-Processor section.
+\paragraph{}Since the co-processors can have any implementation, only the opcode is required. However, adhering to similar 
+formatting of the instruction formats provided in previous sections is imperative and the Fusion-Core foundation 
+will not provide an accepted co-processor ID number. More information about co-processors can be accessed in the Co-Processor section.
 \begin{center}
 	\line(1,0){250}
 \end{center}
 
 \newpage
-\subsection{List of OPCodes}
+\subsection{Opcodes}
+\paragraph{} The opcodes are designed to provide a simple decode unit for the processor. The figure below shows the breakdown
+within the opcode.
 	\begin{center}
-		\begin{tabular}{|c|c|}
+		\begin{tabular}{|c|c|c|}
+			\hline
+				CPEN & Mem/PC[1:0] & Reg Operands[2:0]	\\ \hline
+				5 & 4 \hfill 3 & 2 \hfill 0 \\ \hline
+
+		\end{tabular}
+	\end{center}
+\paragraph{} The most significant bit of the opcode field determines if the instruction is a Co-processor instruction or not.
+This is to offload decoding of co-processor instructions for the individual co-processors, and not cause any requirements
+for future developments of co-processor instruction decoding. 
+\paragraph{} Bits 3 and 4 of the opcode field are for determining memory access, changing the program counter, and linking
+the return address to register RA. A possible way to generate signals for decoding the opcode is provided below in verilog. \\
+
+\texttt{pc\_change = ~opcode[4]}\\
+\texttt{pc\_link = opcode[4] ~| opcode[3]}\\
+\texttt{pc\_change = opcode[4] \& opcode[3]}\\
+
+\paragraph{} The lower 3 bits of the opcode field determine the operand usage of an instruction, including Rd, RSa, RSb, and immediates.
+A possible way to generate signals for decoding the opcode is provided below in verilog. \\
+
+\texttt{use\_rd = ( opcode[1] | opcode[0] ) \& ( ~opcode[2] | opcode[1] ) }\\
+\texttt{use\_rsa = opcode[2] | opcode[1] }\\
+\texttt{use\_rsb = ( opcode[2] \& opcode[0] ) | ( opcode[1] \& opcode[0] ) }\\
+\texttt{use\_immediate = opcode[2] | ~opcode[1] }\\
+
+
+
+\subsubsection{List of OPCodes}
+	\begin{center}
+		\begin{tabular}{|l|l|}
 			\hline
 			Op Code & Description 				 	\\ \hline
-			000001	& Register ALU instructions	 	\\ \hline
-			000010	& Load Immediate instructions 	\\ \hline
-			000011	& Immediate ALU instructions	\\ \hline
-			000101	& Branch Instructions		\\ \hline
-			000110	& Jump Instructions				\\ \hline
-			000111	& Jump and Link Instructions	\\ \hline
-			001XXX	& System Instructions			\\ \hline
-			010010	& Load Instructions				\\ \hline
-			011010	& Store Instructions			\\ \hline
-			1XXXXX	& Co-Processor Instructions		\\ \hline
+			010011	& Register ALU instructions	 	\\ \hline
+			010000	& Load Immediate instructions 	\\ \hline
+			010110	& Immediate ALU instructions	\\ \hline
+			001101	& Branch Instructions			\\ \hline
+			001100	& Jump Instructions				\\ \hline
+			000100	& Jump and Link Instructions	\\ \hline
+			100000	& System Instructions			\\ \hline
+			011110	& Load Instructions				\\ \hline
+			011101	& Store Instructions			\\ \hline
+			11XXXX	& Co-Processor Instructions		\\ \hline
 
 		\end{tabular}
 	\end{center}
@@ -1098,9 +1373,7 @@ more opcode bits. The LSB of the opcode selects ALU usage, the second to last bi
 bit in the opcode selects a change in PC, but the following bits do not correspond to the previous meanings mentioned. The
 4th bit denotes a system instruction, and the 5th bit denotes memory access. 
 \newpage
-\subsection{Instruction Details}
-\paragraph{}This section will go into detail about the instructions that are available, with their functions and options.\\
-\subsubsection{Integer}
+
 
 \subsection{List of Instructions}
 
@@ -1113,7 +1386,7 @@ bit in the opcode selects a change in PC, but the following bits do not correspo
 			sub			& Rd = RSa - RSb 								& 000001dddddaaaaabbbbbxxxxxxx0001 \\
 			addu		& Rd = RSa + RSb (Unsigned) 					& 000001dddddaaaaabbbbbxxxxxxx0010 \\
 			subu		& Rd = RSa - RSb (Unsigned)					 	& 000001dddddaaaaabbbbbxxxxxxx0011 \\
-			tcmp		& Rd = !Rsa	 									& 000001dddddaaaaaxxxxxxxxxxxx0100 \\
+			not		& Rd = !RSa	 									& 000001dddddaaaaaxxxxxxxxxxxx0100 \\
 			and			& Rd = RSa \& RSb								& 000001dddddaaaaabbbbbxxxxxxx0101 \\
 			or			& Rd = RSa $|$ RSb 								& 000001dddddaaaaabbbbbxxxxxxx0110 \\
 			xor			& Rd = RSa $\oplus$ RSb 						& 000001dddddaaaaabbbbbxxxxxxx0111 \\
@@ -1121,7 +1394,7 @@ bit in the opcode selects a change in PC, but the following bits do not correspo
 			sar			& Rd = RSa $\gg$ RSb 							& 000001dddddaaaaabbbbbsssssss1001 \\
 			sll			& Rd = RSa $\ll$ RSb 							& 000001dddddaaaaabbbbbsssssss1010 \\
 			slr			& Rd = RSa $ \ggg  $ RSb 						& 000001dddddaaaaabbbbbsssssss1011 \\
-			comp		& Rd = (RSa == RSb);(RSa $>$ RSb);(RSa $<$ Rsb)	& 000001dddddaaaaaxxxxxsssssss1100 \\
+			comp		& Rd = (RSa == RSb);(RSa $>$ RSb);(RSa $<$ RSb)	& 000001dddddaaaaaxxxxxsssssss1100 \\
 			\hline
 			\multicolumn{3}{|c|}{Immediate Instructions} \\ \hline
 			addi		& Rd = RSa + Imm 								& 000011dddddaaaaaiiiiiiiiiiii0000 \\
@@ -1147,18 +1420,20 @@ bit in the opcode selects a change in PC, but the following bits do not correspo
 			\multicolumn{3}{|c|}{Load Immediate Instructions} \\ \hline
 			li			& (GPREGF) Rd = Imm								& 000010ddddd0000iiiiiiiiiiiiiiiii \\
 			lsi			& (SYSREGF) Rd = Imm							& 000010ddddd0001iiiiiiiiiiiiiiiii \\
-			lgi			& (GLREGF) Rd = Imm								& 000010ddddd0010iiiiiiiiiiiiiiiii \\
+			lgi			& (GLBREGF) Rd = Imm								& 000010ddddd0010iiiiiiiiiiiiiiiii \\
+			\hline \newpage
 			\hline
+			\multicolumn{3}{|c|}{Load Immediate Instructions (cont.)} \\ \hline
 			Instruction & Function 										& Binary \\ \hline
 			lui			& (GPREGF) Rd = Imm	(upper 16 bits)				& 000010ddddd0011iiiiiiiiiiiiiiiii \\
 			lusi		& (SYSREGF) Rd = Imm (upper 16 bits)			& 000010ddddd0100iiiiiiiiiiiiiiiii \\
-			lugi		& (GLREGF) Rd = Imm	 (upper 16 bits)			& 000010ddddd0101iiiiiiiiiiiiiiiii \\
+			lugi		& (GLBREGF) Rd = Imm	 (upper 16 bits)			& 000010ddddd0101iiiiiiiiiiiiiiiii \\
 			lni			& (GPREGF) Rd = Imm	(unsigned)					& 000010ddddd1000iiiiiiiiiiiiiiiii \\
 			lnsi		& (SYSREGF) Rd = Imm (unsigned)					& 000010ddddd1001iiiiiiiiiiiiiiiii \\
-			lngi		& (GLREGF) Rd = Imm (unsigned)					& 000010ddddd1010iiiiiiiiiiiiiiiii \\
+			lngi		& (GLBREGF) Rd = Imm (unsigned)					& 000010ddddd1010iiiiiiiiiiiiiiiii \\
 			luni		& (GPREGF) Rd = Imm	 (upper 16, unsigned)		& 000010ddddd1011iiiiiiiiiiiiiiiii \\
 			lunsi		& (SYSREGF) Rd = Imm (upper 16, unsigned)		& 000010ddddd1100iiiiiiiiiiiiiiiii \\
-			lungi		& (GLREGF) Rd = Imm	(upper 16, unsigned)		& 000010ddddd1101iiiiiiiiiiiiiiiii \\
+			lungi		& (GLBREGF) Rd = Imm	(upper 16, unsigned)		& 000010ddddd1101iiiiiiiiiiiiiiiii \\
 			\hline
 			\multicolumn{3}{|c|}{Store Instructions} \\ \hline
 
@@ -1180,10 +1455,10 @@ bit in the opcode selects a change in PC, but the following bits do not correspo
 			blt			& Next PC $<$- (RSa $<$ RSb) ? PC+Imm : PC+4	& 000101iiiiiaaaaabbbbbiiiiiiiii11\\
 			\hline
 			\multicolumn{3}{|c|}{System Instructions} \\ \hline
-			syscall		& System Call (Raise Privalege)					& 00100dddddaaaaaa00000000iiiiiiii\\
-			sysret		& System Return (Lower Privalege)				& 00100dddddaaaaaa00000001iiiiiiii\\
-			stspr		& (SYSRF) Rd $<$- RSa							& 00100dddddaaaaaa00000010xxxxxxxx\\
-			ldspr		& (SYSRF) RSa -$>$ Rd							& 00100dddddaaaaaa00000011xxxxxxxx\\
+			syscall		& System Call (Raise Privilege)					& 00100dddddaaaaaa00000000iiiiiiii\\
+			sysret		& System Return (Lower Privilege)				& 00100dddddaaaaaa00000001iiiiiiii\\
+			stspr		& (SYSREGF) Rd $<$- RSa							& 00100dddddaaaaaa00000010xxxxxxxx\\
+			ldspr		& (SYSREGF) RSa -$>$ Rd							& 00100dddddaaaaaa00000011xxxxxxxx\\
 			sync		& Flush Pipeline								& 00100xxxxxxxxxxx00000100xxxxxxxx\\
 			pmir		& PML + Imm ?									& 00100xxxxxxxxxxx00000111iiiiiiii\\
 			pmd			& PML - Imm ?									& 00100xxxxxxxxxxx00001000iiiiiiii\\
@@ -1192,32 +1467,40 @@ bit in the opcode selects a change in PC, but the following bits do not correspo
 	\end{center}
 
 
-\subsubsection{Immediate}
-\subsubsection{Load/Store}
-\subsubsection{Branch/Jump}
 \subsubsection{Co-Processor}
+\paragraph{} More information on co-processor instructions will be available
+in the future. This section is still under development.
 
-
-
+\clearpage
 \section{Exceptions and Interrupts}
 \paragraph{} This ISA differentiates between Exceptions and Interrupts based on function. Interrupts are vectored, to allow
 the running process to define what should be done. Exceptions are more based in hardware, and require minimal setup in software.
 
 \subsection{Exceptions}
 \paragraph{} This section is still under development. 
+\subsubsection{User Level}
+\subsubsection{Supervisor Level}
+
+\begin{center}
+	\line(1,0){250}
+\end{center}
 
 \subsection{Interrupts}
 \paragraph{} This section is still under development.
 \subsubsection{User Level}
 \subsubsection{Supervisor Level}
 
+\begin{center}
+	\line(1,0){250}
+\end{center}
+
 \clearpage
 \part{Co-Processors}
 \section{Co-Processor Overview}
-\paragraph{}Co-processors are the main point of the Fusion-Core archetecture. As the ISA strictly specifies the main core for code compatibility,
-the implementator is free to use whichever co-processors that would be necessary for an application. As speeding up the common case is the main goal in CPU design,
+\paragraph{}Co-processors are the main point of the Fusion-Core architecture. As the ISA strictly specifies the main core for code compatibility,
+the implementation is free to use whichever co-processors that would be necessary for an application. As speeding up the common case is the main goal in CPU design,
 these co-processors should enhance the common case for the specific implementation. The ISA has no specific restrictions for a co-processor, but for non-memory
-mapped co-processors, they should be created as dictated by the interface speicifed below.
+mapped co-processors, they should be created as dictated by the interface specified below.
 
 \paragraph{} Examples of co-processors could be hardware acceleration for vector instructions, encryption, floating point, or communication.
 The co-processor can be as complex, or as simple as one requires. There is no limitation for what kind of co-processor that could be used, 
@@ -1228,13 +1511,13 @@ not a requirement, but just a possibility and the current implementation of the 
 custom linker script.
 
 \paragraph{} The reasoning behind co-processors use is to allow for code compatibility between nearly all implementations of the Fusion-Core ISA, and
-allowing for an enhancement to the common case of a processor's use. Most architectures do not allow for radical implementaitons in the architecture itself,
-only the microarchitecture. And by keeping complex instructions away from the main core, a simple decode unit can be created to allow for potentially faster
+allowing for an enhancement to the common case of a processor's use. Most architectures do not allow for radical implementations in the architecture itself,
+only the micro-architecture. And by keeping complex instructions away from the main core, a simple decode unit can be created to allow for potentially faster
 pipelining. 
 
-\subsection{Co-Processor Interface}
+\subsection{ Co-Processor Interface}
 
-\paragraph{Co-Processor Opcode space} Co-processor instructions are enabled through use of the most significant bit of the opcode field. 
+\paragraph{ Co-Processor Opcode space} Co-processor instructions are enabled through use of the most significant bit of the opcode field. 
 The processor should be able to distinguish between main core and co-processor instructions quickly, and a single bit is the simplest way of doing so.
 The other 5 bits are completely usable for whichever purpose the implementation could desire.
 
@@ -1243,8 +1526,8 @@ This ID is provided by the Fusion-Core developers. Please send an email to cpid@
 This ID will be implemented to allow for proper disassembly and assembly of the instructions in the GNU Binutils port. It is also possible to not use an official
 CPID, however no support will be given to the developers of the co-processor.
 
-\subsubsection{Decode unit Connections}
-\subsubsection{Co-Processor Conventions}
+\subsubsection{ Decode unit Connections}
+\subsubsection{ Co-Processor Conventions}
 \subsubsection{Register Connections}
 \subsection{Interface Connection Definitions}
 \subsection{Adding custom Co-Processor}
@@ -1261,8 +1544,8 @@ the Global Register File creates an interface for ease of use between processing
 \paragraph{}This section is under development and will be updated to explain the connections and registers available.
 
 \section{Recommended Co-Processors}
-\paragraph{About} This section will cover some basic coprocessors that have been approved and assigned coprocessor IDs. The full list of approved coprocessors will be included in a separate document. 
-\subsection{Floating Point Unit}
+\paragraph{About} This section will cover some basic co-processors that have been approved and assigned co-processor IDs. The full list of approved co-processors will be included in a separate document. 
+\subsection{Math Unit}
 \subsubsection{Registers}
 \subsubsection{Instructions}
 \subsection{System Unit}
@@ -1271,7 +1554,7 @@ the Global Register File creates an interface for ease of use between processing
 \subsection{Memory Management Unit}
 \subsubsection{Registers}
 \subsubsection{Instructions}
-\subsection{Multiprocessor Communication Unit}
+\subsection{Inter-Processor Communications Unit}
 \subsubsection{Registers}
 \subsubsection{Instructions}
 
