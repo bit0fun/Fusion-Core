@@ -1,0 +1,51 @@
+
+insn_check:     file format elf32-fusion
+
+
+Disassembly of section .text:
+
+00040000 <__start>:
+	...
+
+00040008 <reg_test>:
+   40008:	5b e0 02 a0 	addi	$low0, $zero, 42
+   4000c:	5b c0 02 a0 	addi	$hi0, $zero, 42
+   40010:	5b a0 02 a0 	addi	$tmp7, $zero, 42
+   40014:	5b 80 02 a0 	addi	$tmp6, $zero, 42
+   40018:	5b 60 02 a0 	addi	$tmp5, $zero, 42
+   4001c:	5b 40 02 a0 	addi	$tmp4, $zero, 42
+   40020:	5b 20 02 a0 	addi	$tmp3, $zero, 42
+   40024:	5b 00 02 a0 	addi	$tmp2, $zero, 42
+   40028:	5a e0 02 a0 	addi	$tmp1, $zero, 42
+   4002c:	5a c0 02 a0 	addi	$tmp0, $zero, 42
+   40030:	5a a0 02 a0 	addi	$gr10, $zero, 42
+   40034:	5a 80 02 a0 	addi	$gr9, $zero, 42
+   40038:	5a 60 02 a0 	addi	$gr8, $zero, 42
+   4003c:	5a 40 02 a0 	addi	$gr7, $zero, 42
+   40040:	5a 20 02 a0 	addi	$gr6, $zero, 42
+   40044:	5a 00 02 a0 	addi	$gr5, $zero, 42
+   40048:	59 e0 02 a0 	addi	$gr4, $zero, 42
+   4004c:	59 c0 02 a0 	addi	$gr3, $zero, 42
+   40050:	59 a0 02 a0 	addi	$gr2, $zero, 42
+   40054:	59 80 02 a0 	addi	$gr1, $zero, 42
+   40058:	59 60 02 a0 	addi	$gr0, $zero, 42
+   4005c:	59 40 02 a0 	addi	$rval1, $zero, 42
+   40060:	59 20 02 a0 	addi	$rval0, $zero, 42
+   40064:	59 00 02 a0 	addi	$arg3, $zero, 42
+   40068:	58 e0 02 a0 	addi	$arg2, $zero, 42
+   4006c:	58 c0 02 a0 	addi	$arg1, $zero, 42
+   40070:	58 a0 02 a0 	addi	$arg0, $zero, 42
+   40074:	58 80 02 a0 	addi	$ra, $zero, 42
+   40078:	58 60 02 a0 	addi	$gp, $zero, 42
+   4007c:	58 40 02 a0 	addi	$fp, $zero, 42
+   40080:	58 20 02 a0 	addi	$sp, $zero, 42
+   40084:	58 00 02 a0 	addi	$zero, $zero, 42
+	...
+
+Disassembly of section .data:
+
+00040098 <__DATA_RAM>:
+   40098:	de ad be ef 	nri_unk
+
+0004009c <var2>:
+   4009c:	ca fe ba be 	nri_unk
