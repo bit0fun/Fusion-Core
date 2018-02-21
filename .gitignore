@@ -422,4 +422,5 @@ transcript*
 sc_dpiheader.h
 vsim.dbg
 
-
+#icarus verilog ignore files
+*.vcd #don't need to see test outputs

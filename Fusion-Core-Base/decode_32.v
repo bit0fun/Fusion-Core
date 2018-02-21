@@ -1,9 +1,4 @@
 /*** Defines  ***/
-
-
-
-
-
 /*System because it's special*/
 `define	OPC_SYS		 5'b110000;
 
@@ -275,7 +270,7 @@ always@(posedge clk_in, reset_in, ~stall_in) begin //make sure that reset has to
 		case (funct_sys_w)
 			8'h00: begin				//system call
 				syscall_out 	<= 1'b1;
-				memsync_out		<= 1'b1; //need to also syncronize memory first
+				memsync_out		<= 1'b0; 
 				pem_inc_req_out	<= 1'b0;
 				pem_dec_req_out	<= 1'b0;
 			end
@@ -312,4 +307,4 @@ always@(posedge clk_in, reset_in, ~stall_in) begin //make sure that reset has to
 
 end
 
-endmodule;
+endmodule
