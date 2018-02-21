@@ -1335,7 +1335,7 @@ the return address to register RA. A possible way to generate signals for decodi
 
 \texttt{pc\_change = ~opcode[4]}\\
 \texttt{pc\_link = opcode[4] ~| opcode[3]}\\
-\texttt{pc\_change = opcode[4] \& opcode[3]}\\
+\texttt{mem\_access = opcode[4] \& opcode[3]}\\
 
 \paragraph{} The lower 3 bits of the opcode field determine the operand usage of an instruction, including Rd, RSa, RSb, and immediates.
 A possible way to generate signals for decoding the opcode is provided below in verilog. \\
