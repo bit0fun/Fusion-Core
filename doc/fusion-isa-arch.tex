@@ -1,4 +1,5 @@
 \documentclass[letterpaper, 11pt]{article}
+\usepackage{tocloft}
 \usepackage[T1]{fontenc}
 \usepackage{inconsolata}
 \usepackage{fontspec}
@@ -10,10 +11,12 @@
 \usepackage{subfigure}
 \usepackage{hyperref}
 \usepackage{amssymb}
+
 \hypersetup{colorlinks=false,linktoc=all}
 
+\addtolength{\cftsecnumwidth}{20pt}
 
-\title{Fusion-Core ISA Definition: Revision 0.2}
+\title{Fusion-Core ISA Definition: Revision 0.2.1}
 \author{Dylan Wadler}
 
 \begin{document}
@@ -25,6 +28,7 @@
 \newpage
 \part{Administrative}
 \section{Change log}
+\paragraph{Version 0.2.1} Updated Load Immediate DSEL values to create simpler decode control signals. Fixed various issues in document to be consistent with other sections. The binary representation table, Load Immediate, and System sections were modified.
 \paragraph{Version 0.2} Added comprehensive list of Instruction usage for programmers. Changed opcode definitions to create simpler
 decode, with availability to create new instructions from the existing opcodes. Including more information about special purpose registers.
 \paragraph{Version 0.1} Initial Definition of the Instruction Set Architecture
@@ -746,7 +750,10 @@ the higher byte to the address calculated and the lower byte to the address calc
 \end{center}
 \clearpage
 \paragraph{} The Load Immediate Instructions are for putting immediate values into registers. A 16 bit immediate value is stored into Rd, with variations on
-register file and location within the register.
+register file and location within the register. For unsigned upper immediate loads, only the upper 2 bytes are
+overwritten. This is to allow function calls to only take 2 instructions, and 1 register. All other
+load immediate instructions overwrite the entire register.
+
 \begin{figure}[!h]
 	\begin{center}
 		\begin{tabular}{|l|l|l|}
@@ -1013,7 +1020,7 @@ adherence to RISC philosophy in this architecture is required to exploit any ben
 \begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
 			\multicolumn{6}{c}{Register/Integer Instruction Format}\\ \hline
-				\hspace{2pt} opcode (0x01) \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
 			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
 		
 	\end{tabular}
@@ -1134,22 +1141,24 @@ to determine the byte size to read from memory. This encoding is described in th
 
 \paragraph{Overview:}The Load Immediate Instruction Format is for loading immediate values into a register.
 The DSEL value determines the destination and function of the instruction. This is to allow the selection
-of various register files to be updated. The DSEL bit values and their function are shown below. 
+of various register files to be updated. For unsigned upper immediate loads, only the upper 2 bytes are
+overwritten. This is to allow function calls to only take 2 instructions, and 1 register. All other
+load immediate instructions overwrite the entire register. The DSEL bit values and their function are shown below. 
 The MSB of DSEL determines if the value is unsigned (1) or signed (0). \\
 \begin{tabular}{l|l}
 		DSEL (bin) & Destination \\ \hline
 		0000 & General purpose register file \\
 		0001 & System Register File \\
 		0010 & Global Co-Processor Register File \\ 
-		0011 & General purpose register file (upper 16 bits) \\
-		0100 & System Register File (upper 16 bits)\\
-		0101 & Global Co-Processor Register File (upper 16 bits)\\ 
+		0100 & General purpose register file (upper 16 bits) \\
+		0101 & System Register File (upper 16 bits)\\
+		0110 & Global Co-Processor Register File (upper 16 bits)\\ 
 		1000 & General purpose register file  (Unsigned)\\
 		1001 & System Register File (Unsigned)\\
 		1010 & Global Co-Processor Register File (Unsigned)\\ 
-		1011 & General purpose register file  (Unsigned, upper 16 bits)\\
-		1100 & System Register File (Unsigned, upper 16 bits)\\
-		1101 & Global Co-Processor Register File (Unsigned, upper 16 bits)\\ 
+		1100 & General purpose register file  (Unsigned, upper 16 bits)\\
+		1101 & System Register File (Unsigned, upper 16 bits)\\
+		1110 & Global Co-Processor Register File (Unsigned, upper 16 bits)\\ 
 		
 		\end{tabular}
 
@@ -1161,15 +1170,15 @@ The MSB of DSEL determines if the value is unsigned (1) or signed (0). \\
 			li			& load immediate (gprf)						& 0x0 \\ \hline
 			lsi			& load immediate system						& 0x1 \\ \hline
 			lgi			& load immediate global						& 0x2 \\ \hline
-			lui			& load immediate (gprf)	(upper)				& 0x3 \\ \hline
-			lusi		& load immediate system	(upper)				& 0x4 \\ \hline
-			lugi		& load immediate global	(upper)				& 0x5 \\ \hline
+			lui			& load immediate (gprf)	(upper)				& 0x4 \\ \hline
+			lusi		& load immediate system	(upper)				& 0x5 \\ \hline
+			lugi		& load immediate global	(upper)				& 0x6 \\ \hline
 			lni			& load immediate (gprf)	(unsigned)			& 0x8 \\ \hline
 			lnsi		& load immediate system	(unsigned)			& 0x9 \\ \hline
 			lngi		& load immediate global	(unsigned)			& 0xa \\ \hline 
-			luni		& load immediate (gprf) (unsigned,upper)	& 0xb \\ \hline
-			lunsi		& load immediate system	(unsigned,upper		& 0xc \\ \hline
-			lungi		& load immediate global	(unsigned,upper)	& 0xd \\ \hline
+			luni		& load immediate (gprf) (unsigned,upper)	& 0xc \\ \hline
+			lunsi		& load immediate system	(unsigned,upper		& 0xd \\ \hline
+			lungi		& load immediate global	(unsigned,upper)	& 0xe \\ \hline
 
 		\end{tabular}
 	\end{center}
@@ -1285,6 +1294,9 @@ The PC is only updated with whichever operation is indicated as being true or fa
 \end{center}
 \paragraph{Overview:} The System Instruction Format is used for various system controls. Their functions
 vary, and are described in more detail in their individual listings.
+These instructions are not required, but recommended for implementation.
+While technically the System Instructions are in the co-processor opcode space, they have
+a designated opcode of 110000 as shown in the OPCodes section.
 \paragraph{}The following instructions use this encoding: \\
 \begin{center}
 	\begin{tabular}{|l|l|l|l|} \hline
@@ -1333,18 +1345,21 @@ for future developments of co-processor instruction decoding.
 \paragraph{} Bits 3 and 4 of the opcode field are for determining memory access, changing the program counter, and linking
 the return address to register RA. A possible way to generate signals for decoding the opcode is provided below in verilog. \\
 
-\texttt{pc\_change = ~opcode[4]}\\
-\texttt{pc\_link = opcode[4] ~| opcode[3]}\\
-\texttt{pc\_change = opcode[4] \& opcode[3]}\\
+{\parindent0pt % disables indentation 
+\texttt{pc\_change = $\sim$opcode[4]}\\
+\texttt{pc\_link = opcode[4] $\sim$| opcode[3]}\\
+\texttt{mem\_access = opcode[4] \& opcode[3]}\\
+}%enable indentation
 
 \paragraph{} The lower 3 bits of the opcode field determine the operand usage of an instruction, including Rd, RSa, RSb, and immediates.
 A possible way to generate signals for decoding the opcode is provided below in verilog. \\
 
-\texttt{use\_rd = ( opcode[1] | opcode[0] ) \& ( ~opcode[2] | opcode[1] ) }\\
+{\parindent0pt % disables indentation 
+\texttt{use\_rd = ( opcode[1] | opcode[0] ) \& ( $\sim$opcode[2] | opcode[1] ) }\\
 \texttt{use\_rsa = opcode[2] | opcode[1] }\\
 \texttt{use\_rsb = ( opcode[2] \& opcode[0] ) | ( opcode[1] \& opcode[0] ) }\\
-\texttt{use\_immediate = opcode[2] | ~opcode[1] }\\
-
+\texttt{use\_immediate = opcode[2] | $\sim$opcode[1] }\\
+}%enable indentation
 
 
 \subsubsection{List of OPCodes}
@@ -1358,10 +1373,10 @@ A possible way to generate signals for decoding the opcode is provided below in 
 			001101	& Branch Instructions			\\ \hline
 			001100	& Jump Instructions				\\ \hline
 			000100	& Jump and Link Instructions	\\ \hline
-			100000	& System Instructions			\\ \hline
+			110000	& System Instructions			\\ \hline
 			011110	& Load Instructions				\\ \hline
 			011101	& Store Instructions			\\ \hline
-			11XXXX	& Co-Processor Instructions		\\ \hline
+			1XXXXX	& Co-Processor Instructions		\\ \hline
 
 		\end{tabular}
 	\end{center}
@@ -1382,86 +1397,86 @@ bit in the opcode selects a change in PC, but the following bits do not correspo
 			\multicolumn{3}{c}{Instruction Instruction Summary Table} \\ \hline
 			\multicolumn{3}{|c|}{Integer Instructions} \\ \hline
 			Instruction & Function 										& Binary \\ \hline
-			add			& Rd = RSa + RSb 								& 000001dddddaaaaabbbbbxxxxxxx0000 \\
-			sub			& Rd = RSa - RSb 								& 000001dddddaaaaabbbbbxxxxxxx0001 \\
-			addu		& Rd = RSa + RSb (Unsigned) 					& 000001dddddaaaaabbbbbxxxxxxx0010 \\
-			subu		& Rd = RSa - RSb (Unsigned)					 	& 000001dddddaaaaabbbbbxxxxxxx0011 \\
-			not		& Rd = !RSa	 									& 000001dddddaaaaaxxxxxxxxxxxx0100 \\
-			and			& Rd = RSa \& RSb								& 000001dddddaaaaabbbbbxxxxxxx0101 \\
-			or			& Rd = RSa $|$ RSb 								& 000001dddddaaaaabbbbbxxxxxxx0110 \\
-			xor			& Rd = RSa $\oplus$ RSb 						& 000001dddddaaaaabbbbbxxxxxxx0111 \\
-			sal			& Rd = RSa $\ll$ RSb 							& 000001dddddaaaaabbbbbsssssss1000 \\
-			sar			& Rd = RSa $\gg$ RSb 							& 000001dddddaaaaabbbbbsssssss1001 \\
-			sll			& Rd = RSa $\ll$ RSb 							& 000001dddddaaaaabbbbbsssssss1010 \\
-			slr			& Rd = RSa $ \ggg  $ RSb 						& 000001dddddaaaaabbbbbsssssss1011 \\
-			comp		& Rd = (RSa == RSb);(RSa $>$ RSb);(RSa $<$ RSb)	& 000001dddddaaaaaxxxxxsssssss1100 \\
+			add			& Rd = RSa + RSb 								& 010011dddddaaaaabbbbbxxxxxxx0000 \\
+			sub			& Rd = RSa - RSb 								& 010011dddddaaaaabbbbbxxxxxxx0001 \\
+			addu		& Rd = RSa + RSb (Unsigned) 					& 010011dddddaaaaabbbbbxxxxxxx0010 \\
+			subu		& Rd = RSa - RSb (Unsigned)					 	& 010011dddddaaaaabbbbbxxxxxxx0011 \\
+			not			& Rd = !RSa	 									& 010011dddddaaaaaxxxxxxxxxxxx0100 \\
+			and			& Rd = RSa \& RSb								& 010011dddddaaaaabbbbbxxxxxxx0101 \\
+			or			& Rd = RSa $|$ RSb 								& 010011dddddaaaaabbbbbxxxxxxx0110 \\
+			xor			& Rd = RSa $\oplus$ RSb 						& 010011dddddaaaaabbbbbxxxxxxx0111 \\
+			sal			& Rd = RSa $\ll$ RSb 							& 010011dddddaaaaabbbbbsssssss1000 \\
+			sar			& Rd = RSa $\gg$ RSb 							& 010011dddddaaaaabbbbbsssssss1001 \\
+			sll			& Rd = RSa $\ll$ RSb 							& 010011dddddaaaaabbbbbsssssss1010 \\
+			slr			& Rd = RSa $ \ggg  $ RSb 						& 010011dddddaaaaabbbbbsssssss1011 \\
+			comp		& Rd = (RSa == RSb);(RSa $>$ RSb);(RSa $<$ RSb)	& 010011dddddaaaaaxxxxxsssssss1100 \\
 			\hline
 			\multicolumn{3}{|c|}{Immediate Instructions} \\ \hline
-			addi		& Rd = RSa + Imm 								& 000011dddddaaaaaiiiiiiiiiiii0000 \\
-			subi		& Rd = RSa - Imm 								& 000011dddddaaaaaiiiiiiiiiiii0001 \\
-			addui		& Rd = RSa + Imm (Unsigned)						& 000011dddddaaaaaiiiiiiiiiiii0010 \\
-			subui		& Rd = RSa - Imm (Unsigned)					 	& 000011dddddaaaaaiiiiiiiiiiii0011 \\
-			noti		& Rd = ! Imm									& 000011ddddd00000iiiiiiiiiiii0100 \\
-			andi		& Rd = RSa \& Imm								& 000011dddddaaaaaiiiiiiiiiiii0101 \\
-			ori			& Rd = RSa $|$ Imm 								& 000011dddddaaaaaiiiiiiiiiiii0110 \\
-			xori		& Rd = RSa $\oplus$ Imm 						& 000011dddddaaaaaiiiiiiiiiiii0111 \\
-			sali		& Rd = RSa $\ll$ Imm 							& 000011dddddaaaaaiiiiiiiiiiii1000 \\
-			sari		& Rd = RSa $\gg$ Imm 							& 000011dddddaaaaaiiiiiiiiiiii1001 \\
-			slli		& Rd = RSa $\ll$ Imm 							& 000011dddddaaaaaiiiiiiiiiiii1010 \\
-			slri		& Rd = RSa $ \ggg  $ Imm 						& 000011dddddaaaaaiiiiiiiiiiii1011 \\
-			compi		& Rd = (RSa == Imm);(RSa $>$ Imm);(RSa $<$ Imm)	& 000011dddddaaaaaiiiiiiiiiiii1100 \\
+			addi		& Rd = RSa + Imm 								& 010110dddddaaaaaiiiiiiiiiiii0000 \\
+			subi		& Rd = RSa - Imm 								& 010110dddddaaaaaiiiiiiiiiiii0001 \\
+			addui		& Rd = RSa + Imm (Unsigned)						& 010110dddddaaaaaiiiiiiiiiiii0010 \\
+			subui		& Rd = RSa - Imm (Unsigned)					 	& 010110dddddaaaaaiiiiiiiiiiii0011 \\
+			noti		& Rd = ! Imm									& 010110ddddd00000iiiiiiiiiiii0100 \\
+			andi		& Rd = RSa \& Imm								& 010110dddddaaaaaiiiiiiiiiiii0101 \\
+			ori			& Rd = RSa $|$ Imm 								& 010110dddddaaaaaiiiiiiiiiiii0110 \\
+			xori		& Rd = RSa $\oplus$ Imm 						& 010110dddddaaaaaiiiiiiiiiiii0111 \\
+			sali		& Rd = RSa $\ll$ Imm 							& 010110dddddaaaaaiiiiiiiiiiii1000 \\
+			sari		& Rd = RSa $\gg$ Imm 							& 010110dddddaaaaaiiiiiiiiiiii1001 \\
+			slli		& Rd = RSa $\ll$ Imm 							& 010110dddddaaaaaiiiiiiiiiiii1010 \\
+			slri		& Rd = RSa $ \ggg  $ Imm 						& 010110dddddaaaaaiiiiiiiiiiii1011 \\
+			compi		& Rd = (RSa == Imm);(RSa $>$ Imm);(RSa $<$ Imm)	& 010110dddddaaaaaiiiiiiiiiiii1100 \\
 			\hline
 			\multicolumn{3}{|c|}{Load Instructions} \\ \hline
-			lw			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa00iiiiiiiiiiiiii \\
-			lh			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa01iiiiiiiiiiiiii \\
-			lb			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa11iiiiiiiiiiiiii \\
-			lth			& Rd $<$- Imm(RSa)								& 010010dddddaaaaa10iiiiiiiiiiiiii \\
+			lw			& Rd $<$- Imm(RSa)								& 011110dddddaaaaa00iiiiiiiiiiiiii \\
+			lh			& Rd $<$- Imm(RSa)								& 011110dddddaaaaa01iiiiiiiiiiiiii \\
+			lb			& Rd $<$- Imm(RSa)								& 011110dddddaaaaa11iiiiiiiiiiiiii \\
+			lth			& Rd $<$- Imm(RSa)								& 011110dddddaaaaa10iiiiiiiiiiiiii \\
 			\hline
 			\multicolumn{3}{|c|}{Load Immediate Instructions} \\ \hline
-			li			& (GPREGF) Rd = Imm								& 000010ddddd0000iiiiiiiiiiiiiiiii \\
-			lsi			& (SYSREGF) Rd = Imm							& 000010ddddd0001iiiiiiiiiiiiiiiii \\
-			lgi			& (GLBREGF) Rd = Imm								& 000010ddddd0010iiiiiiiiiiiiiiiii \\
+			li			& (GPREGF) Rd = Imm								& 010000ddddd0000iiiiiiiiiiiiiiiii \\
+			lsi			& (SYSREGF) Rd = Imm							& 010000ddddd0001iiiiiiiiiiiiiiiii \\
+			lgi			& (GLBREGF) Rd = Imm							& 010000ddddd0010iiiiiiiiiiiiiiiii \\
 			\hline \newpage
 			\hline
 			\multicolumn{3}{|c|}{Load Immediate Instructions (cont.)} \\ \hline
 			Instruction & Function 										& Binary \\ \hline
-			lui			& (GPREGF) Rd = Imm	(upper 16 bits)				& 000010ddddd0011iiiiiiiiiiiiiiiii \\
-			lusi		& (SYSREGF) Rd = Imm (upper 16 bits)			& 000010ddddd0100iiiiiiiiiiiiiiiii \\
-			lugi		& (GLBREGF) Rd = Imm	 (upper 16 bits)			& 000010ddddd0101iiiiiiiiiiiiiiiii \\
-			lni			& (GPREGF) Rd = Imm	(unsigned)					& 000010ddddd1000iiiiiiiiiiiiiiiii \\
-			lnsi		& (SYSREGF) Rd = Imm (unsigned)					& 000010ddddd1001iiiiiiiiiiiiiiiii \\
-			lngi		& (GLBREGF) Rd = Imm (unsigned)					& 000010ddddd1010iiiiiiiiiiiiiiiii \\
-			luni		& (GPREGF) Rd = Imm	 (upper 16, unsigned)		& 000010ddddd1011iiiiiiiiiiiiiiiii \\
-			lunsi		& (SYSREGF) Rd = Imm (upper 16, unsigned)		& 000010ddddd1100iiiiiiiiiiiiiiiii \\
-			lungi		& (GLBREGF) Rd = Imm	(upper 16, unsigned)		& 000010ddddd1101iiiiiiiiiiiiiiiii \\
+			lui			& (GPREGF) Rd = Imm	(upper 16 bits)				& 010000ddddd0011iiiiiiiiiiiiiiiii \\
+			lusi		& (SYSREGF) Rd = Imm (upper 16 bits)			& 010000ddddd0100iiiiiiiiiiiiiiiii \\
+			lugi		& (GLBREGF) Rd = Imm	 (upper 16 bits)		& 010000ddddd0101iiiiiiiiiiiiiiiii \\
+			lni			& (GPREGF) Rd = Imm	(unsigned)					& 010000ddddd1000iiiiiiiiiiiiiiiii \\
+			lnsi		& (SYSREGF) Rd = Imm (unsigned)					& 010000ddddd1001iiiiiiiiiiiiiiiii \\
+			lngi		& (GLBREGF) Rd = Imm (unsigned)					& 010000ddddd1010iiiiiiiiiiiiiiiii \\
+			luni		& (GPREGF) Rd = Imm	 (upper 16, unsigned)		& 010000ddddd1011iiiiiiiiiiiiiiiii \\
+			lunsi		& (SYSREGF) Rd = Imm (upper 16, unsigned)		& 010000ddddd1100iiiiiiiiiiiiiiiii \\
+			lungi		& (GLBREGF) Rd = Imm	(upper 16, unsigned)	& 010000ddddd1101iiiiiiiiiiiiiiiii \\
 			\hline
 			\multicolumn{3}{|c|}{Store Instructions} \\ \hline
 
-			sw			& RSb -$>$ Imm(RSa)								& 01101000iiiaaaaabbbbbiiiiiiiiiii\\
-			sh			& RSb -$>$ Imm(RSa)								& 01101001iiiaaaaabbbbbiiiiiiiiiii\\
-			sb			& RSb -$>$ Imm(RSa)								& 01101011iiiaaaaabbbbbiiiiiiiiiii\\
-			sth			& RSb -$>$ Imm(RSa)								& 01101010iiiaaaaabbbbbiiiiiiiiiii\\
+			sw			& RSb -$>$ Imm(RSa)								& 01110100iiiaaaaabbbbbiiiiiiiiiii\\
+			sh			& RSb -$>$ Imm(RSa)								& 011101001iiiaaaaabbbbbiiiiiiiiiii\\
+			sb			& RSb -$>$ Imm(RSa)								& 01110111iiiaaaaabbbbbiiiiiiiiiii\\
+			sth			& RSb -$>$ Imm(RSa)								& 01110110iiiaaaaabbbbbiiiiiiiiiii\\
 			\hline
 			\multicolumn{3}{|c|}{Jump Instructions} \\ \hline		
-			j			& Next PC $<$- (R0 + Imm)						& 000110iiiiiaaaaaiiiiiiiiiiiiiiii\\
-			jal			& Next PC $<$- (R0 + Imm); RA0 <- PC 			& 000111iiiiiaaaaaiiiiiiiiiiiiiiii\\
-			jr			& Next PC $<$- (RSa + Imm)						& 000110iiiiiaaaaaiiiiiiiiiiiiiiii\\
-			jrl			& Next PC $<$- (RSa + Imm); RA0 <- PC			& 000111iiiiiaaaaaiiiiiiiiiiiiiiii\\
+			j			& Next PC $<$- (R0 + Imm)						& 001100iiiii00000iiiiiiiiiiiiiiii\\
+			jal			& Next PC $<$- (R0 + Imm); RA0 <- PC 			& 000100iiiii00000iiiiiiiiiiiiiiii\\
+			jr			& Next PC $<$- (RSa + Imm)						& 001100iiiiiaaaaaiiiiiiiiiiiiiiii\\
+			jrl			& Next PC $<$- (RSa + Imm); RA0 <- PC			& 000100iiiiiaaaaaiiiiiiiiiiiiiiii\\
 			\hline
 			\multicolumn{3}{|c|}{Branch Instructions} \\ \hline
-			beq			& Next PC $<$- (RSa == RSb) ? PC+Imm : PC+4		& 000101iiiiiaaaaabbbbbiiiiiiiii00\\
-			bne			& Next PC $<$- (RSa != RSb) ? PC+Imm : PC+4		& 000101iiiiiaaaaabbbbbiiiiiiiii01\\
-			bgt			& Next PC $<$- (RSa $>$ RSb) ? PC+Imm : PC+4	& 000101iiiiiaaaaabbbbbiiiiiiiii10\\
-			blt			& Next PC $<$- (RSa $<$ RSb) ? PC+Imm : PC+4	& 000101iiiiiaaaaabbbbbiiiiiiiii11\\
+			beq			& Next PC $<$- (RSa == RSb) ? PC+Imm : PC+4		& 001101iiiiiaaaaabbbbbiiiiiiiii00\\
+			bne			& Next PC $<$- (RSa != RSb) ? PC+Imm : PC+4		& 001101iiiiiaaaaabbbbbiiiiiiiii01\\
+			bgt			& Next PC $<$- (RSa $>$ RSb) ? PC+Imm : PC+4	& 001101iiiiiaaaaabbbbbiiiiiiiii10\\
+			blt			& Next PC $<$- (RSa $<$ RSb) ? PC+Imm : PC+4	& 001101iiiiiaaaaabbbbbiiiiiiiii11\\
 			\hline
 			\multicolumn{3}{|c|}{System Instructions} \\ \hline
-			syscall		& System Call (Raise Privilege)					& 00100dddddaaaaaa00000000iiiiiiii\\
-			sysret		& System Return (Lower Privilege)				& 00100dddddaaaaaa00000001iiiiiiii\\
-			stspr		& (SYSREGF) Rd $<$- RSa							& 00100dddddaaaaaa00000010xxxxxxxx\\
-			ldspr		& (SYSREGF) RSa -$>$ Rd							& 00100dddddaaaaaa00000011xxxxxxxx\\
-			sync		& Flush Pipeline								& 00100xxxxxxxxxxx00000100xxxxxxxx\\
-			pmir		& PML + Imm ?									& 00100xxxxxxxxxxx00000111iiiiiiii\\
-			pmd			& PML - Imm ?									& 00100xxxxxxxxxxx00001000iiiiiiii\\
+			syscall		& System Call (Raise Privilege)					& 11000dddddaaaaaa00000000iiiiiiii\\
+			sysret		& System Return (Lower Privilege)				& 11000dddddaaaaaa00000001iiiiiiii\\
+			stspr		& (SYSREGF) Rd $<$- RSa							& 11000dddddaaaaaa00000010xxxxxxxx\\
+			ldspr		& (SYSREGF) RSa -$>$ Rd							& 11000dddddaaaaaa00000011xxxxxxxx\\
+			sync		& Flush Pipeline								& 11000xxxxxxxxxxx00000100xxxxxxxx\\
+			pmir		& PML + Imm ?									& 11000xxxxxxxxxxx00000111iiiiiiii\\
+			pmd			& PML - Imm ?									& 11000xxxxxxxxxxx00001000iiiiiiii\\
 			\hline
 		\end{longtable}
 	\end{center}
