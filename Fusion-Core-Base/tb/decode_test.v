@@ -4,7 +4,7 @@
 
 module decode_test();
 
-localparam	MEM_SIZE =	32;
+localparam	MEM_SIZE =	91;
 
 
 /* Clocks */

@@ -1,3 +1,22 @@
+/*
+*
+*  This file is part of Fusion-Core-ISA.
+*  Author: Dylan Wadler dylan@fusion-core.org
+*
+*  Fusion-Core-ISA is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  Fusion-Core-ISA is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with Fusion-Core-ISA.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /*** Defines  ***/
 /*System because it's special*/
 `define	OPC_SYS		 5'b110000;
@@ -159,9 +178,12 @@ module decode_32(
 	* determining read or writes */
 	assign 	mem_write_req_w = (mem_access_w & use_rsb_w); //store instructions use rsb, not rd
 	assign 	mem_read_req_w	= (mem_access_w & ~use_rsb_w); //load instructions use rd, not rsb
+	
+	/* opcode_w[2] & ~opcode_w[1] denotes */ 
 
-	assign  pc_rel_w		= (pc_change_w & 	( (opcode_w[2:0] && 3'b101)  || (rsa_addr_w == (5'b0)) ) ); //not jr/jrl or branch
-	assign	pc_abs_w		= (pc_change_w & ~( (opcode_w[2:0] && 3'b101)  || (rsa_addr_w == (5'b0)) ) );
+//	assign  pc_rel_w		= (pc_change_w & 	( (opcode_w[2:0] && 3'b101)  || (rsa_addr_w == (5'b0)) ) ); //not jr/jrl or branch
+	assign  pc_rel_w		= (pc_change_w &	( (opcode_w[0]) || (opcode_w[2] & (rsa_addr_w == (5'b0))))); //so nops don't cause pc changes
+	assign	pc_abs_w		= (pc_change_w &   ~( (opcode_w[2:0] && 3'b101)  || (rsa_addr_w == (5'b0)) ) );
 
 /* Internal registers*/
 	reg	[PIPELINEL_2 - 1 : 0]	memstall_count; //counter for stalls in pipeline

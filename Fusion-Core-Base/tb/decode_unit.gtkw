@@ -1,0 +1,49 @@
+[*]
+[*] GTKWave Analyzer v3.3.86 (w)1999-2017 BSI
+[*] Sun Feb 25 19:16:48 2018
+[*]
+[dumpfile] "/home/bit0fun/Documents/workspace/Fusion-Core/Fusion-Core-Base/tb/decode.vcd"
+[dumpfile_mtime] "Sun Feb 25 19:10:40 2018"
+[dumpfile_size] 28702
+[savefile] "/home/bit0fun/Documents/workspace/Fusion-Core/Fusion-Core-Base/tb/decode_unit.gtkw"
+[timestart] 892700
+[size] 1366 723
+[pos] -1 -1
+*-16.272438 1087700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 229
+[signals_width] 252
+[sst_expanded] 1
+[sst_vpaned_height] 183
+@28
+decode_test.clk
+@23
+decode_test.insn_address[31:0]
+@22
+decode_test.insn[31:0]
+decode_test.reg_select[4:0]
+@24
+decode_test.rd[4:0]
+decode_test.rsa[4:0]
+decode_test.rsb[4:0]
+@22
+decode_test.imm[20:0]
+@28
+decode_test.mem_read
+decode_test.mem_write
+decode_test.memsync
+decode_test.pc_change_absolute
+decode_test.pc_change_relative
+decode_test.jlnk
+decode_test.permission_inc
+decode_test.permission_dec
+decode_test.stall
+decode_test.stall_output
+decode_test.syscall
+@22
+decode_test.sysreg_addr[7:0]
+decode_test.sysreg_data[7:0]
+decode_test.sysreg_data_input[7:0]
+@28
+decode_test.reset
+[pattern_trace] 1
+[pattern_trace] 0

@@ -42,10 +42,320 @@ Disassembly of section .text:
    40084:	58 00 02 a0 	addi	$zero, $zero, 42
 	...
 
+00040094 <insn_test>:
+	...
+
+0004009c <clear_regs_0>:
+   4009c:	4f ff f8 07 	xor	$low0, $low0, $low0
+   400a0:	4f de f0 07 	xor	$hi0, $hi0, $hi0
+   400a4:	4f bd e8 07 	xor	$tmp7, $tmp7, $tmp7
+   400a8:	4f 9c e0 07 	xor	$tmp6, $tmp6, $tmp6
+   400ac:	4f 7b d8 07 	xor	$tmp5, $tmp5, $tmp5
+   400b0:	4f 5a d0 07 	xor	$tmp4, $tmp4, $tmp4
+   400b4:	4f 39 c8 07 	xor	$tmp3, $tmp3, $tmp3
+   400b8:	4f 18 c0 07 	xor	$tmp2, $tmp2, $tmp2
+   400bc:	4e f7 b8 07 	xor	$tmp1, $tmp1, $tmp1
+   400c0:	4e d6 b0 07 	xor	$tmp0, $tmp0, $tmp0
+   400c4:	4e b5 a8 07 	xor	$gr10, $gr10, $gr10
+   400c8:	4e 94 a0 07 	xor	$gr9, $gr9, $gr9
+   400cc:	4e 73 98 07 	xor	$gr8, $gr8, $gr8
+   400d0:	4e 52 90 07 	xor	$gr7, $gr7, $gr7
+   400d4:	4e 31 88 07 	xor	$gr6, $gr6, $gr6
+   400d8:	4e 10 80 07 	xor	$gr5, $gr5, $gr5
+   400dc:	4d ef 78 07 	xor	$gr4, $gr4, $gr4
+   400e0:	4d ce 70 07 	xor	$gr3, $gr3, $gr3
+   400e4:	4d ad 68 07 	xor	$gr2, $gr2, $gr2
+   400e8:	4d 8c 60 07 	xor	$gr1, $gr1, $gr1
+   400ec:	4d 6b 58 07 	xor	$gr0, $gr0, $gr0
+   400f0:	4d 4a 50 07 	xor	$rval1, $rval1, $rval1
+   400f4:	4d 29 48 07 	xor	$rval0, $rval0, $rval0
+   400f8:	4d 08 40 07 	xor	$arg3, $arg3, $arg3
+   400fc:	4c e7 38 07 	xor	$arg2, $arg2, $arg2
+   40100:	4c c6 30 07 	xor	$arg1, $arg1, $arg1
+   40104:	4c a5 28 07 	xor	$arg0, $arg0, $arg0
+   40108:	4c 84 20 07 	xor	$ra, $ra, $ra
+   4010c:	4c 63 18 07 	xor	$gp, $gp, $gp
+   40110:	4c 42 10 07 	xor	$fp, $fp, $fp
+   40114:	4c 21 08 07 	xor	$sp, $sp, $sp
+   40118:	4c 00 00 07 	xor	$zero, $zero, $zero
+	...
+
+00040130 <load_imm_test>:
+   40130:	41 60 be ef 	li	$gr0, 0xbeef
+   40134:	41 86 de ad 	lui	$gr1, 0xdead
+   40138:	41 b0 be ef 	lni	$gr2, 0xbeef
+   4013c:	41 b0 de ad 	lni	$gr2, 0xdead
+   40140:	42 22 be ef 	lsi	$gr6, 0xbeef
+   40144:	42 48 de ad 	lusi	$gr7, 0xdead
+   40148:	42 72 be ef 	lnsi	$gr8, 0xbeef
+   4014c:	42 72 de ad 	lnsi	$gr8, 0xdead
+
+00040150 <clear_regs_1>:
+   40150:	4f ff f8 07 	xor	$low0, $low0, $low0
+   40154:	4f de f0 07 	xor	$hi0, $hi0, $hi0
+   40158:	4f bd e8 07 	xor	$tmp7, $tmp7, $tmp7
+   4015c:	4f 9c e0 07 	xor	$tmp6, $tmp6, $tmp6
+   40160:	4f 7b d8 07 	xor	$tmp5, $tmp5, $tmp5
+   40164:	4f 5a d0 07 	xor	$tmp4, $tmp4, $tmp4
+   40168:	4f 39 c8 07 	xor	$tmp3, $tmp3, $tmp3
+   4016c:	4f 18 c0 07 	xor	$tmp2, $tmp2, $tmp2
+   40170:	4e f7 b8 07 	xor	$tmp1, $tmp1, $tmp1
+   40174:	4e d6 b0 07 	xor	$tmp0, $tmp0, $tmp0
+   40178:	4e b5 a8 07 	xor	$gr10, $gr10, $gr10
+   4017c:	4e 94 a0 07 	xor	$gr9, $gr9, $gr9
+   40180:	4e 73 98 07 	xor	$gr8, $gr8, $gr8
+   40184:	4e 52 90 07 	xor	$gr7, $gr7, $gr7
+   40188:	4e 31 88 07 	xor	$gr6, $gr6, $gr6
+   4018c:	4e 10 80 07 	xor	$gr5, $gr5, $gr5
+   40190:	4d ef 78 07 	xor	$gr4, $gr4, $gr4
+   40194:	4d ce 70 07 	xor	$gr3, $gr3, $gr3
+   40198:	4d ad 68 07 	xor	$gr2, $gr2, $gr2
+   4019c:	4d 8c 60 07 	xor	$gr1, $gr1, $gr1
+   401a0:	4d 6b 58 07 	xor	$gr0, $gr0, $gr0
+   401a4:	4d 4a 50 07 	xor	$rval1, $rval1, $rval1
+   401a8:	4d 29 48 07 	xor	$rval0, $rval0, $rval0
+   401ac:	4d 08 40 07 	xor	$arg3, $arg3, $arg3
+   401b0:	4c e7 38 07 	xor	$arg2, $arg2, $arg2
+   401b4:	4c c6 30 07 	xor	$arg1, $arg1, $arg1
+   401b8:	4c a5 28 07 	xor	$arg0, $arg0, $arg0
+   401bc:	4c 84 20 07 	xor	$ra, $ra, $ra
+   401c0:	4c 63 18 07 	xor	$gp, $gp, $gp
+   401c4:	4c 42 10 07 	xor	$fp, $fp, $fp
+   401c8:	4c 21 08 07 	xor	$sp, $sp, $sp
+   401cc:	4c 00 00 07 	xor	$zero, $zero, $zero
+	...
+
+000401e4 <integer_test>:
+   401e4:	41 60 aa aa 	li	$gr0, 0xaaaa
+   401e8:	41 80 55 55 	li	$gr1, 0x5555
+	...
+   40200:	4d ac 58 00 	add	$gr2, $gr1, $gr0
+   40204:	4d cc 58 01 	sub	$gr3, $gr1, $gr0
+   40208:	4d eb 00 04 	not	$gr4, $gr0, $zero
+   4020c:	4e 0c 58 05 	and	$gr5, $gr1, $gr0
+   40210:	4e 2c 58 06 	or	$gr6, $gr1, $gr0
+   40214:	4e 4c 58 07 	xor	$gr7, $gr1, $gr0
+   40218:	4e 6c 58 0c 	comp	$gr8, $gr1, $gr0
+   4021c:	42 c0 00 04 	li	$tmp0, 0x0004
+	...
+   40234:	4e eb b0 08 	sal	$tmp1, $gr0, $tmp0
+   40238:	4f 0b b0 09 	sar	$tmp2, $gr0, $tmp0
+   4023c:	4f 2b b0 0a 	sll	$tmp3, $gr0, $tmp0
+   40240:	4f 4b b0 0b 	slr	$tmp4, $gr0, $tmp0
+
+00040244 <clear_regs_2>:
+   40244:	4f ff f8 07 	xor	$low0, $low0, $low0
+   40248:	4f de f0 07 	xor	$hi0, $hi0, $hi0
+   4024c:	4f bd e8 07 	xor	$tmp7, $tmp7, $tmp7
+   40250:	4f 9c e0 07 	xor	$tmp6, $tmp6, $tmp6
+   40254:	4f 7b d8 07 	xor	$tmp5, $tmp5, $tmp5
+   40258:	4f 5a d0 07 	xor	$tmp4, $tmp4, $tmp4
+   4025c:	4f 39 c8 07 	xor	$tmp3, $tmp3, $tmp3
+   40260:	4f 18 c0 07 	xor	$tmp2, $tmp2, $tmp2
+   40264:	4e f7 b8 07 	xor	$tmp1, $tmp1, $tmp1
+   40268:	4e d6 b0 07 	xor	$tmp0, $tmp0, $tmp0
+   4026c:	4e b5 a8 07 	xor	$gr10, $gr10, $gr10
+   40270:	4e 94 a0 07 	xor	$gr9, $gr9, $gr9
+   40274:	4e 73 98 07 	xor	$gr8, $gr8, $gr8
+   40278:	4e 52 90 07 	xor	$gr7, $gr7, $gr7
+   4027c:	4e 31 88 07 	xor	$gr6, $gr6, $gr6
+   40280:	4e 10 80 07 	xor	$gr5, $gr5, $gr5
+   40284:	4d ef 78 07 	xor	$gr4, $gr4, $gr4
+   40288:	4d ce 70 07 	xor	$gr3, $gr3, $gr3
+   4028c:	4d ad 68 07 	xor	$gr2, $gr2, $gr2
+   40290:	4d 8c 60 07 	xor	$gr1, $gr1, $gr1
+   40294:	4d 6b 58 07 	xor	$gr0, $gr0, $gr0
+   40298:	4d 4a 50 07 	xor	$rval1, $rval1, $rval1
+   4029c:	4d 29 48 07 	xor	$rval0, $rval0, $rval0
+   402a0:	4d 08 40 07 	xor	$arg3, $arg3, $arg3
+   402a4:	4c e7 38 07 	xor	$arg2, $arg2, $arg2
+   402a8:	4c c6 30 07 	xor	$arg1, $arg1, $arg1
+   402ac:	4c a5 28 07 	xor	$arg0, $arg0, $arg0
+   402b0:	4c 84 20 07 	xor	$ra, $ra, $ra
+   402b4:	4c 63 18 07 	xor	$gp, $gp, $gp
+   402b8:	4c 42 10 07 	xor	$fp, $fp, $fp
+   402bc:	4c 21 08 07 	xor	$sp, $sp, $sp
+   402c0:	4c 00 00 07 	xor	$zero, $zero, $zero
+	...
+
+000402d8 <integer_imm_test>:
+   402d8:	41 80 0a aa 	li	$gr1, 0x0aaa
+	...
+   402f0:	59 ac 55 50 	addi	$gr2, $gr1, 1365
+   402f4:	59 cc 55 51 	subi	$gr3, $gr1, 1365
+   402f8:	59 e0 55 54 	noti	$gr4, 0x555
+   402fc:	5a 0c 55 55 	andi	$gr5, $gr1, 0x555
+   40300:	5a 2c 55 56 	ori	$gr6, $gr1, 0x555
+   40304:	5a 4c 55 57 	xori	$gr7, $gr1, 0x555
+   40308:	5a 6c 55 5c 	compi	$gr8, $gr1, 1365
+   4030c:	5a ec 00 48 	sali	$tmp1, $gr1, 4
+   40310:	5b 0c 00 49 	sari	$tmp2, $gr1, 4
+   40314:	5b 2c 00 4a 	slli	$tmp3, $gr1, 4
+   40318:	5b 4c 00 4b 	slri	$tmp4, $gr1, 4
+
+0004031c <clear_regs_3>:
+   4031c:	4f ff f8 07 	xor	$low0, $low0, $low0
+   40320:	4f de f0 07 	xor	$hi0, $hi0, $hi0
+   40324:	4f bd e8 07 	xor	$tmp7, $tmp7, $tmp7
+   40328:	4f 9c e0 07 	xor	$tmp6, $tmp6, $tmp6
+   4032c:	4f 7b d8 07 	xor	$tmp5, $tmp5, $tmp5
+   40330:	4f 5a d0 07 	xor	$tmp4, $tmp4, $tmp4
+   40334:	4f 39 c8 07 	xor	$tmp3, $tmp3, $tmp3
+   40338:	4f 18 c0 07 	xor	$tmp2, $tmp2, $tmp2
+   4033c:	4e f7 b8 07 	xor	$tmp1, $tmp1, $tmp1
+   40340:	4e d6 b0 07 	xor	$tmp0, $tmp0, $tmp0
+   40344:	4e b5 a8 07 	xor	$gr10, $gr10, $gr10
+   40348:	4e 94 a0 07 	xor	$gr9, $gr9, $gr9
+   4034c:	4e 73 98 07 	xor	$gr8, $gr8, $gr8
+   40350:	4e 52 90 07 	xor	$gr7, $gr7, $gr7
+   40354:	4e 31 88 07 	xor	$gr6, $gr6, $gr6
+   40358:	4e 10 80 07 	xor	$gr5, $gr5, $gr5
+   4035c:	4d ef 78 07 	xor	$gr4, $gr4, $gr4
+   40360:	4d ce 70 07 	xor	$gr3, $gr3, $gr3
+   40364:	4d ad 68 07 	xor	$gr2, $gr2, $gr2
+   40368:	4d 8c 60 07 	xor	$gr1, $gr1, $gr1
+   4036c:	4d 6b 58 07 	xor	$gr0, $gr0, $gr0
+   40370:	4d 4a 50 07 	xor	$rval1, $rval1, $rval1
+   40374:	4d 29 48 07 	xor	$rval0, $rval0, $rval0
+   40378:	4d 08 40 07 	xor	$arg3, $arg3, $arg3
+   4037c:	4c e7 38 07 	xor	$arg2, $arg2, $arg2
+   40380:	4c c6 30 07 	xor	$arg1, $arg1, $arg1
+   40384:	4c a5 28 07 	xor	$arg0, $arg0, $arg0
+   40388:	4c 84 20 07 	xor	$ra, $ra, $ra
+   4038c:	4c 63 18 07 	xor	$gp, $gp, $gp
+   40390:	4c 42 10 07 	xor	$fp, $fp, $fp
+   40394:	4c 21 08 07 	xor	$sp, $sp, $sp
+   40398:	4c 00 00 07 	xor	$zero, $zero, $zero
+	...
+
+000403b0 <load_test>:
+   403b0:	41 76 00 04 	luni	$gr0, 0x0004
+   403b4:	79 8b 05 c4 	lw	$gr1, 0x5c4(gr0)
+   403b8:	79 ab 45 c4 	lh	$gr2, 0x5c4(gr0)
+   403bc:	79 cb c5 c4 	lb	$gr3, 0x5c4(gr0)
+   403c0:	79 eb 85 c4 	lth	$gr4, 0x5c4(gr0)
+	...
+
+000403d8 <store_test>:
+   403d8:	42 10 ba be 	lni	$gr5, 0xbabe
+   403dc:	42 16 ca fe 	luni	$gr5, 0xcafe
+	...
+   403f4:	74 0b 85 c8 	sw	$gr5, 0x5c8($gr0)
+   403f8:	75 0b 85 c8 	sh	$gr5, 0x5c8($gr0)
+   403fc:	77 0b 85 c8 	sb	$gr5, 0x5c8($gr0)
+   40400:	76 0b 85 c8 	sth	$gr5, 0x5c8($gr0)
+
+00040404 <clear_regs_4>:
+   40404:	4f ff f8 07 	xor	$low0, $low0, $low0
+   40408:	4f de f0 07 	xor	$hi0, $hi0, $hi0
+   4040c:	4f bd e8 07 	xor	$tmp7, $tmp7, $tmp7
+   40410:	4f 9c e0 07 	xor	$tmp6, $tmp6, $tmp6
+   40414:	4f 7b d8 07 	xor	$tmp5, $tmp5, $tmp5
+   40418:	4f 5a d0 07 	xor	$tmp4, $tmp4, $tmp4
+   4041c:	4f 39 c8 07 	xor	$tmp3, $tmp3, $tmp3
+   40420:	4f 18 c0 07 	xor	$tmp2, $tmp2, $tmp2
+   40424:	4e f7 b8 07 	xor	$tmp1, $tmp1, $tmp1
+   40428:	4e d6 b0 07 	xor	$tmp0, $tmp0, $tmp0
+   4042c:	4e b5 a8 07 	xor	$gr10, $gr10, $gr10
+   40430:	4e 94 a0 07 	xor	$gr9, $gr9, $gr9
+   40434:	4e 73 98 07 	xor	$gr8, $gr8, $gr8
+   40438:	4e 52 90 07 	xor	$gr7, $gr7, $gr7
+   4043c:	4e 31 88 07 	xor	$gr6, $gr6, $gr6
+   40440:	4e 10 80 07 	xor	$gr5, $gr5, $gr5
+   40444:	4d ef 78 07 	xor	$gr4, $gr4, $gr4
+   40448:	4d ce 70 07 	xor	$gr3, $gr3, $gr3
+   4044c:	4d ad 68 07 	xor	$gr2, $gr2, $gr2
+   40450:	4d 8c 60 07 	xor	$gr1, $gr1, $gr1
+   40454:	4d 6b 58 07 	xor	$gr0, $gr0, $gr0
+   40458:	4d 4a 50 07 	xor	$rval1, $rval1, $rval1
+   4045c:	4d 29 48 07 	xor	$rval0, $rval0, $rval0
+   40460:	4d 08 40 07 	xor	$arg3, $arg3, $arg3
+   40464:	4c e7 38 07 	xor	$arg2, $arg2, $arg2
+   40468:	4c c6 30 07 	xor	$arg1, $arg1, $arg1
+   4046c:	4c a5 28 07 	xor	$arg0, $arg0, $arg0
+   40470:	4c 84 20 07 	xor	$ra, $ra, $ra
+   40474:	4c 63 18 07 	xor	$gp, $gp, $gp
+   40478:	4c 42 10 07 	xor	$fp, $fp, $fp
+   4047c:	4c 21 08 07 	xor	$sp, $sp, $sp
+   40480:	4c 00 00 07 	xor	$zero, $zero, $zero
+	...
+
+00040498 <jump_branch_test>:
+   40498:	30 00 00 c4 	j	196
+	...
+
+000404a4 <beq_point>:
+   404a4:	34 00 68 f0 	beq	$zero,$gr2,60
+	...
+
+000404b0 <bne_point>:
+   404b0:	34 00 58 f1 	bne	$zero,$gr0,60
+	...
+
+000404bc <bgt_point>:
+   404bc:	34 0b 00 c2 	bgt	$gr0,$zero,48
+	...
+
+000404c8 <blt_point>:
+   404c8:	34 00 58 f3 	blt	$zero,$gr0,60
+	...
+
+000404e0 <beq_test_point>:
+   404e0:	37 e0 6f 40 	beq	$zero,$gr2,-48
+	...
+
+000404ec <bne_test_point>:
+   404ec:	37 e0 5f 41 	bne	$zero,$gr0,-48
+	...
+
+000404f8 <bgt_test_point>:
+   404f8:	37 eb 07 42 	bgt	$gr0,$zero,-48
+	...
+
+00040504 <blt_test_point>:
+   40504:	37 e0 5f 13 	blt	$zero,$gr0,-60
+	...
+
+0004051c <jlnk_test>:
+   4051c:	41 76 00 04 	luni	$gr0, 0x0004
+	...
+   4052c:	41 70 05 78 	lni	$gr0, 0x0578
+	...
+   4053c:	10 00 00 3c 	jal	60
+
+00040540 <jrl_test>:
+   40540:	41 76 00 04 	luni	$gr0, 0x0004
+	...
+   40550:	41 70 05 90 	lni	$gr0, 0x0590
+   40554:	4c 84 20 07 	xor	$ra, $ra, $ra
+   40558:	10 00 05 90 	jal	1424
+
+0004055c <far_address>:
+   4055c:	41 76 00 04 	luni	$gr0, 0x0004
+	...
+   40574:	30 0b 04 a4 	jr	0x0004a4($gr0)
+
+00040578 <far_address_jal>:
+	...
+   40584:	37 e4 5e f0 	beq	$ra,$gr0,-68
+   40588:	30 04 00 00 	jr	0x000000($ra)
+   4058c:	00 00 00 00 	nop
+
+00040590 <far_address_jrl>:
+	...
+   405a0:	34 04 58 40 	beq	$ra,$gr0,16
+	...
+
+000405b0 <test_complete>:
+   405b0:	42 16 00 04 	luni	$gr5, 0x0004
+	...
+   405bc:	30 10 05 b0 	jr	0x0005b0($gr5)
+   405c0:	00 00 00 00 	nop
+
 Disassembly of section .data:
 
-00040098 <__DATA_RAM>:
-   40098:	de ad be ef 	nri_unk
+000405c4 <__DATA_RAM>:
+   405c4:	de ad be ef 	nri_unk
 
-0004009c <var2>:
-   4009c:	ca fe ba be 	nri_unk
+000405c8 <var2>:
+   405c8:	00 00 00 00 	nop

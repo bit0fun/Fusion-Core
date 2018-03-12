@@ -30,3 +30,67 @@
 584002a0 //	addi	$fp, $zero, 42
 582002a0 //	addi	$sp, $zero, 42
 580002a0 //	addi	$zero, $zero, 42
+// load immediate tests
+4160beef //	   li	$gr0, 0xbeef
+4186dead //    lui	$gr1, 0xdead
+41b0beef //    lni	$gr2, 0xbeef
+41b0dead //    lni	$gr2, 0xdead
+4222beef //    lsi	$gr6, 0xbeef
+4248dead //    lusi	$gr7, 0xdead
+4272beef //    lnsi	$gr8, 0xbeef
+4272dead //    lnsi	$gr8, 0xdead
+//integer test
+4160aaaa //	li	$gr0, 0xaaaa
+41805555 //	li	$gr1, 0x5555
+00000000 //	nop	
+00000000 //	nop
+00000000 //	nop
+00000000 //	nop                                         
+4dac5800 //	add	$gr2, $gr1, $gr0
+4dcc5801 //	sub	$gr3, $gr1, $gr0
+4deb0004 //	not	$gr4, $gr0, $zero
+4e0c5805 //	and	$gr5, $gr1, $gr0
+4e2c5806 //	or	$gr6, $gr1, $gr0
+4e4c5807 //	xor	$gr7, $gr1, $gr0
+4e6c580c //	comp	$gr8, $gr1, $gr0
+42c00004 //	li	$tmp0, 0x0004
+00000000 //	nop                                        
+00000000 //	nop
+4eebb008 //	sal	$tmp1, $gr0, $tmp0
+4f0bb009 //	sar	$tmp2, $gr0, $tmp0
+4f2bb00a //	sll	$tmp3, $gr0, $tmp0
+4f4bb00b //	slr	$tmp4, $gr0, $tmp0
+//integer immediate test
+41800aaa 	//	li	$gr1, 0x0aaa
+00000000 	//	nop                                        
+00000000 	//	nop
+59ac5550 	// addi	 $gr2, $gr1, 1365
+59cc5551 	// subi	 $gr3, $gr1, 1365
+59e05554 	// noti	 $gr4, 0x555
+5a0c5555 	// andi	 $gr5, $gr1, 0x555
+5a2c5556 	// ori	 $gr6, $gr1, 0x555
+5a4c5557 	// xori	 $gr7, $gr1, 0x555
+5a6c555c 	// compi $gr8, $gr1, 1365
+5aec0048 	// sali	 $tmp1, $gr1, 4
+5b0c0049 	// sari	 $tmp2, $gr1, 4
+5b2c004a 	// slli	 $tmp3, $gr1, 4
+5b4c004b 	// slri	 $tmp4, $gr1, 4
+//load test
+41760004 //	luni	$gr0, 0x0004
+798b05c4 //	lw	$gr1, 0x5c4(gr0)
+79ab45c4 //	lh	$gr2, 0x5c4(gr0)
+79cbc5c4 //	lb	$gr3, 0x5c4(gr0)
+79eb85c4 //	lth	$gr4, 0x5c4(gr0)
+00000000 	//	nop                                        
+00000000 	//	nop
+00000000 	//	nop                                        
+00000000 	//	nop
+//store test
+4210babe //	lni	$gr5, 0xbabe
+4216cafe //	luni	$gr5, 0xcafe
+00000000 	//	nop
+00000000 	//	nop
+740b85c8 //	sw	$gr5, 0x5c8($gr0)
+750b85c8 //	sh	$gr5, 0x5c8($gr0)
+770b85c8 //	sb	$gr5, 0x5c8($gr0)
+760b85c8 //	sth	$gr5, 0x5c8($gr0)
