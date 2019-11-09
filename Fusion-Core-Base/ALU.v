@@ -20,15 +20,15 @@
 
 
 /*ALU Module Includes*/
-`include add_32.v
-`include and_32.v
-`include not_32.v
-`include or_32.v
-`include xor_32.v
-`include shift_carry_right_32.v
-`include shift_left_32.v
-`include shift_right_32.v
-`include compare_32.v
+`include "ALUOP/add_32.v"
+`include "ALUOP/and_32.v"
+`include "ALUOP/not_32.v"
+`include "ALUOP/or_32.v"
+`include "ALUOP/xor_32.v"
+`include "ALUOP/shift_carry_right_32.v"
+`include "ALUOP/shift_left_32.v"
+`include "ALUOP/shift_right_32.v"
+`include "ALUOP/compare_32.v"
 
 module ALU(
 //32 bit ALU, will upgrade to 64 bit after tests are done.

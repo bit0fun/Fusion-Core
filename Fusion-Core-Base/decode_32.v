@@ -22,11 +22,11 @@
 `define	OPC_SYS		 5'b110000;
 
 module decode_32(
-	input[31:0] 	insn_in,			//input instruction
-	input			reset_in,			//input reset line
-	input			clk_in,				//input clock
-	input[31:0]		insn_pc_in,			//input program counter address
-	input			stall_in,			//input stall signal
+	input		[31:0] 	insn_in,			//input instruction
+	input				reset_in,			//input reset line
+	input				clk_in,				//input clock
+	input		[31:0]	insn_pc_in,			//input program counter address
+	input				stall_in,			//input stall signal
 
 
 	/*Operand output connections*/
@@ -39,32 +39,32 @@ module decode_32(
 											//size
 
 	/*Control Signals*/
-	output 	reg [3:0] aluop_out,
-	output	reg jlnk_out,
-	output	reg pc_change_rel_out,
-	output	reg pc_change_abs_out,
-	output	reg mem_read_out,
-	output	reg mem_write_out,
+	output 	reg [3:0] 	aluop_out,
+	output	reg 		jlnk_out,
+	output	reg 		pc_change_rel_out,
+	output	reg 		pc_change_abs_out,
+	output	reg 		mem_read_out,
+	output	reg 		mem_write_out,
 
 	/*Flag outputs*/
-	output	reg nri_flg_out,		//output of 'not real instruction' flag
-	output	reg [1:0] branch_funct_out,	//branch function; taken from the funct field
-	output	reg stall_out,
+	output	reg 		nri_flg_out,		//output of 'not real instruction' flag
+	output	reg [1:0] 	branch_funct_out,	//branch function; taken from the funct field
+	output	reg 		stall_out,
 
 	/*System instruction signals*/
-	output		reg 		memsync_out,
-	output		reg 		syscall_out,
-	output		reg 		pem_inc_req_out,
-	output		reg 		pem_dec_req_out,
-	output		reg [7:0]	sysreg_addr_out,	//for reading and writing to system registers
-	output		reg [7:0]	sysreg_data_out,
-	input 			[7:0]	sysreg_data_in,
+	output	reg 		memsync_out,
+	output	reg 		syscall_out,
+	output	reg 		pem_inc_req_out,
+	output	reg 		pem_dec_req_out,
+	output	reg [7:0]	sysreg_addr_out,	//for reading and writing to system registers
+	output	reg [7:0]	sysreg_data_out,
+	input 		[7:0]	sysreg_data_in,
 
 
 	/* Misc. Outputs*/
-	output	reg [31:0] insn_pc_out,
+	output	reg [31:0] 	insn_pc_out,
 	/*Co-processor connections*/
-	output	reg [30:0] cp_insn_out
+	output	reg [30:0] 	cp_insn_out
 
 	);
 
@@ -82,56 +82,56 @@ module decode_32(
 	localparam OPC_ST		= 5'b011101;
 
 	/*Wire connections*/
-	wire[5:0] 	opcode_w;
-	wire[4:0] 	rsa_addr_w;
-	wire[4:0] 	rsb_addr_w;
-	wire[4:0] 	rd_addr_w;
-	wire[3:0] 	aluop_w;
+	wire	[5:0] 	opcode_w;
+	wire	[4:0] 	rsa_addr_w;
+	wire	[4:0] 	rsb_addr_w;
+	wire	[4:0] 	rd_addr_w;
+	wire	[3:0] 	aluop_w;
 
 	/*Funct Variants*/
-	wire[1:0]	funct_ld_w;
-	wire[1:0]	funct_st_w;
-	wire[3:0]	dsel_li_w;
-	wire[1:0]	funct_b_w;
-	wire[7:0]	funct_sys_w;
+	wire	[1:0]	funct_ld_w;
+	wire	[1:0]	funct_st_w;
+	wire	[3:0]	dsel_li_w;
+	wire	[1:0]	funct_b_w;
+	wire	[7:0]	funct_sys_w;
 
 	/*Immediate Variants*/
-	wire[11:0]	imm_i_w;
-	wire[13:0]	imm_ld_w;
-	wire[15:0]	imm_li_w;
-	wire[13:0]	imm_st_w;
-	wire[20:0]	imm_j_w;
-	wire[13:0]	imm_b_w;
-	wire[7:0]	imm_sys_w;
+	wire	[11:0]	imm_i_w;
+	wire	[13:0]	imm_ld_w;
+	wire	[15:0]	imm_li_w;
+	wire	[13:0]	imm_st_w;
+	wire	[20:0]	imm_j_w;
+	wire	[13:0]	imm_b_w;
+	wire	[7:0]	imm_sys_w;
 
 	/*OPCode generated signals*/
 
 	/*Resouce usage*/
-	wire		use_alu_w;
-	wire		is_cp_insn_w;			//is coprocessor instruction
-	wire		pc_change_w;			//instruction can change the pc
-	wire		mem_access_w;
-	wire		pc_link_w;				//jump that requires linking to ra
-	wire		sys_insn_w;
+	wire			use_alu_w;
+	wire			is_cp_insn_w;			//is coprocessor instruction
+	wire			pc_change_w;			//instruction can change the pc
+	wire			mem_access_w;
+	wire			pc_link_w;				//jump that requires linking to ra
+	wire			sys_insn_w;
 
 	/*secondary calculated resource usage*/
-	wire		mem_read_req_w;
-	wire		mem_write_req_w;
-	wire		pc_abs_w;
-	wire		pc_rel_w;
-	wire		memsync_w;
+	wire			mem_read_req_w;
+	wire			mem_write_req_w;
+	wire			pc_abs_w;
+	wire			pc_rel_w;
+	wire			memsync_w;
 	
 	/*ALU op signal selection*/
-	wire		aluop_intsig_w; // integer/register operation field used
-	wire		aluop_addsig_w; // fixed add operation
-	wire		aluop_bsig_w;   // branch operation decode value
+	wire			aluop_intsig_w; // integer/register operation field used
+	wire			aluop_addsig_w; // fixed add operation
+	wire			aluop_bsig_w;   // branch operation decode value
 
 	/*Operand usage*/
-	wire		use_rd_w;
-	wire		use_rsa_w;
-	wire		use_rsb_w;
-	wire		use_imm_w;
-	wire [4:0]	imm_sel_w;
+	wire			use_rd_w;
+	wire			use_rsa_w;
+	wire			use_rsb_w;
+	wire			use_imm_w;
+	wire 	[4:0]	imm_sel_w;
 
 
 	/*Assignments*/

@@ -1,5 +1,4 @@
 /*
-*
 *  This file is part of Fusion-Core-ISA.
 *  Author: Dylan Wadler dylan@fusion-core.org
 *
@@ -19,18 +18,94 @@
 
 `include ALU.v
 `include decode_32.v
+`include Maincore_Registers.v
 
-decode_32 Decode_MAIN(
-		.insn_in(),
-		.reset_in(),
-		.clk_in(),
-		.insn_pc_in(),
-		.stall_in(),
-		.reg_select_out(),
-		.rsa_out(),
-		.rsb_out(),
-		.rd_out(),
-		.imm_out(),
+module cpu_core(
+	/* Control Signals */
+	input			cpu_clk_in,
+	input			master_reset,
 
+	/* Instruction Memory Signals */
+	input	[31:0]	insn_mem_in,
+	output	[31:0]	insn_mem_addr_out,
+	output			insn_mem_write_out, /* Only used in special cases */
+	output			insn_mem_read_out,
+	input			insn_mem_stall_in,
+	output			insn_mem_stall_out,
+
+	/* Data Memory Signals */
+	input	[31:0]	data_mem_in,
+	input	[31:0]	data_mem_addr_out,
+	output	[31:0]	data_mem_out,
+	output			data_mem_write_out,
+	output			data_mem_read_out,
+	input			data_mem_stall_in,
+	output			data_mem_stall_out,
+
+	/* Debug Connections */
+	/* TO-DO */
+//	input			debug_si,
+//	output			debug_so,
+//	input			debug_reset,
+	/* END TO-DO */
+
+);
+
+/* Core Global Signals */
+wire			g_reset; 								//global reset signal
+assign 			g_reset = master_reset | debug_reset;
+reg		[31:0]	pc_reg;
+
+
+
+/* Instruction Fetch Stage / Co-Proessor Insn Routing */
+
+/* Signals for instruction fetch stage */
+wire	[31:0]	if_pc_out;
+wire	[31:0]	if_insn_out;
+wire	[31:0]	if_cpinsn_out;
+wire			pc_change_req;
+wire			pc_change_addr;
+wire	[31:0]	to_cp_insn;
+wire	[31:0]	to_cp_pc;
+/* Instantiation of instruction fetch */
+insn_fetch_32 InsnFetch(
+	.insn_in( insn_mem_in ),
+	.insn_pc_in( pc_reg ),
+	.reset_in( g_reset ),
+	.clk_in( cpu_clk_in ),
+	.insn_pc_out( if_pc_out ),
+	.cpinsn_out( to_cp_insn ),
+	.cpinsn_pc_out( to_cp_pc ),
+	.pc_change_req( pc_change_req ),
+	.pc_change_addr( pc_change_addr ),
+
+);
+
+
+
+
+/* Decode Stage for Main Core instructions */
+
+/* Decode Unit Signals */
+wire	[31:0]		decode_rsa;
+wire	[31:0]		decode_rsb;
+wire	[31:0]		decode_rd;
+wire	[31:0]		decode_regf_sel;
+wire	[31:0]		decode_imm;
+
+
+
+/* ALU instantiation */
+
+ALU ALU_MAIN(
+	.rsa(),
+	.rsb(),
+	.op_code(),
+	.out(),
+	.flag_carry(),
+	.flag_overflow(),
+	.flag_parity(),
+	.flag_neg()
 
 );

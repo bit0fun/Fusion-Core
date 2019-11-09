@@ -14,7 +14,7 @@
       You should have received a copy of the GNU General Public License
       along with Fusion-Core-ISA.  If not, see <http://www.gnu.org/licenses/>.
   */
-`include RegisterFile.v
+`include "REGFILES/RegisterFile.v"
 
 module MainCore_Registers(
 	input			clk_in,
@@ -30,6 +30,8 @@ module MainCore_Registers(
 	input	[31:0]	rd_val_in,
 	input	[4:0]	wb_bank_sel_in,		//writeback bank select
 	input			wb_in,				//initiate writeback
+	input			hi_in,				//High and low register writeback
+	input			low_in
 
  
 );
