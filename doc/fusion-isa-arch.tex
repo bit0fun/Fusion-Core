@@ -1,5 +1,4 @@
 \documentclass[letterpaper, 11pt]{article}
-\usepackage{tocloft}
 \usepackage[T1]{fontenc}
 \usepackage{inconsolata}
 \usepackage{fontspec}
@@ -9,14 +8,15 @@
 \usepackage{graphicx}
 \usepackage[left=1in, right=1in, top=1.00in, bottom=1.00in]{geometry}
 \usepackage{subfigure}
-\usepackage{hyperref}
+\usepackage[subfigure]{tocloft}
 \usepackage{amssymb}
+\usepackage{hyperref}
 
 \hypersetup{colorlinks=false,linktoc=all}
 
 \addtolength{\cftsecnumwidth}{20pt}
 
-\title{Fusion-Core ISA Definition: Revision 0.2.1}
+\title{Fusion-Core ISA Definition: Revision 0.3.0}
 \author{Dylan Wadler}
 
 \begin{document}
@@ -28,6 +28,7 @@
 \newpage
 \part{Administrative}
 \section{Change log}
+\paragraph{Version 0.3.0} Changing to Little endian as default. \\Remove unsigned add, indistinguishable from normal add. Add load and store n bytes as macro.\\
 \paragraph{Version 0.2.1} Updated Load Immediate DSEL values to create simpler decode control signals. Fixed various issues in document to be consistent with other sections. The binary representation table, Load Immediate, and System sections were modified.
 \paragraph{Version 0.2} Added comprehensive list of Instruction usage for programmers. Changed opcode definitions to create simpler
 decode, with availability to create new instructions from the existing opcodes. Including more information about special purpose registers.
@@ -40,7 +41,7 @@ decode, with availability to create new instructions from the existing opcodes. 
 recompile a program's binary. By use of defining an easy interface with a simple core instruction set, this allows for
 more freedom in implementation. High end processors and microcontrollers would only require slight variations in
 configuration, as their core would remain identical save for easy to maintain and scalable co-processors.
-\paragraph{Main Ideas}The architecture is Big endian, with a core instruction set that is RISC, but the co-processors do not need to adhere to the RISC philosophy. This allows for more flexibility in design, and possibly faster core clock speeds as the pipeline would depend on smaller amounts of logic. Only the instructions provided in this document are to be implemented in the main processor. The co-processors defined in this document are recommended, but not required for normal function. Co-processor documentation is to be provided by the creator, and should adhere to the standards of clarity and conciseness such that it can be easily implemented from the documentation alone in a HDL. 
+\paragraph{Main Ideas}The architecture is Little endian, with a core instruction set that is RISC, but the co-processors do not need to adhere to the RISC philosophy. This allows for more flexibility in design, and possibly faster core clock speeds as the pipeline would depend on smaller amounts of logic. Only the instructions provided in this document are to be implemented in the main processor. The co-processors defined in this document are recommended, but not required for normal function. Co-processor documentation is to be provided by the creator, and should adhere to the standards of clarity and conciseness such that it can be easily implemented from the documentation alone in a HDL. 
 \paragraph{64 Bit instructions:}At this moment in time, the Fusion-Core ISA is only a 32 bit ISA. Due to the focus on co-processors,
 older implementations could easily be modified to include 64 bit operations.
 \paragraph{Co-Processors}The Co-Processor interface is currently defined by setting the MSB within the OP Code field of 
@@ -614,7 +615,7 @@ it's own interrupt to use. Since branch instructions exist to check if a registe
 			Instruction Name	& Definition															& Usage 							\\ \hline
 			add					& Adds RSa and RSb, result stored in Rd									& \texttt{add \$Rd, \$RSa, \$RSb}	\\ \hline
 			sub					& Subtracts RSb from RSa, result stored in Rd							& \texttt{sub \$Rd, \$RSa, \$RSb}	\\ \hline
-			addu 				& Adds RSa and RSb, result stored in Rd 								& \texttt{addu \$Rd, \$RSa, \$RSb}	\\ 
+%			addu 				& Adds RSa and RSb, result stored in Rd 								& \texttt{addu \$Rd, \$RSa, \$RSb}	\\ 
 			\hfill				& Does not affect OV flag												& \hfill 							\\ \hline
 			subu 				& Subtracts RSb from RSa, result stored in Rd							& \texttt{subu \$Rd, \$RSa, \$RSb}	\\ 
 			\hfill				& Does not affect OV flag												& \hfill 							\\ \hline
@@ -661,7 +662,7 @@ The table shown below describes the instructions available.
 			Instruction Name	& Definition															& Usage 							\\ \hline
 			addi				& Adds RSa and Immediate, result stored in Rd							& \texttt{addi \$Rd, \$RSa, 0xfff}	\\ \hline
 			subi				& Subtracts Immediate from RSa, result stored in Rd						& \texttt{subi \$Rd, \$RSa, 0xfff}	\\ \hline
-			addui 				& Adds RSa and Immediate, result stored in Rd 							& \texttt{addui \$Rd, \$RSa, 0xfff}	\\ 
+%			addui 				& Adds RSa and Immediate, result stored in Rd 							& \texttt{addui \$Rd, \$RSa, 0xfff}	\\ 
 			\hfill				& Does not affect OV flag												& \hfill 							\\ \hline
 			subui 				& Subtracts Immediate from RSa, result stored in Rd						& \texttt{subui \$Rd, \$RSa, 0xfff}	\\ 
 			\hfill				& Does not affect OV flag												& \hfill 							\\ \hline
@@ -695,8 +696,8 @@ The table shown below describes the instructions available.
 \end{center}
 \clearpage
 \subsection{Load/Store}
-\paragraph{} The Load Instructions feature a 14 bit immediate offset value, with a base address of the value of RSa. Since the architecture is big endian,
-the byte aligned address refers to the most significant byte. When reading values less than 32 bits wide, the upper bytes are set to zeros. For example, when loading
+\paragraph{} The Load Instructions feature a 14 bit immediate offset value, with a base address of the value of RSa. Since the architecture is little endian,
+the byte aligned address refers to the least significant byte. When reading values less than 32 bits wide, the upper bytes are set to zeros. For example, when loading
 a two byte value into Rd, the address in RSa and the next byte will be placed into the lower two bytes of Rd.
 \begin{figure}[!h]
 	\begin{center}
@@ -706,11 +707,11 @@ a two byte value into Rd, the address in RSa and the next byte will be placed in
 			Instruction Name	& Definition											& Usage 							\\ \hline
 			lw					& Reads a 4 byte value from Memory at address RSa 		& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
 			\hfill				& with a 14 bit Immediate offset, puts result in Rd		& \hfill 							\\ \hline
-			lh					& Reads a 2 byte value from Memory at address RSa 		& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
+			lh					& Reads a 2 byte value from Memory at address RSa 		& \texttt{lh \$Rd, 0x3fff(\$RSa)}	\\ 
 			\hfill				& with a 14 bit Immediate offset, puts result in Rd		& \hfill 							\\ \hline			
-			lb					& Reads a 1 byte value from Memory at address RSa 		& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
+			lb					& Reads a 1 byte value from Memory at address RSa 		& \texttt{lb \$Rd, 0x3fff(\$RSa)}	\\ 
 			\hfill				& with a 14 bit Immediate offset, puts result in Rd		& \hfill 							\\ \hline			
-			lth					& Reads a 3 byte value from Memory at address RSa 		& \texttt{lw \$Rd, 0x3fff(\$RSa)}	\\ 
+			lth					& Reads a 3 byte value from Memory at address RSa 		& \texttt{lth \$Rd, 0x3fff(\$RSa)}	\\ 
 			\hfill				& with a 14 bit Immediate offset, puts result in Rd		& \hfill 							\\ \hline			
 		
 		\end{tabular} 
@@ -724,7 +725,7 @@ a two byte value into Rd, the address in RSa and the next byte will be placed in
 
 \paragraph{} The Store Instructions are similar in nature to the Load instructions, with a 14 bit immediate value offset to the base address of \$RSa.
 The value of \$RSb will be written to the address calculated from the aforementioned sources. For writing values smaller than 32 bits wide, the lower
-bytes will be written in a big endian fashion to memory. For example, writing a two byte value to memory, would take the lower two bytes of \$RSb, and write
+bytes will be written in a little endian fashion to memory. For example, writing a two byte value to memory, would take the lower two bytes of \$RSb, and write
 the higher byte to the address calculated and the lower byte to the address calculated plus 1. 
 \begin{figure}[!h]
 	\begin{center}
@@ -732,11 +733,11 @@ the higher byte to the address calculated and the lower byte to the address calc
 			\hline
 			\multicolumn{3}{c}{Store Instructions} \\ \hline
 			Instruction Name	& Definition											& Usage 							\\ \hline
-			sw					& Writes the value of RSb at address RSa				& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ 
+			sw					& Writes the value of RSb at address RSa				& \texttt{sw \$RSb, 0x3fff(\$RSa)}	\\ 
 			\hfill				& with a 14 bit Immediate offset.						& \hfill 							\\ \hline
-			sh					& Writes the lower two bytes of RSb 					& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ 
+			sh					& Writes the lower two bytes of RSb 					& \texttt{sh \$RSb, 0x3fff(\$RSa)}	\\ 
 			\hfill				& at address RSa with a 14 bit Immediate offset.		& \hfill 							\\ \hline
-			sb					& Writes the least significant byte of RSb 				& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ 
+			sb					& Writes the least significant byte of RSb 				& \texttt{sb \$RSb, 0x3fff(\$RSa)}	\\ 
 			\hfill				& at address RSa with a 14 bit Immediate offset.		& \hfill 							\\ \hline
 			sth					& Writes the lower three bytes of RSb 					& \texttt{lw \$RSb, 0x3fff(\$RSa)}	\\ 
 			\hfill				& at address RSa with a 14 bit Immediate offset.		& \hfill 							\\ \hline
@@ -962,15 +963,18 @@ may be terminated or halted. More information will be available in the permissio
 
 \subsection{Macros}
 \paragraph{} The macro instructions defined here explain the usage and their expansions.
+The number of instructions are the worst case number of instructions
 
 \begin{figure}[!h]
 	\begin{center}
 		\begin{tabular}{|l|l|l|}
 			\hline
-			Name		& Usage & Number of Instructions\\ \hline
+			Name	& Usage & Number of Instructions\\ \hline
 			call	& \texttt{call	address\_label}		&	2	\\ \hline
 			ret		& \texttt{ret	}					&	1	\\ \hline
 			la		& \texttt{la \$Rd, address\_label}	& 	2	\\ \hline
+			ldn		& \texttt{ldn \$Rd, n, address}		&   (n / 4) + 2\\ \hline
+			stn		& \texttt{stn \$RSb, n, address}	&   (n / 4) + 2 \\ \hline
 		 		\end{tabular} 
 	\end{center}
 	
@@ -988,6 +992,10 @@ with no immediate offset. The RA register stores the return address, which the j
 li and lui. Currently there is no way to merge the two values into one register, however the macro will be updated soon to do so.
 It is advised against using this macro until further notice. The same functionality can be achieved with an or instruction and
 a li and lui instruction, however due to register usage this is not ideal to create as a macro.
+
+\paragraph{} The ldn and stn macros are effectively loop unrolled loads and stores. Depending on the number of bytes read or written to memory,
+the optimal number of instructions will be generated. The sw and lw instructions will be used by default, with lh/sh or lb/sb used for remaining bytes.
+
 \begin{center}
 	\line(1,0){250}
 \end{center}
@@ -1020,8 +1028,12 @@ adherence to RISC philosophy in this architecture is required to exploit any ben
 \begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
 			\multicolumn{6}{c}{Register/Integer Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+%big endian	\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+%			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   4&3 \hfill   0\\ \hline
+			\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}shft  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+			0 \hfill 5& 6 \hfill 10 &11 \hfill  15& 16 \hfill  20&21 \hfill   27&28 \hfill   31\\ \hline
+
+			
 		
 	\end{tabular}
 \end{center}	
@@ -1035,7 +1047,7 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 			Instruction & Description 				& ALU Operation (hex) \\ \hline
 			add			& Add 						& 0x0 \\ \hline
 			sub 		& Subtract					& 0x1 \\ \hline
-			addu 		& Add Unsigned 				& 0x2 \\ \hline
+%			addu 		& Add Unsigned 				& 0x2 \\ \hline
 			subu		& Subtract Unsigned 		& 0x3 \\ \hline
 			not		& Not			& 0x4 \\ \hline
 			and			& And						& 0x5 \\ \hline
@@ -1063,8 +1075,9 @@ The shft bits are only for the shift amount with the shifting instructions, but 
 \begin{center}
 		\begin{tabular}{|c|c|c|c|c|}
 			\multicolumn{5}{c}{Immediate Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Immediate  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15  \hfill   4&3 \hfill   0\\ \hline
+			\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Immediate  \hspace{10pt} & \hspace{3pt} aluop \hspace{3pt}   \\	\hline
+%big endian	31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15  \hfill   4&3 \hfill   0\\ \hline
+			0 \hfill 5&6 \hfill 10&11 \hfill 15& 16 \hfill 27&28 \hfill 31\\ \hline
 		
 	\end{tabular}
 \end{center}
@@ -1077,7 +1090,7 @@ source register, RSa, with the other source being the immediate value. The resul
 			Instruction & Description 						& ALU Operation (hex) \\ \hline
 			addi		& Add Immediate						& 0x0 \\ \hline
 			subi 		& Subtract Immediate				& 0x1 \\ \hline
-			addui 		& Add Unsigned Immediate			& 0x2 \\ \hline
+%			addui 		& Add Unsigned Immediate			& 0x2 \\ \hline
 			subui		& Subtract Immediate 				& 0x3 \\ \hline
 			noti		& Invert Immediate					& 0x4 \\ \hline
 			andi		& And Immediate						& 0x5 \\ \hline
@@ -1101,7 +1114,8 @@ source register, RSa, with the other source being the immediate value. The resul
 		\begin{tabular}{|c|c|c|c|c|}
 			\multicolumn{5}{c}{Load Instruction Format}\\ \hline
 				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{3pt} funct \hspace{3pt} & \hspace{10pt} Immediate \hspace{10pt}   \\	\hline
-				31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill 14  & 13 \hfill 0\\ \hline
+%big endian		31 \hfill 26& 25 \hfill 21 &20 \hfill 16& 15 \hfill 14  & 13 \hfill 0\\ \hline
+				0 \hfill 5&6 \hfill 10&11 \hfill 15&16 \hfill 17&18 \hfill 31\\ \hline
 		
 	\end{tabular}
 \end{center}
@@ -1111,9 +1125,9 @@ to determine the byte size to read from memory. This encoding is described in th
 \begin{tabular}{l|l}
 		Funct & Description \\ \hline
 		00	  & 1 word (32 bits) \\
-		01	  & half word (16 bits, upper) \\ 
-		10	  & 24 bits, upper \\
-		11	  & byte, upper		\\
+		01	  & half word (16 bits, lower) \\ 
+		10	  & three bytes ( 24 bits )\\
+		11	  & byte, lower		\\
 		\end{tabular}
 \paragraph{}The following instructions use this encoding: \\
 \begin{center}
@@ -1121,8 +1135,9 @@ to determine the byte size to read from memory. This encoding is described in th
 			Instruction & Description 						& Funct\\ \hline
 			lw			& Load Word							& 0x0 \\ \hline
 			lh			& Load Half Word					& 0x1 \\ \hline
+			lth			& Load Three Bytes					& 0x2 \\ \hline
 			lb			& Load Byte							& 0x3 \\ \hline
-			lth			& Load Three (Bytes, 24 bits)		& 0x2 \\ \hline
+
 
 \end{tabular}
 \end{center}
@@ -1132,9 +1147,10 @@ to determine the byte size to read from memory. This encoding is described in th
 
 \begin{center}
 		\begin{tabular}{|c|c|c|c|}
-				\multicolumn{4}{c}{Load Immediate Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} DSEL \hspace{4pt} & \hspace{10pt}Immediate  \hspace{10pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15  \hfill   0\\ \hline
+			\multicolumn{4}{c}{Load Immediate Instruction Format}\\ \hline
+			\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} DSEL \hspace{4pt} & \hspace{10pt}Immediate  \hspace{10pt}   \\	\hline
+%big endian	31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15  \hfill   0\\ \hline
+			0 \hfill 5&6 \hfill 10&11 \hfill  15& 16  \hfill   31\\ \hline
 		
 	\end{tabular}
 \end{center}
@@ -1192,7 +1208,8 @@ The MSB of DSEL determines if the value is unsigned (1) or signed (0). \\
 		\begin{tabular}{|c|c|c|c|c|c|}
 			\multicolumn{6}{c}{Store Instruction Format}\\ \hline
 				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} Funct \hspace{5pt} &  \hspace{4pt} Immediate[13:11] \hspace{4pt} & \hspace{4pt}rsa  \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt} &\hspace{10pt}Immediate[10:0]  \hspace{10pt}     \\	\hline
-				31 \hfill 26& 25 \hfill 24 &23 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill  0\\ \hline
+%big endian		31 \hfill 26& 25 \hfill 24 &23 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill  0\\ \hline
+				0 \hfill 5&6 \hfill 7&8 \hfill 10&11 \hfill  15&16 \hfill 20&21 \hfill  31\\ \hline
 		
 	\end{tabular}
 \end{center}
@@ -1204,18 +1221,18 @@ to determine the byte size to write to memory. This encoding is described in the
 		Funct & Description \\ \hline
 		00	  & 1 word (32 bits) \\
 		01	  & half word (16 bits, upper) \\ 
-		10	  & 24 bits, upper \\
-		11	  & byte, upper		\\
+		10	  & byte, upper \\
+		11	  & n bytes		\\
 	\end{tabular}
 \paragraph{}The following instructions use this encoding: \\
 
 	\begin{center}
 		\begin{tabular}{|l|l|l|} \hline
-			Instruction & Description 						& Funct\\ \hline
-			sw			& Store Word							& 0x0 \\ \hline
-			sh			& Store Half Word					& 0x1 \\ \hline
-			sb			& Store Byte							& 0x3 \\ \hline
-			sth			& Store Three (Bytes, 24 bits)		& 0x2 \\ \hline
+			Instruction & Description 			& Funct\\ \hline
+			sw			& Store Word			& 0x0 \\ \hline
+			sh			& Store Half Word		& 0x1 \\ \hline
+			sb			& Store Byte			& 0x3 \\ \hline
+			sth			& Store Three Bytes		& 0x2 \\ \hline
 
 		\end{tabular}
 	\end{center}
@@ -1231,7 +1248,8 @@ to determine the byte size to write to memory. This encoding is described in the
 		\begin{tabular}{|c|c|c|c|}
 				\multicolumn{4}{c}{Jump Instruction Format}\\ \hline
 				\hspace{2pt} opcode \hspace{2pt}  & \hspace{3pt} Immediate[20:16] \hspace{3pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt} Immediate[15:0]  \hspace{10pt}   \\	\hline
-							31 \hfill 26& 25  \hfill 21 &20 \hfill  16& 15 \hfill   0\\ \hline
+%big endian					31 \hfill 26& 25  \hfill 21 &20 \hfill  16& 15 \hfill   0\\ \hline
+							0 \hfill 5&6  \hfill 10&11 \hfill  15&16 \hfill   31\\ \hline
 		
 	\end{tabular}
 \end{center}	
@@ -1260,8 +1278,9 @@ the PC is stored in RA0, or R4 in the General Purpose Register file.
 \begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
 			\multicolumn{6}{c}{Branch Instruction Format}\\ \hline
-				\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} Immediate[13:9] \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}Immediate[8:0]  \hspace{10pt} & \hspace{3pt} funct \hspace{3pt}   \\	\hline
-			31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   2&1 \hfill   0\\ \hline
+			\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} Immediate[13:9] \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{4pt}rsb  \hspace{4pt}& \hspace{10pt}Immediate[8:0]  \hspace{10pt} & \hspace{3pt} funct \hspace{3pt}   \\	\hline
+%big endian	31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  11&10 \hfill   2&1 \hfill   0\\ \hline
+			0 \hfill 5&6 \hfill 10&11 \hfill  15&16 \hfill 20&21 \hfill   29&30 \hfill 31\\ \hline
 		
 	\end{tabular}
 \end{center}
@@ -1288,7 +1307,8 @@ The PC is only updated with whichever operation is indicated as being true or fa
 	\begin{tabular}{|c|c|c|c|c|}
 		\multicolumn{5}{c}{System Instruction Format}\\ \hline
 			\hspace{2pt} opcode \hspace{2pt} & \hspace{5pt} rd \hspace{5pt} &  \hspace{4pt} rsa \hspace{4pt} & \hspace{10pt}Funct  \hspace{10pt} & \hspace{8pt} Immediate[7:0] \hspace{8pt}   \\	\hline
-		31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  8&7 \hfill   0\\ \hline
+%big endian	31 \hfill 26& 25 \hfill 21 &20 \hfill  16& 15 \hfill  8&7 \hfill   0\\ \hline
+			0 \hfill 5&6 \hfill 10&11 \hfill 15&16 \hfill  23&24 \hfill 31\\ \hline
 		
 	\end{tabular}
 \end{center}
@@ -1399,7 +1419,7 @@ bit in the opcode selects a change in PC, but the following bits do not correspo
 			Instruction & Function 										& Binary \\ \hline
 			add			& Rd = RSa + RSb 								& 010011dddddaaaaabbbbbxxxxxxx0000 \\
 			sub			& Rd = RSa - RSb 								& 010011dddddaaaaabbbbbxxxxxxx0001 \\
-			addu		& Rd = RSa + RSb (Unsigned) 					& 010011dddddaaaaabbbbbxxxxxxx0010 \\
+%			addu		& Rd = RSa + RSb (Unsigned) 					& 010011dddddaaaaabbbbbxxxxxxx0010 \\
 			subu		& Rd = RSa - RSb (Unsigned)					 	& 010011dddddaaaaabbbbbxxxxxxx0011 \\
 			not			& Rd = !RSa	 									& 010011dddddaaaaaxxxxxxxxxxxx0100 \\
 			and			& Rd = RSa \& RSb								& 010011dddddaaaaabbbbbxxxxxxx0101 \\
@@ -1414,7 +1434,7 @@ bit in the opcode selects a change in PC, but the following bits do not correspo
 			\multicolumn{3}{|c|}{Immediate Instructions} \\ \hline
 			addi		& Rd = RSa + Imm 								& 010110dddddaaaaaiiiiiiiiiiii0000 \\
 			subi		& Rd = RSa - Imm 								& 010110dddddaaaaaiiiiiiiiiiii0001 \\
-			addui		& Rd = RSa + Imm (Unsigned)						& 010110dddddaaaaaiiiiiiiiiiii0010 \\
+%			addui		& Rd = RSa + Imm (Unsigned)						& 010110dddddaaaaaiiiiiiiiiiii0010 \\
 			subui		& Rd = RSa - Imm (Unsigned)					 	& 010110dddddaaaaaiiiiiiiiiiii0011 \\
 			noti		& Rd = ! Imm									& 010110ddddd00000iiiiiiiiiiii0100 \\
 			andi		& Rd = RSa \& Imm								& 010110dddddaaaaaiiiiiiiiiiii0101 \\
